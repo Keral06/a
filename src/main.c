@@ -32,7 +32,7 @@ int main ()
 		BeginDrawing();
 
 		// Setup the back buffer for drawing (clear color and depth buffers)
-		ClearBackground(BLACK);
+		ClearBackground(GREEN);
 
 		// draw some text using the default font
 		DrawText("Hello Raylib", 200,200,20,WHITE);
