@@ -11,6 +11,138 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
+const int screenWidth = 800;
+const int screenHeight = 450;
+
+enum Direccion 
+{
+ARRIBA,
+ABAJO,
+DERECHA,
+IZQUIERDA
+};
+
+class Entity {
+
+public:
+	Entity(int hp, int vel) {
+		this->hp = hp;
+		this->vel = vel;
+	
+	}
+
+	bool Alive() {
+	
+		return true;
+	
+	}
+
+	virtual void Movement() = 0;
+protected:
+	int hp;
+	int vel;
+
+
+
+};
+
+class Enemy :public Entity {
+
+public:
+	Enemy(int hp, int vel) : Entity(hp, vel){
+	
+	
+	
+	}
+
+protected:
+
+
+
+
+
+};
+
+class Player : public Entity {
+
+private:
+	int lives;
+	int coins;
+	Vector2 playerPos;
+	Direccion dir;
+public:
+
+	Player(int hp, int vel) : Entity(1,2) {
+	
+		this->coins = 0;
+		this->lives = 3;
+
+		this->dir = ARRIBA;
+		playerPos = { (float)screenWidth / 2, (float)screenHeight / 2 };
+
+	
+	}
+
+	Vector2 GetPosition() { return this->playerPos; }
+	Direccion GetDir() { return this->dir; }
+	void Movement() override {
+	
+		if (IsKeyDown(KEY_RIGHT)) { playerPos.x += 2.0f; }
+		if (IsKeyDown(KEY_LEFT)) { playerPos.x -= 2.0f; }
+		if (IsKeyDown(KEY_UP)) 
+		{ 
+			playerPos.y -= 2.0f; 
+			dir = ARRIBA;
+		}
+		if (IsKeyDown(KEY_DOWN)) 
+		{ 
+			playerPos.y += 2.0f; 
+			dir = ABAJO;
+		}
+	}
+
+
+};
+
+class Orc : public Enemy{
+
+public:
+
+	Orc(int hp, int vel) :Enemy(1,1) {
+	
+	
+	
+	}
+
+
+};
+
+class Ogre : public Enemy {
+public:
+
+	Ogre(int hp, int vel) : Enemy(3, 1) {
+	
+	
+	
+	
+	}
+
+
+};
+class Mummy : public Enemy {
+public:
+
+	Mummy(int hp, int vel) : Enemy(6, 1) {
+
+
+
+
+	}
+
+
+};
+
+
 int main ()
 {
 	// Tell the window to use vsync and work on high DPI displays
@@ -23,7 +155,7 @@ int main ()
 	SearchAndSetResourceDir("resources");
 
 	// Load a texture from the resources directory
-	Texture logo = LoadTexture("pene.png");
+	Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
 	
 	const int screenWidth = 800;
 	const int screenHeight = 450;
@@ -31,31 +163,35 @@ int main ()
 
 	int seconds = 4;
 
+		//Vector2 ballPosition = { (float)screenWidth / 2, (float)screenHeight / 2 };
 	// game loop
+		Player p(1,2);
 	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
 
 
-		// drawing
+
+		p.Movement();
+			
+
+
+		//-------------------------------------- DRAWING -------------------------------------------
 		BeginDrawing();
 
-		// Setup the back buffer for drawing (clear color and depth buffers)
-		ClearBackground(BLACK);
+		ClearBackground(RAYWHITE);
+		if (p.GetDir() == ARRIBA)
+		{
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+		}
+		else if (p.GetDir() == ABAJO) 
+		{
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, RED);
+		
+		}
+		//DrawCircleV(p.GetPosition(), 50, MAROON);
 
-		// draw some text using the default font
-		DrawText("Irene, Jiayi & Queralt", 300,200,20,WHITE);
-
-		// draw our texture to the screen
-		DrawTexture(logo,350, 320, WHITE);
-
-		double GetTime(seconds);
-		void WaitTime(GetTime);
-
-		DrawRectangle(screenWidth / 4 * 2 - 60, 100, 800, 900, RED);
-		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
-
-
+			
 	}
 
 	// cleanup
