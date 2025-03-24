@@ -19,13 +19,35 @@ enum Direccion
 ARRIBA,
 ABAJO,
 DERECHA,
-IZQUIERDA
+IZQUIERDA,
+DIAGONAL1,
+DIAGONAL2,
+DIAGONAL3,
+DIAGONAL4,
+IDLE
 };
 
-class Entity {
+class Colision {
+public:
+
+	Colision(Vector2 posicion) {
+
+		float widthThing = posicion.x + 128;
+		float HeightThing = posicion.y - 128;
+		Square = { widthThing, HeightThing,35,56 };
+	
+	}
+protected:
+	Rectangle Square;
+
+
+
+};
+
+class Entity :public Colision {
 
 public:
-	Entity(int hp, int vel) {
+	Entity(int hp, int vel) : Colision(playerPos){
 		this->hp = hp;
 		this->vel = vel;
 	
@@ -36,11 +58,101 @@ public:
 		return true;
 	
 	}
+	Vector2 GetPosition() { return this->playerPos; }
+	Direccion GetDir() { return this->dir; }
 
-	virtual void Movement() = 0;
+	int pos(){
+	
+		int a = GetRandomValue(1,4);
+		return a;
+	
+	} 
+
+	
 protected:
 	int hp;
 	int vel;
+	Vector2 playerPos;
+	Direccion dir;
+	bool status = Alive();
+	
+
+
+
+};
+class Player : public Entity {
+
+private:
+	int lives;
+	int coins;
+
+public:
+
+	Player(int hp, int vel) : Entity(1, 2) {
+
+		this->coins = 0;
+		this->lives = 3;
+
+		this->dir = ARRIBA;
+		playerPos = { ((float)screenWidth / 2) + 128 + 128 / 2, ((float)screenHeight / 2) + 128 / 2 };
+
+
+	}
+
+
+	void Movement() {
+
+		if (IsKeyDown(KEY_RIGHT))
+		{
+			playerPos.x += 2.0f;
+			dir = DERECHA;
+		}
+		if (IsKeyDown(KEY_LEFT))
+		{
+			playerPos.x -= 2.0f;
+			dir = IZQUIERDA;
+		}
+		if (IsKeyDown(KEY_UP))
+		{
+			playerPos.y -= 2.0f;
+			dir = ARRIBA;
+		}
+		if (IsKeyDown(KEY_DOWN))
+		{
+			playerPos.y += 2.0f;
+			dir = ABAJO;
+		}
+		if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP))
+		{
+			playerPos.x += 0.5f;
+			playerPos.y -= 0.5f;
+			dir = DIAGONAL1;
+		}
+		if (IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_UP))
+		{
+			playerPos.x -= 0.5f;
+			playerPos.y -= 0.5f;
+			dir = DIAGONAL2;
+		}
+		if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT))
+		{
+			playerPos.x += 0.5f;
+			playerPos.y += 0.5f;
+			dir = DIAGONAL3;
+		}
+		if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_LEFT))
+		{
+			playerPos.y += 0.5f;
+			playerPos.x -= 0.5f;
+			dir = DIAGONAL4;
+		}
+		else {
+
+			dir = IDLE;
+
+		}
+	}
+	friend class Enemy;
 
 
 
@@ -50,10 +162,50 @@ class Enemy :public Entity {
 
 public:
 	Enemy(int hp, int vel) : Entity(hp, vel){
-	
-	
+		int posicion = pos();
+		if (posicion == 1) {
+
+			playerPos = { ((float)screenWidth / 2) + 128 + 128 / 2,  128 / 2 };
+		}
+		if (posicion == 2) {
+			playerPos = { 128 + 128 / 2, ((float)screenHeight / 2) + 128 / 2 };
+
+		}
+		if (posicion == 3) {
+
+			playerPos = { ((float)screenWidth / 2) + 128 + 128 / 2,-128 / 2 };
+		}
+		if (posicion == 4) {
+			playerPos = { -128 - 128 / 2, ((float)screenHeight / 2) + 128 / 2 };
+
+		}
+		
 	
 	}
+
+	void MovementEnemy(Player p) {
+
+		Vector2 player = p.GetPosition();
+		if (playerPos.x < player.x) {
+			playerPos.x -= vel;
+
+		}
+		else {
+			playerPos.x += vel;
+
+		}
+
+		if (playerPos.y < player.y) {
+			playerPos.y -= vel;
+
+		}
+		else {
+			playerPos.y += vel;
+
+		}
+
+	}
+
 
 protected:
 
@@ -63,46 +215,7 @@ protected:
 
 };
 
-class Player : public Entity {
 
-private:
-	int lives;
-	int coins;
-	Vector2 playerPos;
-	Direccion dir;
-public:
-
-	Player(int hp, int vel) : Entity(1,2) {
-	
-		this->coins = 0;
-		this->lives = 3;
-
-		this->dir = ARRIBA;
-		playerPos = { (float)screenWidth / 2, (float)screenHeight / 2 };
-
-	
-	}
-
-	Vector2 GetPosition() { return this->playerPos; }
-	Direccion GetDir() { return this->dir; }
-	void Movement() override {
-	
-		if (IsKeyDown(KEY_RIGHT)) { playerPos.x += 2.0f; }
-		if (IsKeyDown(KEY_LEFT)) { playerPos.x -= 2.0f; }
-		if (IsKeyDown(KEY_UP)) 
-		{ 
-			playerPos.y -= 2.0f; 
-			dir = ARRIBA;
-		}
-		if (IsKeyDown(KEY_DOWN)) 
-		{ 
-			playerPos.y += 2.0f; 
-			dir = ABAJO;
-		}
-	}
-
-
-};
 
 class Orc : public Enemy{
 
@@ -110,9 +223,13 @@ public:
 
 	Orc(int hp, int vel) :Enemy(1,1) {
 	
-	
+		
 	
 	}
+
+	
+
+	
 
 
 };
@@ -142,6 +259,89 @@ public:
 
 };
 
+class Shoot : public Entity{
+public:
+	Shoot(Player p) : Entity(1,1) {
+	
+		Vector2 shootFrom = p.GetPosition();
+
+		shootFrom = { shootFrom.x / 2, shootFrom.y / 2 };
+
+		while (status == true) {
+			if (IsKeyDown(KEY_RIGHT))
+			{
+				playerPos.x += 2.0f;
+				dir = DERECHA;
+			}
+			if (IsKeyDown(KEY_LEFT))
+			{
+				playerPos.x -= 2.0f;
+				dir = IZQUIERDA;
+			}
+			if (IsKeyDown(KEY_UP))
+			{
+				playerPos.y -= 2.0f;
+				dir = ARRIBA;
+			}
+			if (IsKeyDown(KEY_DOWN))
+			{
+				playerPos.y += 2.0f;
+				dir = ABAJO;
+			}
+			if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP))
+			{
+				playerPos.x += 0.5f;
+				playerPos.y -= 0.5f;
+				dir = DIAGONAL1;
+			}
+			if (IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_UP))
+			{
+				playerPos.x -= 0.5f;
+				playerPos.y -= 0.5f;
+				dir = DIAGONAL2;
+			}
+			if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT))
+			{
+				playerPos.x += 0.5f;
+				playerPos.y += 0.5f;
+				dir = DIAGONAL3;
+			}
+			if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_LEFT))
+			{
+				playerPos.y += 0.5f;
+				playerPos.x -= 0.5f;
+				dir = DIAGONAL4;
+			}
+
+
+			 
+		}
+
+	
+	
+	
+	}
+public:
+
+
+
+
+};
+
+
+
+class level  {
+
+
+
+
+
+};
+
+
+
+
+
 
 int main ()
 {
@@ -157,8 +357,8 @@ int main ()
 	// Load a texture from the resources directory
 	Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
 	
-	const int screenWidth = 800;
-	const int screenHeight = 450;
+	const int screenHeight = 800;
+	const int screenWidth = 1280;
 	SetTargetFPS(60);
 
 	int seconds = 4;
@@ -185,10 +385,49 @@ int main ()
 		}
 		else if (p.GetDir() == ABAJO) 
 		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, RED);
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
 		
 		}
-		//DrawCircleV(p.GetPosition(), 50, MAROON);
+		else if (p.GetDir() == IZQUIERDA)
+		{
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+
+		}
+		else if (p.GetDir() == DERECHA)
+		{
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+
+		}
+		else if (p.GetDir() == DIAGONAL1)
+		{
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+
+		}
+		else if (p.GetDir() == DIAGONAL2)
+		{
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+
+		}
+		else if (p.GetDir() == DIAGONAL3)
+		{
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+
+		}
+		else if (p.GetDir() == DIAGONAL4)
+		{
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+
+		}
+		else {
+		
+			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+		}
+		
+		if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) ) {
+		
+			Shoot hola(p);
+		
+		}
 
 		EndDrawing();
 			
