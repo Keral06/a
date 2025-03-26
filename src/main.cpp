@@ -10,9 +10,10 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "raylib.h"
 
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
+#include <vector>  // Add this include for std::vector
 
-const int screenWidth = 800;
-const int screenHeight = 450;
+const int screenWidth = 1280;
+const int screenHeight = 800;
 
 enum Direccion 
 {
@@ -45,21 +46,21 @@ protected:
 };
 
 class Entity :public Colision {
-
 public:
-	Entity(int hp, int vel) : Colision(playerPos){
-		this->hp = hp;
-		this->vel = vel;
-	
-	}
+    Entity(int hp, int vel, Vector2 initialPos) : playerPos(initialPos), Colision(initialPos) {
+        this->hp = hp;
+        this->vel = vel;
+        dir = IDLE;
+        status = true;
+    }
 
 	bool Alive() {
 	
 		return true;
 	
 	}
-	Vector2 GetPosition() { return this->playerPos; }
-	Direccion GetDir() { return this->dir; }
+	Vector2 GetPosition() const { return this->playerPos; }
+	Direccion GetDir() const { return this->dir; }
 
 	int pos(){
 	
@@ -88,69 +89,81 @@ private:
 
 public:
 
-	Player(int hp, int vel) : Entity(1, 2) {
-
+	Player(int hp, int vel) : Entity(hp, vel, {(float)screenWidth/2, (float)screenHeight/2}) {
 		this->coins = 0;
 		this->lives = 3;
-
 		this->dir = ARRIBA;
-		playerPos = { ((float)screenWidth / 2) + 128 + 128 / 2, ((float)screenHeight / 2) + 128 / 2 };
-
-
 	}
 
 
 	void Movement() {
+	    bool moved = false;
+	    float nextX = playerPos.x;
+	    float nextY = playerPos.y;
+	    
+	    if (IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
+	    {
+	        nextX += 2.0f;
+	        nextY -= 2.0f;
+	        dir = DIAGONAL1;
+	        moved = true;
+	    }
+	    else if (IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
+	    {
+	        nextX -= 2.0f;
+	        nextY -= 2.0f;
+	        dir = DIAGONAL2;
+	        moved = true;
+	    }
+	    else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_D))
+	    {
+	        nextX += 2.0f;
+	        nextY += 2.0f;
+	        dir = DIAGONAL3;
+	        moved = true;
+	    }
+	    else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_A))
+	    {
+	        nextX -= 2.0f;
+	        nextY += 2.0f;
+	        dir = DIAGONAL4;
+	        moved = true;
+	    }
+	    else if (IsKeyDown(KEY_D))
+	    {
+	        nextX += 2.0f;
+	        dir = DERECHA;
+	        moved = true;
+	    }
+	    else if (IsKeyDown(KEY_A))
+	    {
+	        nextX -= 2.0f;
+	        dir = IZQUIERDA;
+	        moved = true;
+	    }
+	    else if (IsKeyDown(KEY_W))
+	    {
+	        nextY -= 2.0f;
+	        dir = ARRIBA;
+	        moved = true;
+	    }
+	    else if (IsKeyDown(KEY_S))
+	    {
+	        nextY += 2.0f;
+	        dir = ABAJO;
+	        moved = true;
+	    }
 
-		if (IsKeyDown(KEY_RIGHT))
-		{
-			playerPos.x += 2.0f;
-			dir = DERECHA;
-		}
-		if (IsKeyDown(KEY_LEFT))
-		{
-			playerPos.x -= 2.0f;
-			dir = IZQUIERDA;
-		}
-		if (IsKeyDown(KEY_UP))
-		{
-			playerPos.y -= 2.0f;
-			dir = ARRIBA;
-		}
-		if (IsKeyDown(KEY_DOWN))
-		{
-			playerPos.y += 2.0f;
-			dir = ABAJO;
-		}
-		if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP))
-		{
-			playerPos.x += 0.5f;
-			playerPos.y -= 0.5f;
-			dir = DIAGONAL1;
-		}
-		if (IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_UP))
-		{
-			playerPos.x -= 0.5f;
-			playerPos.y -= 0.5f;
-			dir = DIAGONAL2;
-		}
-		if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT))
-		{
-			playerPos.x += 0.5f;
-			playerPos.y += 0.5f;
-			dir = DIAGONAL3;
-		}
-		if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_LEFT))
-		{
-			playerPos.y += 0.5f;
-			playerPos.x -= 0.5f;
-			dir = DIAGONAL4;
-		}
-		else {
-
-			dir = IDLE;
-
-		}
+	    if (!moved) {
+	        dir = IDLE;
+	    }
+	    
+	    // Add bounds checking before applying movement
+	    if (nextX >= 0 && nextX <= screenWidth - 128 &&
+	        nextY >= 0 && nextY <= screenHeight - 128) {
+	        playerPos.x = nextX;
+	        playerPos.y = nextY;
+	    }
 	}
 	friend class Enemy;
 
@@ -158,16 +171,14 @@ public:
 
 };
 
-class Enemy :public Entity {
-
+class Enemy : public Entity {
 public:
-	Enemy(int hp, int vel) : Entity(hp, vel){
-		int posicion = pos();
-		if (posicion == 1) {
-
-			playerPos = { ((float)screenWidth / 2) + 128 + 128 / 2,  128 / 2 };
-		}
-		if (posicion == 2) {
+    Enemy(int hp, int vel) : Entity(hp, vel, {0,0}) {
+        int posicion = pos();
+        if (posicion == 1) {
+            playerPos = { ((float)screenWidth / 2) + 128,  128 / 2 };
+        }
+        if (posicion == 2) {
 			playerPos = { 128 + 128 / 2, ((float)screenHeight / 2) + 128 / 2 };
 
 		}
@@ -178,32 +189,24 @@ public:
 		if (posicion == 4) {
 			playerPos = { -128 - 128 / 2, ((float)screenHeight / 2) + 128 / 2 };
 
-		}
-		
-	
-	}
+			}
+    }
 
 	void MovementEnemy(Player p) {
+	    Vector2 player = p.GetPosition();
+	    if (playerPos.x < player.x) {
+	        playerPos.x += vel;  // Changed from -= to +=
+	    }
+	    else {
+	        playerPos.x -= vel;  // Changed from += to -=
+	    }
 
-		Vector2 player = p.GetPosition();
-		if (playerPos.x < player.x) {
-			playerPos.x -= vel;
-
-		}
-		else {
-			playerPos.x += vel;
-
-		}
-
-		if (playerPos.y < player.y) {
-			playerPos.y -= vel;
-
-		}
-		else {
-			playerPos.y += vel;
-
-		}
-
+	    if (playerPos.y < player.y) {
+	        playerPos.y += vel;  // Changed from -= to +=
+	    }
+	    else {
+	        playerPos.y -= vel;  // Changed from += to -=
+	    }
 	}
 
 
@@ -259,76 +262,76 @@ public:
 
 };
 
-class Shoot : public Entity{
+class Shoot : public Entity {
 public:
-	Shoot(Player p) : Entity(1,1) {
-	
-		Vector2 shootFrom = p.GetPosition();
-
-		shootFrom = { shootFrom.x / 2, shootFrom.y / 2 };
-
-		while (status == true) {
-			if (IsKeyDown(KEY_RIGHT))
-			{
-				playerPos.x += 2.0f;
-				dir = DERECHA;
-			}
-			if (IsKeyDown(KEY_LEFT))
-			{
-				playerPos.x -= 2.0f;
-				dir = IZQUIERDA;
-			}
-			if (IsKeyDown(KEY_UP))
-			{
-				playerPos.y -= 2.0f;
-				dir = ARRIBA;
-			}
-			if (IsKeyDown(KEY_DOWN))
-			{
-				playerPos.y += 2.0f;
-				dir = ABAJO;
-			}
-			if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP))
-			{
-				playerPos.x += 0.5f;
-				playerPos.y -= 0.5f;
-				dir = DIAGONAL1;
-			}
-			if (IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_UP))
-			{
-				playerPos.x -= 0.5f;
-				playerPos.y -= 0.5f;
-				dir = DIAGONAL2;
-			}
-			if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_RIGHT))
-			{
-				playerPos.x += 0.5f;
-				playerPos.y += 0.5f;
-				dir = DIAGONAL3;
-			}
-			if (IsKeyDown(KEY_DOWN) && IsKeyDown(KEY_LEFT))
-			{
-				playerPos.y += 0.5f;
-				playerPos.x -= 0.5f;
-				dir = DIAGONAL4;
-			}
-
-
-			 
-		}
-
-	
-	
-	
-	}
-public:
-
-
-
-
+    Shoot(Player p) : Entity(1, 1, p.GetPosition()) {
+        playerPos = p.GetPosition();
+        // Set direction based on arrow keys instead of player direction
+        if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP)) {
+            dir = DIAGONAL1;
+        }
+        else if (IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_UP)) {
+            dir = DIAGONAL2;
+        }
+        else if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_DOWN)) {
+            dir = DIAGONAL3;
+        }
+        else if (IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_DOWN)) {
+            dir = DIAGONAL4;
+        }
+        else if (IsKeyDown(KEY_RIGHT)) {
+            dir = DERECHA;
+        }
+        else if (IsKeyDown(KEY_LEFT)) {
+            dir = IZQUIERDA;
+        }
+        else if (IsKeyDown(KEY_UP)) {
+            dir = ARRIBA;
+        }
+        else if (IsKeyDown(KEY_DOWN)) {
+            dir = ABAJO;
+        }
+        else {
+            dir = p.GetDir(); // Fallback to player direction if no arrow key pressed
+        }
+    }
+    
+    // Add method to update bullet position
+    void UpdatePosition() {
+        switch(dir) {
+            case ARRIBA:
+                playerPos.y -= 5.0f;
+                break;
+            case ABAJO:
+                playerPos.y += 5.0f;
+                break;
+            case DERECHA:
+                playerPos.x += 5.0f;
+                break;
+            case IZQUIERDA:
+                playerPos.x -= 5.0f;
+                break;
+            case DIAGONAL1:
+                playerPos.x += 5.0f;
+                playerPos.y -= 5.0f;
+                break;
+            case DIAGONAL2:
+                playerPos.x -= 5.0f;
+                playerPos.y -= 5.0f;
+                break;
+            case DIAGONAL3:
+                playerPos.x += 5.0f;
+                playerPos.y += 5.0f;
+                break;
+            case DIAGONAL4:
+                playerPos.x -= 5.0f;
+                playerPos.y += 5.0f;
+                break;
+            default:
+                break;
+        }
+    }
 };
-
-
 
 class level  {
 
@@ -343,101 +346,70 @@ class level  {
 
 
 
-int main ()
-{
-	// Tell the window to use vsync and work on high DPI displays
-	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
+int main() {
+    // Tell the window to use vsync and work on high DPI displays
+    SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
-	// Create the window and OpenGL context
-	InitWindow(1280, 800, "Hello Raylib");
+    // Create the window and OpenGL context
+    InitWindow(screenWidth, screenHeight, "Hello Raylib");
 
-	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
-	SearchAndSetResourceDir("resources");
+    // Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
+    SearchAndSetResourceDir("resources");
 
-	// Load a texture from the resources directory
-	Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
-	
-	const int screenHeight = 800;
-	const int screenWidth = 1280;
-	SetTargetFPS(60);
-
-	int seconds = 4;
-
-		//Vector2 ballPosition = { (float)screenWidth / 2, (float)screenHeight / 2 };
-	// game loop
-		Player p(1,2);
-	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
-	{
-
-
-
-		p.Movement();
-			
-
-
-		//-------------------------------------- DRAWING -------------------------------------------
-		BeginDrawing();
-
-		ClearBackground(RAYWHITE);
-		if (p.GetDir() == ARRIBA)
-		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-		}
-		else if (p.GetDir() == ABAJO) 
-		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-		
-		}
-		else if (p.GetDir() == IZQUIERDA)
-		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-
-		}
-		else if (p.GetDir() == DERECHA)
-		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-
-		}
-		else if (p.GetDir() == DIAGONAL1)
-		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-
-		}
-		else if (p.GetDir() == DIAGONAL2)
-		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-
-		}
-		else if (p.GetDir() == DIAGONAL3)
-		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-
-		}
-		else if (p.GetDir() == DIAGONAL4)
-		{
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-
-		}
-		else {
-		
-			DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
-		}
-		
-		if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) ) {
-		
-			Shoot hola(p);
-		
-		}
-
-		EndDrawing();
-			
-	}
-
-	// cleanup
-	// unload our texture so it can be cleaned up
-	UnloadTexture(logo);
-
-	// destroy the window and cleanup the OpenGL context
-	CloseWindow();
-	return 0;
+    // Load a texture from the resources directory
+    Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
+    Texture bulletTex = LoadTexture("Bullet_1.png");
+    
+    SetTargetFPS(60);
+    
+    Player p(1,2);
+    std::vector<Shoot> bullets;
+    
+    while (!WindowShouldClose()) {
+        p.Movement();
+        
+        // Handle bullet creation with arrow keys
+        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) || 
+            IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
+            // Add rate limiting for bullets
+            static float shootTimer = 0.0f;
+            if (shootTimer <= 0) {
+                bullets.push_back(Shoot(p));
+                shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
+            }
+            shootTimer -= GetFrameTime();
+        }
+        
+        // Update and remove off-screen bullets
+        bullets.erase(
+            std::remove_if(bullets.begin(), bullets.end(),
+                [](const Shoot& bullet) {
+                    Vector2 pos = bullet.GetPosition();
+                    return pos.x < 0 || pos.x > screenWidth ||
+                           pos.y < 0 || pos.y > screenHeight;
+                }
+            ),
+            bullets.end()
+        );
+        
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        
+        // Draw player
+        DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+        
+        // Update and draw bullets using bullet texture
+        for(auto& bullet : bullets) {
+            bullet.UpdatePosition();
+            DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
+        }
+        
+        EndDrawing();
+    }
+    
+    // Cleanup
+    UnloadTexture(logo);
+    UnloadTexture(bulletTex);  // Don't forget to unload bullet texture
+    CloseWindow();
+    return 0;
 }
