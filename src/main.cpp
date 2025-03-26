@@ -14,7 +14,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 
 const int screenWidth = 1280;
 const int screenHeight = 800;
-
+class Player;
+class Enemy;
 enum Direccion 
 {
 ARRIBA,
@@ -32,12 +33,28 @@ class Colision {
 public:
 
 	Colision(Vector2 posicion) {
-
+        BeginDrawing();
 		float widthThing = posicion.x + 128;
 		float HeightThing = posicion.y - 128;
+
+       DrawRectangle( posicion.x, posicion.y, widthThing, HeightThing, BLUE);
 		Square = { widthThing, HeightThing,35,56 };
 	
 	}
+
+   void ColisionPlayer(Vector2 posicion) {
+
+       float widthThing =  128;
+       float HeightThing =  128;
+
+       DrawRectangle(posicion.x, posicion.y, widthThing, HeightThing, BLUE);
+    
+    
+    }
+
+    
+
+    
 protected:
 	Rectangle Square;
 
@@ -157,6 +174,8 @@ public:
 	    if (!moved) {
 	        dir = IDLE;
 	    }
+
+        ColisionPlayer(playerPos);
 	    
 	    // Add bounds checking before applying movement
 	    if (nextX >= 0 && nextX <= screenWidth - 128 &&
@@ -166,7 +185,7 @@ public:
 	    }
 	}
 	friend class Enemy;
-
+    friend class Colision;
 
 
 };
@@ -191,7 +210,7 @@ public:
 
 			}
     }
-
+    friend class Colision;
 	void MovementEnemy(Player p) {
 	    Vector2 player = p.GetPosition();
 	    if (playerPos.x < player.x) {
