@@ -34,20 +34,18 @@ public:
 
 	Colision(Vector2 posicion) {
         BeginDrawing();
-		float widthThing = posicion.x + 128;
-		float HeightThing = posicion.y - 128;
+		float widthThing = 128;
+		float HeightThing = 128;
 
        DrawRectangle( posicion.x, posicion.y, widthThing, HeightThing, BLUE);
-		Square = { widthThing, HeightThing,35,56 };
+		Square = { widthThing, HeightThing };
 	
 	}
 
    void ColisionPlayer(Vector2 posicion) {
 
-       float widthThing =  128;
-       float HeightThing =  128;
 
-       DrawRectangle(posicion.x, posicion.y, widthThing, HeightThing, BLUE);
+      DrawRectangle(posicion.x, posicion.y, Square.x, Square.y, BLUE);
     
     
     }
@@ -320,6 +318,7 @@ public:
         switch(dir) {
             case ARRIBA:
                 playerPos.y -= 5.0f;
+
                 break;
             case ABAJO:
                 playerPos.y += 5.0f;
