@@ -12,10 +12,12 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include <vector>  // Add this include for std::vector
 
+
 const int screenWidth = 1280;
 const int screenHeight = 800;
 class Player;
 class Enemy;
+
 enum Direccion 
 {
 ARRIBA,
@@ -44,8 +46,8 @@ public:
 
    void ColisionPlayer(Vector2 posicion) {
 
-
-      DrawRectangle(posicion.x, posicion.y, Square.x, Square.y, BLUE);
+       DrawRectangle(posicion.x, posicion.y, Square.x, Square.y, BLUE);
+      
     
     
     }
@@ -83,13 +85,13 @@ public:
 		return a;
 	
 	} 
-
+    Direccion dir;
 	
 protected:
 	int hp;
 	int vel;
 	Vector2 playerPos;
-	Direccion dir;
+	
 	bool status = Alive();
 	
 
@@ -101,6 +103,7 @@ class Player : public Entity {
 private:
 	int lives;
 	int coins;
+    
 
 public:
 
@@ -108,20 +111,26 @@ public:
 		this->coins = 0;
 		this->lives = 3;
 		this->dir = ARRIBA;
+        dire = 1;
 	}
-
+    int dire;
 
 	void Movement() {
+
+        BeginDrawing();
+         Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
+         Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
 	    bool moved = false;
 	    float nextX = playerPos.x;
 	    float nextY = playerPos.y;
-	    
+        
 	    if (IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
 	    {
 	        nextX += 2.0f;
 	        nextY -= 2.0f;
 	        dir = DIAGONAL1;
 	        moved = true;
+            
 	    }
 	    else if (IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
 	    {
@@ -129,6 +138,7 @@ public:
 	        nextY -= 2.0f;
 	        dir = DIAGONAL2;
 	        moved = true;
+            
 	    }
 	    else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_D))
 	    {
@@ -136,6 +146,7 @@ public:
 	        nextY += 2.0f;
 	        dir = DIAGONAL3;
 	        moved = true;
+            
 	    }
 	    else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_A))
 	    {
@@ -143,30 +154,36 @@ public:
 	        nextY += 2.0f;
 	        dir = DIAGONAL4;
 	        moved = true;
+            
 	    }
 	    else if (IsKeyDown(KEY_D))
 	    {
 	        nextX += 2.0f;
 	        dir = DERECHA;
 	        moved = true;
+            
 	    }
 	    else if (IsKeyDown(KEY_A))
 	    {
 	        nextX -= 2.0f;
 	        dir = IZQUIERDA;
 	        moved = true;
+          
 	    }
 	    else if (IsKeyDown(KEY_W))
 	    {
 	        nextY -= 2.0f;
 	        dir = ARRIBA;
 	        moved = true;
+            
 	    }
 	    else if (IsKeyDown(KEY_S))
 	    {
 	        nextY += 2.0f;
 	        dir = ABAJO;
 	        moved = true;
+
+         
 	    }
 
 	    if (!moved) {
@@ -181,6 +198,8 @@ public:
 	        playerPos.x = nextX;
 	        playerPos.y = nextY;
 	    }
+
+  
 	}
 	friend class Enemy;
     friend class Colision;
@@ -376,12 +395,18 @@ int main() {
 
     // Load a texture from the resources directory
     Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
+
+    Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
+    Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
+
     Texture bulletTex = LoadTexture("Bullet_1.png");
+    
     
     SetTargetFPS(60);
     
     Player p(1,2);
     std::vector<Shoot> bullets;
+    int dire = 1;
     
     while (!WindowShouldClose()) {
         p.Movement();
@@ -414,7 +439,56 @@ int main() {
         ClearBackground(RAYWHITE);
         
         // Draw player
-        DrawTexture(logo, p.GetPosition().x, p.GetPosition().y, WHITE);
+        
+        if (p.dire == DIAGONAL1)
+        {
+            
+        }
+        else if (p.dire == DIAGONAL2)
+        {
+            
+        }
+        else if (p.dire == DIAGONAL3)
+        {
+            
+        }
+        else if (p.dire == DIAGONAL4)
+        {
+            
+        }
+        else if (p.dire == ARRIBA)
+        {
+           
+        }
+        else if (p.dire == DERECHA)
+        {
+          
+        }
+        else if (p.dire == IZQUIERDA)
+        {
+            
+        }
+        else if (p.dire == ABAJO)
+        {
+           
+
+            if (dire % 2 == 0) {
+
+                DrawTexture(Abajo1, p.GetPosition().x, p.GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Abajo2, p.GetPosition().x,p.GetPosition().y, WHITE);
+
+            }
+            dire++;
+        }
+        else if (p.dir == IDLE) {
+        
+        
+        }
         
         // Update and draw bullets using bullet texture
         for(auto& bullet : bullets) {
