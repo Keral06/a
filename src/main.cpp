@@ -9,6 +9,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 
 #include "raylib.h"
 
+
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include <vector>  // Add this include for std::vector
 
@@ -55,51 +56,24 @@ public:
     
     }
 
-   void ColisionOgre(Player p, Orc o) {
+   void ColisionMonster(Player p) {
 
-       bool Check = CheckCollisionRecs(p.Square, o.Square);                                          
+       bool Check = CheckCollisionRecs(p.Square, Square);                                          
+
+
+
+
+   }
+   void BulletColision(Shoot p) {
+
+       bool Check = CheckCollisionRecs(p.Square, Square);
 
 
 
 
    }
-   void ColisionOgre(Player p, Ogre o) {
 
 
-       bool Check = CheckCollisionRecs(p.Square, o.Square);
-
-
-   }
-   void ColisionOgre(Player p, Mummy o) {
-
-
-       bool Check = CheckCollisionRecs(p.Square, o.Square);
-
-
-   }
-
-   void ColisionBulletMummy(Shoot p, Mummy o) {
-
-
-       bool Check = CheckCollisionRecs(p.Square, o.Square);
-
-
-   }
-   void ColisionBulletOrc(Shoot p, Mummy o) {
-
-
-       bool Check = CheckCollisionRecs(p.Square, o.Square);
-
-
-   }
-
-   void ColisionBulletOgre(Shoot p, Mummy o) {
-
-
-       bool Check = CheckCollisionRecs(p.Square, o.Square);
-
-
-   }
 
     
 
@@ -252,6 +226,7 @@ public:
 	}
 	friend class Enemy;
     friend class Colision;
+    friend class Ogre;
 
 
 };
@@ -332,6 +307,31 @@ public:
 	
 	
 	}
+
+    void Update(Player p) {
+
+        if (p.playerPos.x > 0) {
+
+            playerPos = +vel;
+
+        }
+        else {
+
+            playerPos = -vel;
+
+        }
+
+        if (p.playerPos.y > 0) {
+
+            playerPos = +vel;
+        }
+        else {
+
+            playerPos = -vel;
+
+        }
+
+    }
 
     friend class Colision;
 
@@ -607,6 +607,22 @@ int main() {
         }
         
         EndDrawing();
+
+
+
+
+        //creation of enemy vector
+        int og = 0;
+        vector<Ogre>ogres(og);
+        //primero hago una update de los que ya hay y despues lo que tendría que hacer es crear nuevos
+        int aux = 0;
+        while (aux < og) {
+
+            ogres[aux].Update(p);
+
+
+        }
+
     }
     
     // Cleanup
