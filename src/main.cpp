@@ -17,7 +17,9 @@ const int screenWidth = 1280;
 const int screenHeight = 800;
 class Player;
 class Enemy;
-
+class Mummy;
+class Orc;
+class Ogre;
 enum Direccion 
 {
 ARRIBA,
@@ -36,8 +38,8 @@ public:
 
 	Colision(Vector2 posicion) {
         BeginDrawing();
-		float widthThing = 128;
-		float HeightThing = 128;
+		float widthThing = 64;
+		float HeightThing = 64;
 
        DrawRectangle( posicion.x, posicion.y, widthThing, HeightThing, BLUE);
 		Square = { widthThing, HeightThing };
@@ -47,10 +49,57 @@ public:
    void ColisionPlayer(Vector2 posicion) {
 
        DrawRectangle(posicion.x, posicion.y, Square.x, Square.y, BLUE);
-      
+       Square.x = posicion.x;
+       Square.y = posicion.y;
     
     
     }
+
+   void ColisionOgre(Player p, Orc o) {
+
+       bool Check = CheckCollisionRecs(p.Square, o.Square);                                          
+
+
+
+
+   }
+   void ColisionOgre(Player p, Ogre o) {
+
+
+       bool Check = CheckCollisionRecs(p.Square, o.Square);
+
+
+   }
+   void ColisionOgre(Player p, Mummy o) {
+
+
+       bool Check = CheckCollisionRecs(p.Square, o.Square);
+
+
+   }
+
+   void ColisionBulletMummy(Shoot p, Mummy o) {
+
+
+       bool Check = CheckCollisionRecs(p.Square, o.Square);
+
+
+   }
+   void ColisionBulletOrc(Shoot p, Mummy o) {
+
+
+       bool Check = CheckCollisionRecs(p.Square, o.Square);
+
+
+   }
+
+   void ColisionBulletOgre(Shoot p, Mummy o) {
+
+
+       bool Check = CheckCollisionRecs(p.Square, o.Square);
+
+
+   }
 
     
 
@@ -268,7 +317,8 @@ public:
 
 	
 
-	
+    friend class Colision;
+
 
 
 };
@@ -283,6 +333,7 @@ public:
 	
 	}
 
+    friend class Colision;
 
 };
 class Mummy : public Enemy {
@@ -294,6 +345,7 @@ public:
 
 
 	}
+    friend class Colision;
 
 
 };
@@ -301,7 +353,7 @@ public:
 class Shoot : public Entity {
 public:
     Shoot(Player p) : Entity(1, 1, p.GetPosition()) {
-        playerPos = p.GetPosition();
+        playerPos = { p.GetPosition().x -64/2, p.GetPosition().y -64/2};
         // Set direction based on arrow keys instead of player direction
         if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP)) {
             dir = DIAGONAL1;
@@ -371,9 +423,63 @@ public:
 };
 
 class level  {
+protected:
+    int levels;
+
+
+public:
+
+    level() {
+
+        levels = 1;
+
+    }
+
+   void LevelUp() {
+
+        levels++;
+
+    }
+
+};
+class Stage : public level {
+
+protected:
+    int stage;
+public:
+
+    Stage();
+
+    Stage() : level(){
+
+        stage = 1;
+
+    }
+    void StageUp() {
+
+        stage++;
+
+    }
+
+   int CheckStage() {
+
+       return stage;
+
+    }
 
 
 
+};
+class Game {
+
+public:
+
+    Game(Player p) {
+
+        Stage();
+
+
+    }
 
 
 };
@@ -397,7 +503,11 @@ int main() {
     Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
 
     Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
-    Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
+    Texture Abajo = LoadTexture("64x64/personaje.adelante1.png");
+    Texture Abajo2 = LoadTexture("64x64/personaje.adelante3.png");
+    Texture Diagonal1 = LoadTexture("64x64/personaje.derecha.png");
+    Texture Diagonal1 = LoadTexture("64x64/personaje.izquierda.png");
+    Texture Atras = LoadTexture("64x64/personaje.detras.png");
 
     Texture bulletTex = LoadTexture("Bullet_1.png");
     
@@ -407,7 +517,7 @@ int main() {
     Player p(1,2);
     std::vector<Shoot> bullets;
     int dire = 1;
-    
+    Game();
     while (!WindowShouldClose()) {
         p.Movement();
         
@@ -442,31 +552,31 @@ int main() {
         
         if (p.dire == DIAGONAL1)
         {
-            
+            DrawTexture(Diagonal2, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
         else if (p.dire == DIAGONAL2)
         {
-            
+            DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
         else if (p.dire == DIAGONAL3)
         {
-            
+            DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
         else if (p.dire == DIAGONAL4)
         {
-            
+            DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
         else if (p.dire == ARRIBA)
         {
-           
+            DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
         else if (p.dire == DERECHA)
         {
-          
+            DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
         else if (p.dire == IZQUIERDA)
         {
-            
+            DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
         else if (p.dire == ABAJO)
         {
@@ -487,7 +597,7 @@ int main() {
         }
         else if (p.dir == IDLE) {
         
-        
+            DrawTexture(Abajo, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
         
         // Update and draw bullets using bullet texture
