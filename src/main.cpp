@@ -56,14 +56,16 @@ public:
     
     }
 
-   void ColisionMonster(Player p) {
+   virtual void ColisionMonster(Player p) {
 
-       bool Check = CheckCollisionRecs(p.Square, Square);                                          
+       bool Check = CheckCollisionRecs(p.Square, Square); 
+
+      
 
 
 
 
-   }
+    }
    void BulletColision(Shoot p) {
 
        bool Check = CheckCollisionRecs(p.Square, Square);
@@ -101,6 +103,8 @@ public:
 	}
 	Vector2 GetPosition() const { return this->playerPos; }
 	Direccion GetDir() const { return this->dir; }
+
+    void Death() = 0;
 
 	int pos(){
 	
@@ -333,6 +337,20 @@ public:
 
     }
 
+     void ColisionMonster(Player p) override {
+
+        bool Check = CheckCollisionRecs(p.Square, Square);
+
+        if(Check){p.Death() }
+
+
+
+
+
+
+
+    }
+
     friend class Colision;
 
 };
@@ -515,6 +533,11 @@ int main() {
     SetTargetFPS(60);
     
     Player p(1,2);
+
+    //creation of enemy vector
+    int og = 0;
+    vector<Ogre>ogres(og);
+
     std::vector<Shoot> bullets;
     int dire = 1;
     Game();
@@ -611,15 +634,13 @@ int main() {
 
 
 
-        //creation of enemy vector
-        int og = 0;
-        vector<Ogre>ogres(og);
+        
         //primero hago una update de los que ya hay y despues lo que tendría que hacer es crear nuevos
         int aux = 0;
         while (aux < og) {
 
             ogres[aux].Update(p);
-
+            ogres[aux].ColisionMonster(p);
 
         }
 
