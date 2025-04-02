@@ -50,13 +50,12 @@ public:
    void ColisionPlayer(Vector2 posicion) {
 
        DrawRectangle(posicion.x, posicion.y, Square.x, Square.y, BLUE);
-       Square.x = posicion.x;
-       Square.y = posicion.y;
+       
     
     
     }
 
-   virtual void ColisionMonster(Player p) {
+  /* virtual void ColisionMonster(Player p) {
 
        bool Check = CheckCollisionRecs(p.Square, Square); 
 
@@ -65,15 +64,16 @@ public:
 
 
 
-    }
-   void BulletColision(Shoot p) {
+    }*/
+  /* 
+   void BulletColision(Entity p) {
 
-       bool Check = CheckCollisionRecs(p.Square, Square);
+       bool Check = CheckCollisionRecs(this->Square, p.Square);
 
 
 
 
-   }
+   }*/
 
 
 
@@ -104,7 +104,7 @@ public:
 	Vector2 GetPosition() const { return this->playerPos; }
 	Direccion GetDir() const { return this->dir; }
 
-    void Death() = 0;
+   
 
 	int pos(){
 	
@@ -316,32 +316,30 @@ public:
 
         if (p.playerPos.x > 0) {
 
-            playerPos = +vel;
+            playerPos.x +=vel;
 
         }
         else {
 
-            playerPos = -vel;
+            playerPos.x -=vel;
 
         }
 
         if (p.playerPos.y > 0) {
 
-            playerPos = +vel;
+            playerPos.y +=vel;
         }
         else {
 
-            playerPos = -vel;
+            playerPos.y -=vel;
 
         }
 
     }
 
-     void ColisionMonster(Player p) override {
+     /*void ColisionMonster(Player p) override {
 
-        bool Check = CheckCollisionRecs(p.Square, Square);
-
-        if(Check){p.Death() }
+        
 
 
 
@@ -349,7 +347,7 @@ public:
 
 
 
-    }
+    }*/
 
     friend class Colision;
 
@@ -468,11 +466,11 @@ public:
 
     Stage();
 
-    Stage() : level(){
+    /*Stage() : level() {
 
         stage = 1;
 
-    }
+    }*/
     void StageUp() {
 
         stage++;
@@ -524,23 +522,23 @@ int main() {
     Texture Abajo = LoadTexture("64x64/personaje.adelante1.png");
     Texture Abajo2 = LoadTexture("64x64/personaje.adelante3.png");
     Texture Diagonal1 = LoadTexture("64x64/personaje.derecha.png");
-    Texture Diagonal1 = LoadTexture("64x64/personaje.izquierda.png");
+    Texture Diagonal2 = LoadTexture("64x64/personaje.izquierda.png");
     Texture Atras = LoadTexture("64x64/personaje.detras.png");
 
     Texture bulletTex = LoadTexture("Bullet_1.png");
     
     
     SetTargetFPS(60);
-    
     Player p(1,2);
 
     //creation of enemy vector
     int og = 0;
-    vector<Ogre>ogres(og);
+    //vector<Ogre> ogres(og);
+    
 
     std::vector<Shoot> bullets;
     int dire = 1;
-    Game();
+   
     while (!WindowShouldClose()) {
         p.Movement();
         
@@ -636,13 +634,13 @@ int main() {
 
         
         //primero hago una update de los que ya hay y despues lo que tendría que hacer es crear nuevos
-        int aux = 0;
+       /* int aux = 0;
         while (aux < og) {
 
             ogres[aux].Update(p);
             ogres[aux].ColisionMonster(p);
 
-        }
+        }*/
 
     }
     
