@@ -369,7 +369,7 @@ public:
 class Shoot : public Entity {
 public:
     Shoot(Player p) : Entity(1, 1, p.GetPosition()) {
-        playerPos = { p.GetPosition().x -64/2, p.GetPosition().y -64/2};
+        playerPos = { p.GetPosition().x +65/2, p.GetPosition().y +(64)};
         // Set direction based on arrow keys instead of player direction
         if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP)) {
             dir = DIAGONAL1;
@@ -435,7 +435,11 @@ public:
             default:
                 break;
         }
+
+
     }
+
+  
 };
 
 class level  {
@@ -571,35 +575,35 @@ int main() {
         
         // Draw player
         
-        if (p.dire == DIAGONAL1)
+        if (p.dir == DIAGONAL1)
         {
             DrawTexture(Diagonal2, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
-        else if (p.dire == DIAGONAL2)
+        else if (p.dir == DIAGONAL2)
         {
             DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
-        else if (p.dire == DIAGONAL3)
+        else if (p.dir == DIAGONAL3)
         {
             DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
-        else if (p.dire == DIAGONAL4)
+        else if (p.dir == DIAGONAL4)
         {
             DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
-        else if (p.dire == ARRIBA)
+        else if (p.dir == ARRIBA)
         {
             DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
-        else if (p.dire == DERECHA)
+        else if (p.dir == DERECHA)
         {
             DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
-        else if (p.dire == IZQUIERDA)
+        else if (p.dir == IZQUIERDA)
         {
             DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
         }
-        else if (p.dire == ABAJO)
+        else if (p.dir == ABAJO)
         {
            
 
