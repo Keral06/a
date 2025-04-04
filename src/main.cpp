@@ -43,14 +43,15 @@ public:
 		float HeightThing = 64;
 
        DrawRectangle( posicion.x, posicion.y, widthThing, HeightThing, BLUE);
-		Square = { widthThing, HeightThing };
+		Square = {posicion.x,posicion.y, widthThing, HeightThing };
 	
 	}
 
    void ColisionPlayer(Vector2 posicion) {
 
-       DrawRectangle(posicion.x, posicion.y, Square.x, Square.y, BLUE);
-       
+       DrawRectangle(posicion.x, posicion.y,64,64, BLUE);
+       Square.x = posicion.x;
+       Square.y = posicion.y;
     
     
     }
@@ -271,7 +272,7 @@ public:
     
     
     }
-	void Movement(Ogre a) {
+	void Movement() {
 
         BeginDrawing();
          Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
@@ -358,7 +359,7 @@ public:
         }
         else {
         
-            Death(a);
+            Death();
         
         
         
@@ -368,7 +369,7 @@ public:
 
   
 	}
-    void Death(Ogre a) {
+    void Death() {
     
     
     
@@ -442,7 +443,7 @@ public:
 	
 
     friend class Colision;
-    friend class Player;
+
 
 
 };
@@ -461,10 +462,15 @@ public:
 	
 	
 	}
-    bool CheckColisions(Player p) {
+    bool CheckColisions(Player &p) {
     
         bool check = CheckCollisionRecs(this->Square, p.Square);
-        return check;
+        if (check == true) {
+        
+            p.status = false;
+        }
+
+        return p.status;
     
     }
 
@@ -716,7 +722,7 @@ int main() {
     int dire = 1;
 
     while (!WindowShouldClose()) {
-        p.Movement(enemigo);
+        p.Movement();
         p.Draw();
 
         // Handle bullet creation with arrow keys
@@ -748,7 +754,7 @@ int main() {
 
         // Draw player
         
-
+        enemigo.CheckColisions(p);
         if (p.status == true) {
             enemigo.MovementEnemy(p);
 
@@ -757,12 +763,7 @@ int main() {
             if (ayxi == 100) { ayxi = 0; }
         }
 
-        if (enemigo.CheckColisions(p)) {
-        
-            p.status == false;
-
-        
-        }
+       
 
 
 
