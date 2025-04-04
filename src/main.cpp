@@ -136,16 +136,8 @@ private:
     Texture Diagonal23 = LoadTexture("64x64/personaje.izquierda3.png");
     Texture Atras1 = LoadTexture("64x64/personaje.detras1.png");
     Texture Atras2 = LoadTexture("64x64/personaje.detras2.png");
-
-
-    Texture Muerte1 = LoadTexture("effects/muerte1.png");
-    Texture Muerte2 = LoadTexture("effects/muerte2.png");
-    Texture Muerte3 = LoadTexture("effects/muerte3.png");
-    Texture Muerte4 = LoadTexture("effects/muerte4.png");
-
-
     bool status;
-    int animationDeathAssist;
+
 public:
     friend int main();
 	Player(int hp, int vel) : Entity(hp, vel, {(float)screenWidth/2, (float)screenHeight/2}) {
@@ -154,138 +146,137 @@ public:
 		this->dir = ARRIBA;
         dire = 1;
         status = true;
-        animationDeathAssist = 0;
 	}
     int dire;
     void Draw() {
         BeginDrawing();
-        if(status==true){
-            if (dir == DIAGONAL1) {
-                if (dire <= 50) {
+        if (dir == DIAGONAL1) {
+            if (dire <= 50) {
 
-                    DrawTexture(Diagonal23, GetPosition().x, GetPosition().y, WHITE);
+                DrawTexture(Diagonal23, GetPosition().x, GetPosition().y, WHITE);
 
-
-                }
-                else {
-
-                    DrawTexture(Diagonal22, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == DIAGONAL2)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
-
-                }
 
             }
-            else if (dir == DIAGONAL3)
-            {
-                if (dire <= 50) {
+            else {
 
-                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-                else {
-
-                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == DIAGONAL4)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-                else {
-
-                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == ARRIBA)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == DERECHA)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == IZQUIERDA)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == ABAJO)
-            {
-
-
-                if (dire <= 50) {
-
-                    DrawTexture(Abajo1, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Abajo2, GetPosition().x, GetPosition().y, WHITE);
-
-                }
+                DrawTexture(Diagonal22, GetPosition().x, GetPosition().y, WHITE);
 
             }
-            else if (dir == IDLE) {
+        }
+        else if (dir == DIAGONAL2)
+        {
+            if (dire <= 50) {
 
-                DrawTexture(Abajo, GetPosition().x, GetPosition().y, WHITE);
+                DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
+
+
             }
-            dire++;
-            if (dire == 100) { dire = 0; }
+            else {
+
+                DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+            }
 
         }
+        else if (dir == DIAGONAL3)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+            else {
+
+                DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == DIAGONAL4)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+            else {
+
+                DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == ARRIBA)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == DERECHA)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == IZQUIERDA)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Diagonal12,GetPosition().x, GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == ABAJO)
+        {
+
+
+            if (dire <= 50) {
+
+                DrawTexture(Abajo1, GetPosition().x,GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Abajo2, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+
+        }
+        else if (dir == IDLE) {
+
+            DrawTexture(Abajo, GetPosition().x, GetPosition().y, WHITE);
+        }
+        dire++;
+        if (dire == 100) { dire = 0; }
+    
     
     }
 	void Movement() {
 
-        
+        BeginDrawing();
+         Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
+         Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
 	    bool moved = false;
 	    float nextX = playerPos.x;
 	    float nextY = playerPos.y;
@@ -366,7 +357,6 @@ public:
                 playerPos.y = nextY;
             }
         }
-
         else {
         
             Death();
@@ -381,22 +371,8 @@ public:
 	}
     void Death() {
     
-        if (animationDeathAssist < 50) {
-        
-            DrawTexture(Muerte1, GetPosition().x, GetPosition().y, WHITE);
-        
-        }
-        else if(animationDeathAssist>=50 && animationDeathAssist<100){
-        
-            DrawTexture(Muerte2, GetPosition().x, GetPosition().y, WHITE);
-        
-        }
-        else if (animationDeathAssist >= 100 && animationDeathAssist < 150) {
-        
-            DrawTexture(Muerte3 , GetPosition().x, GetPosition().y, WHITE);
-        
-        }
-    animationDeathAssist++;
+    
+    
     
     
          }
@@ -711,6 +687,13 @@ public:
 
 };
 
+class Background : public Stage{
+private:
+    Texture Stage = LoadTexture("stage/fondo_desierto.png");
+
+
+
+};
 
 
 
