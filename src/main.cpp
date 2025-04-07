@@ -14,8 +14,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include <vector>  // Add this include for std::vector
 
 
-const int screenWidth = 1280;
-const int screenHeight = 800;
+const int screenWidth = 1024/2;
+const int screenHeight = 1024/2;
 class Player;
 class Enemy;
 class Mummy;
@@ -34,7 +34,6 @@ DIAGONAL3,
 DIAGONAL4,
 IDLE
 };
-
 class Colision {
 public:
 
@@ -137,16 +136,8 @@ private:
     Texture Diagonal23 = LoadTexture("64x64/personaje.izquierda3.png");
     Texture Atras1 = LoadTexture("64x64/personaje.detras1.png");
     Texture Atras2 = LoadTexture("64x64/personaje.detras2.png");
-
-
-    Texture Muerte1 = LoadTexture("effects/muerte1.png");
-    Texture Muerte2 = LoadTexture("effects/muerte2.png");
-    Texture Muerte3 = LoadTexture("effects/muerte3.png");
-    Texture Muerte4 = LoadTexture("effects/muerte4.png");
-
-
     bool status;
-    int animationDeathAssist;
+
 public:
     friend int main();
     friend class Game;
@@ -156,7 +147,6 @@ public:
 		this->dir = ARRIBA;
         dire = 1;
         status = true;
-        animationDeathAssist = 0;
 	}
     int dire;
     void Draw() {
@@ -166,129 +156,131 @@ public:
             if (dir == DIAGONAL1) {
                 if (dire <= 50) {
 
-                    DrawTexture(Diagonal23, GetPosition().x, GetPosition().y, WHITE);
+                DrawTexture(Diagonal23, GetPosition().x, GetPosition().y, WHITE);
 
-
-                }
-                else {
-
-                    DrawTexture(Diagonal22, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == DIAGONAL2)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
-
-                }
 
             }
-            else if (dir == DIAGONAL3)
-            {
-                if (dire <= 50) {
+            else {
 
-                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-                else {
-
-                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == DIAGONAL4)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-                else {
-
-                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == ARRIBA)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == DERECHA)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == IZQUIERDA)
-            {
-                if (dire <= 50) {
-
-                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
-
-                }
-            }
-            else if (dir == ABAJO)
-            {
-
-
-                if (dire <= 50) {
-
-                    DrawTexture(Abajo1, GetPosition().x, GetPosition().y, WHITE);
-
-
-                }
-                else {
-
-                    DrawTexture(Abajo2, GetPosition().x, GetPosition().y, WHITE);
-
-                }
+                DrawTexture(Diagonal22, GetPosition().x, GetPosition().y, WHITE);
 
             }
-            else if (dir == IDLE) {
+        }
+        else if (dir == DIAGONAL2)
+        {
+            if (dire <= 50) {
 
-                DrawTexture(Abajo, GetPosition().x, GetPosition().y, WHITE);
+                DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
+
+
             }
-            dire++;
-            if (dire == 100) { dire = 0; }
+            else {
+
+                DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+            }
 
         }
-        /*EndDrawing();*/
+        else if (dir == DIAGONAL3)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+            else {
+
+                DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == DIAGONAL4)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+            else {
+
+                DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == ARRIBA)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == DERECHA)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == IZQUIERDA)
+        {
+            if (dire <= 50) {
+
+                DrawTexture(Diagonal12,GetPosition().x, GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+        }
+        else if (dir == ABAJO)
+        {
+
+
+            if (dire <= 50) {
+
+                DrawTexture(Abajo1, GetPosition().x,GetPosition().y, WHITE);
+
+
+            }
+            else {
+
+                DrawTexture(Abajo2, GetPosition().x, GetPosition().y, WHITE);
+
+            }
+
+        }
+        else if (dir == IDLE) {
+
+            DrawTexture(Abajo, GetPosition().x, GetPosition().y, WHITE);
+        }
+        dire++;
+        if (dire == 100) { dire = 0; }
+    
+    
+
     }
 	void Movement() {
 
-        
+        BeginDrawing();
+         Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
+         Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
 	    bool moved = false;
 	    float nextX = playerPos.x;
 	    float nextY = playerPos.y;
@@ -369,7 +361,6 @@ public:
                 playerPos.y = nextY;
             }
         }
-
         else {
         
             Death();
@@ -384,22 +375,8 @@ public:
 	}
     void Death() {
     
-        if (animationDeathAssist < 50) {
-        
-            DrawTexture(Muerte1, GetPosition().x, GetPosition().y, WHITE);
-        
-        }
-        else if(animationDeathAssist>=50 && animationDeathAssist<100){
-        
-            DrawTexture(Muerte2, GetPosition().x, GetPosition().y, WHITE);
-        
-        }
-        else if (animationDeathAssist >= 100 && animationDeathAssist < 150) {
-        
-            DrawTexture(Muerte3 , GetPosition().x, GetPosition().y, WHITE);
-        
-        }
-    animationDeathAssist++;
+    
+    
     
     
          }
@@ -720,6 +697,7 @@ public:
 //
 //
 //};
+
 class Game {
 private:
     int stage;
@@ -864,6 +842,90 @@ public:
 
 };
 
+class Background : public Stage{
+private:
+
+    Texture suelo = LoadTexture("stage/64x64_fondo_desierto.png");
+    Texture arbol1 = LoadTexture("stage/64x64_cesped_desierto.png");
+    Texture arbol2 = LoadTexture("stage/64x64_cesped_desierto2.png");
+
+public:
+    int time = 0;
+    friend int main();
+    int currentTime = GetTime();
+    void Draw() {
+        BeginDrawing();
+        int x = 0;
+        DrawTexture(suelo, 64, 0, WHITE);
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, 0, WHITE);
+                }
+              
+            }
+            x = x + 64;
+
+        }
+        x = 1024;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, 0, WHITE);
+                }
+
+            }
+            x = x - 64;
+
+        }
+        int y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, 0, y, WHITE);
+                }
+
+            }
+            y = y + 64;
+
+        }
+        y = 1024;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, 0, y, WHITE);
+                }
+
+            }
+            y = y - 64;
+
+        }
+        y = 1024;
+        x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, y, WHITE);
+                }
+
+            }
+            x = x + 64;
+
+        }
+    }
+
+
+};
 
 
 
@@ -882,15 +944,19 @@ int main() {
     // Load a texture from the resources directory
     Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
 
-    
 
     //Texture bulletTex = LoadTexture("Bullet_1.png");
 
 
     SetTargetFPS(60);
     Player p(1, 2);
+
     std::vector<Ogre>enemigo;
     int bulletaux;
+
+    Background desierto;
+    Ogre enemigo;
+
     //creation of enemy vector
     int og = 0;
     //vector<Ogre> ogres(og);
@@ -900,6 +966,7 @@ int main() {
     int dire = 1;
     Game game;
     while (!WindowShouldClose()) {
+
         
         game.GameStart(p,enemigo,bullets, og, ayxi, dire, ogreaux, bulletaux);
        /* ClearBackground(RAYWHITE);*/
@@ -968,7 +1035,7 @@ int main() {
 
 
         
-        //primero hago una update de los que ya hay y despues lo que tendría que hacer es crear nuevos
+        //primero hago una update de los que ya hay y despues lo que tendrï¿½a que hacer es crear nuevos
        /* int aux = 0;
         while (aux < og) {
 
