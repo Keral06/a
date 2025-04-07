@@ -689,7 +689,7 @@ public:
 
 class Background : public Stage{
 private:
-    Texture Stage = LoadTexture("stage/fondo_desierto.png");
+    Texture Stage = LoadTexture("stage/64x64/fondo_desierto.png");
 
 
 
