@@ -14,8 +14,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include <vector>  // Add this include for std::vector
 
 
-const int screenWidth = 1280;
-const int screenHeight = 800;
+const int screenWidth = 1024/2;
+const int screenHeight = 1024/2;
 class Player;
 class Enemy;
 class Mummy;
@@ -33,7 +33,6 @@ DIAGONAL3,
 DIAGONAL4,
 IDLE
 };
-
 class Colision {
 public:
 
@@ -651,13 +650,11 @@ protected:
     int stage;
 public:
 
-    Stage();
-
-    /*Stage() : level() {
+    Stage() : level() {
 
         stage = 1;
 
-    }*/
+    }
     void StageUp() {
 
         stage++;
@@ -689,8 +686,84 @@ public:
 
 class Background : public Stage{
 private:
-    Texture Stage = LoadTexture("stage/fondo_desierto.png");
+    Texture suelo = LoadTexture("stage/64x64_fondo_desierto.png");
+    Texture arbol1 = LoadTexture("stage/64x64_cesped_desierto.png");
+    Texture arbol2 = LoadTexture("stage/64x64_cesped_desierto2.png");
 
+public:
+    int time = 0;
+    friend int main();
+    int currentTime = GetTime();
+    void Draw() {
+        BeginDrawing();
+        int x = 0;
+        DrawTexture(suelo, 64, 0, WHITE);
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, 0, WHITE);
+                }
+              
+            }
+            x = x + 64;
+
+        }
+        x = 1024;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, 0, WHITE);
+                }
+
+            }
+            x = x - 64;
+
+        }
+        int y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, 0, y, WHITE);
+                }
+
+            }
+            y = y + 64;
+
+        }
+        y = 1024;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, 0, y, WHITE);
+                }
+
+            }
+            y = y - 64;
+
+        }
+        y = 1024;
+        x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, y, WHITE);
+                }
+
+            }
+            x = x + 64;
+
+        }
+    }
 
 
 };
@@ -712,13 +785,13 @@ int main() {
     // Load a texture from the resources directory
     Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
 
-    
 
     Texture bulletTex = LoadTexture("Bullet_1.png");
 
 
     SetTargetFPS(60);
     Player p(1, 2);
+    Background desierto;
     Ogre enemigo;
     //creation of enemy vector
     int og = 0;
@@ -729,6 +802,7 @@ int main() {
     int dire = 1;
 
     while (!WindowShouldClose()) {
+        desierto.Draw();
         p.Movement();
         p.Draw();
 
