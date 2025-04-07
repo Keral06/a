@@ -686,6 +686,7 @@ public:
 
 class Background : public Stage{
 private:
+
     Texture suelo = LoadTexture("stage/64x64_fondo_desierto.png");
     Texture arbol1 = LoadTexture("stage/64x64_cesped_desierto.png");
     Texture arbol2 = LoadTexture("stage/64x64_cesped_desierto2.png");
@@ -866,7 +867,7 @@ int main() {
 
 
         
-        //primero hago una update de los que ya hay y despues lo que tendría que hacer es crear nuevos
+        //primero hago una update de los que ya hay y despues lo que tendrï¿½a que hacer es crear nuevos
        /* int aux = 0;
         while (aux < og) {
 
