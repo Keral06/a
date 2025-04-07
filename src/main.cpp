@@ -20,6 +20,7 @@ class Player;
 class Enemy;
 class Mummy;
 class Orc;
+class Shoot;
 class Ogre;
 enum Direccion 
 {
@@ -42,14 +43,14 @@ public:
 		float widthThing = 64;
 		float HeightThing = 64;
 
-       DrawRectangle( posicion.x, posicion.y, widthThing, HeightThing, BLUE);
+       DrawRectangle( posicion.x, posicion.y, widthThing, HeightThing, BLANK);
 		Square = {posicion.x,posicion.y, widthThing, HeightThing };
 	
 	}
 
    void ColisionPlayer(Vector2 posicion) {
 
-       DrawRectangle(posicion.x, posicion.y,64,64, BLUE);
+       DrawRectangle(posicion.x, posicion.y,64,64, BLANK);
        Square.x = posicion.x;
        Square.y = posicion.y;
     
@@ -148,6 +149,7 @@ private:
     int animationDeathAssist;
 public:
     friend int main();
+    friend class Game;
 	Player(int hp, int vel) : Entity(hp, vel, {(float)screenWidth/2, (float)screenHeight/2}) {
 		this->coins = 0;
 		this->lives = 3;
@@ -158,7 +160,8 @@ public:
 	}
     int dire;
     void Draw() {
-        BeginDrawing();
+        //BeginDrawing();
+       
         if(status==true){
             if (dir == DIAGONAL1) {
                 if (dire <= 50) {
@@ -281,7 +284,7 @@ public:
             if (dire == 100) { dire = 0; }
 
         }
-    
+        /*EndDrawing();*/
     }
 	void Movement() {
 
@@ -409,8 +412,9 @@ public:
 
 class Enemy : public Entity {
 public:
+    friend class Shoot;
     Enemy(int hp, int vel) : Entity(hp, vel, {0,0}) {
-        int posicion = 4; /*pos();*/
+        int posicion = pos();
         if (posicion == 1) {
             playerPos = { ((float)screenWidth / 2), 64 };
         }else if (posicion == 2) {
@@ -442,7 +446,15 @@ public:
 	    }
         ColisionPlayer(playerPos);
 	}
+
     
+
+    /*bool ColisionBullet(Shoot s) {
+    
+    
+    
+    }
+    */
 
 protected:
 
@@ -524,7 +536,7 @@ public:
     }
     void Draw() {
     
-    
+        /*BeginDrawing();*/
         if (dire <= 50) {
 
             DrawTexture(Mon2, GetPosition().x, GetPosition().y, WHITE);
@@ -540,7 +552,7 @@ public:
         if (dire == 100) { dire = 0; }
         dire++;
     
-    
+        /*EndDrawing();*/
     
     }
 
@@ -575,6 +587,16 @@ public:
 
 class Shoot : public Entity {
 public:
+    friend class Enemy;
+
+    bool ColisionBullet(Enemy s) {
+
+        bool Check = CheckCollisionRecs(this->Square, s.Square);
+
+        return Check;
+
+
+    }
     Shoot(Player p) : Entity(1, 1, p.GetPosition()) {
         playerPos = { p.GetPosition().x +65/2, p.GetPosition().y +(64)};
         // Set direction based on arrow keys instead of player direction
@@ -642,6 +664,7 @@ public:
             default:
                 break;
         }
+        ColisionPlayer(playerPos);
 
 
     }
@@ -649,63 +672,193 @@ public:
   
 };
 
-class level  {
-protected:
-    int levels;
-
-
-public:
-
-    level() {
-
-        levels = 1;
-
-    }
-
-   void LevelUp() {
-
-        levels++;
-
-    }
-
-};
-class Stage : public level {
-
-protected:
-    int stage;
-public:
-
-    Stage();
-
-    /*Stage() : level() {
-
-        stage = 1;
-
-    }*/
-    void StageUp() {
-
-        stage++;
-
-    }
-
-   int CheckStage() {
-
-       return stage;
-
-    }
-
-
-
-};
+//class level  {
+//protected:
+//    int levels;
+//
+//
+//public:
+//
+//    level() {
+//
+//        levels = 1;
+//
+//    }
+//
+//   void LevelUp() {
+//
+//        levels++;
+//
+//    }
+//
+//};
+//class Stage : public level {
+//
+//protected:
+//    int stage;
+//public:
+//
+//    Stage();
+//
+//    /*Stage() : level() {
+//
+//        stage = 1;
+//
+//    }*/
+//    void StageUp() {
+//
+//        stage++;
+//
+//    }
+//
+//   int CheckStage() {
+//
+//       return stage;
+//
+//    }
+//
+//
+//
+//};
 class Game {
+private:
+    int stage;
+    int level;
+    Texture bulletTex = LoadTexture("Bullet_1.png");
 
 public:
 
-    Game(Player p) {
+    Game() {
+        
+        stage = 1;
+        level = 1;
+      /*  BeginDrawing();*/
 
-        Stage();
+    }
+
+    void GameStart(Player &p, std::vector<Ogre>&enemigo, std::vector<Shoot> &bullets, int &og, int &ayxi, int &dire, int &ogreaux, int&bulletaux) {
+    
+        ClearBackground(BLACK);
+        /*BeginDrawing();*/
+        BeginDrawing();
+
+        p.Movement();
+        p.Draw();
+        // Handle bullet creation with arrow keys
+        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
+            IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
+            // Add rate limiting for bullets
+            static float shootTimer = 0.0f;
+            if (shootTimer <= 0) {
+                bullets.push_back(Shoot(p));
+                shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
+            }
+            shootTimer -= GetFrameTime();
+            
+            
+        }
+
+       
+
+        // Update and remove off-screen bullets
+        bullets.erase(
+            std::remove_if(bullets.begin(), bullets.end(),
+                [](const Shoot& bullet) {
+                    Vector2 pos = bullet.GetPosition();
+                    return pos.x < 0 || pos.x > screenWidth ||
+                        pos.y < 0 || pos.y > screenHeight;
+                }
+            ),
+            bullets.end()
+        );
+       int bulletSize = bullets.size();
+
+      
+
+      /*  BeginDrawing();
+        ClearBackground(RAYWHITE);*/
+
+       if (GetRandomValue(1, 100) == 1 && ogreaux <10) {
+        
+            Ogre auxiliar;
+            enemigo.push_back(auxiliar);
+            ogreaux++;
+        
+        }
+        int i = 0;
+        while (i < ogreaux) {
+        
+            enemigo[i].CheckColisions(p);
+
+            if (p.status == true) {
+            
+                enemigo[i].MovementEnemy(p);
+
+                
+            }
+            
+                enemigo[i].Draw();
+          
+            i++;
+            
+        }
+        i = 0;
+        int j = 0;
+        int aux = 0;
+        while (i < ogreaux) {
+        
+            while (j < bulletSize) {
+            
+                if (bullets[j].ColisionBullet(enemigo[i]) == true) {
+                
+                    aux = i;
+                    while (aux < ogreaux-1) {
+                    
+                        enemigo[aux] = enemigo[aux + 1];
+                        aux++;
+                    
+                    }
+                    enemigo.pop_back();
 
 
+                    aux = j;
+
+                    while (aux < bulletSize-1) {
+                    
+                        bullets[aux] = bullets[aux + 1];
+                        aux++;
+                    }
+
+                    bullets.pop_back();
+                }
+            
+            
+                j++;
+            }
+        
+            i++;
+        
+        
+        }
+
+
+
+        EndDrawing();
+
+
+      
+
+
+        // Update and draw bullets using bullet texture
+        for (auto& bullet : bullets) {
+            bullet.UpdatePosition();
+            DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
+        }
+
+      
+
+                                // Set background color (framebuffer clear color)
+      /*  EndDrawing();*/
     }
 
 
@@ -731,79 +884,85 @@ int main() {
 
     
 
-    Texture bulletTex = LoadTexture("Bullet_1.png");
+    //Texture bulletTex = LoadTexture("Bullet_1.png");
 
 
     SetTargetFPS(60);
     Player p(1, 2);
-    Ogre enemigo;
+    std::vector<Ogre>enemigo;
+    int bulletaux;
     //creation of enemy vector
     int og = 0;
     //vector<Ogre> ogres(og);
     int ayxi = 0;
-
+    int ogreaux = 0;
     std::vector<Shoot> bullets;
     int dire = 1;
-
+    Game game;
     while (!WindowShouldClose()) {
-        p.Movement();
-        p.Draw();
-
-        // Handle bullet creation with arrow keys
-        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
-            IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
-            // Add rate limiting for bullets
-            static float shootTimer = 0.0f;
-            if (shootTimer <= 0) {
-                bullets.push_back(Shoot(p));
-                shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
-            }
-            shootTimer -= GetFrameTime();
-        }
-
-        // Update and remove off-screen bullets
-        bullets.erase(
-            std::remove_if(bullets.begin(), bullets.end(),
-                [](const Shoot& bullet) {
-                    Vector2 pos = bullet.GetPosition();
-                    return pos.x < 0 || pos.x > screenWidth ||
-                        pos.y < 0 || pos.y > screenHeight;
-                }
-            ),
-            bullets.end()
-        );
-
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-
-        // Draw player
         
-        enemigo.CheckColisions(p);
-        if (p.status == true) {
-            enemigo.MovementEnemy(p);
+        game.GameStart(p,enemigo,bullets, og, ayxi, dire, ogreaux, bulletaux);
+       /* ClearBackground(RAYWHITE);*/
+     /*   ClearBackground(RAYWHITE);           */           
+      /*  EndDrawing();*/
+        //p.Movement();
+        //p.Draw();
+
+        //// Handle bullet creation with arrow keys
+        //if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
+        //    IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
+        //    // Add rate limiting for bullets
+        //    static float shootTimer = 0.0f;
+        //    if (shootTimer <= 0) {
+        //        bullets.push_back(Shoot(p));
+        //        shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
+        //    }
+        //    shootTimer -= GetFrameTime();
+        //}
+
+        //// Update and remove off-screen bullets
+        //bullets.erase(
+        //    std::remove_if(bullets.begin(), bullets.end(),
+        //        [](const Shoot& bullet) {
+        //            Vector2 pos = bullet.GetPosition();
+        //            return pos.x < 0 || pos.x > screenWidth ||
+        //                pos.y < 0 || pos.y > screenHeight;
+        //        }
+        //    ),
+        //    bullets.end()
+        //);
+
+        //BeginDrawing();
+        //ClearBackground(RAYWHITE);
+
+        //// Draw player
+        //
+        //enemigo.CheckColisions(p);
+        //if (p.status == true) {
+        //    enemigo.MovementEnemy(p);
 
 
-            ayxi++;
-            if (ayxi == 100) { ayxi = 0; }
-        }
+        //    ayxi++;
+        //    if (ayxi == 100) { ayxi = 0; }
+        //}
 
        
 
 
 
 
-        
+        //
 
-        enemigo.Draw();
-        
-        
-        // Update and draw bullets using bullet texture
-        for(auto& bullet : bullets) {
-            bullet.UpdatePosition();
-            DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
-        }
-        
-        EndDrawing();
+        //enemigo.Draw();
+        //
+        //
+        //// Update and draw bullets using bullet texture
+        //for(auto& bullet : bullets) {
+        //    bullet.UpdatePosition();
+        //    DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
+        //}
+        //
+        //EndDrawing();
 
 
 
@@ -817,12 +976,12 @@ int main() {
             ogres[aux].ColisionMonster(p);
 
         }*/
-
+        
     }
     
     // Cleanup
-    UnloadTexture(logo);
-    UnloadTexture(bulletTex);  // Don't forget to unload bullet texture
+  /*  UnloadTexture(logo);*/
+   /* UnloadTexture(bulletTex);*/  // Don't forget to unload bullet texture
     CloseWindow();
     return 0;
 }
