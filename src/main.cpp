@@ -710,7 +710,7 @@ public:
                         if (bullets[j].ColisionBullet(enemigo[i]) == true) {
                             if (ogreaux == 1) {
                                 enemigo.pop_back();
-
+                                ogreaux--;
                             }
 
                             else if (ogreaux > 1) {
@@ -722,15 +722,15 @@ public:
 
                                 }
                                 enemigo.pop_back();
-
+                                ogreaux--;
 
                             }
-                            ogreaux--;
+                            
                             aux = j;
                             if (bulletSize == 1) {
 
                                 bullets.pop_back();
-
+                                bulletSize--;
                             }
                             else if (bulletSize > 1) {
                                 while (aux < bulletSize - 1) {
@@ -740,7 +740,7 @@ public:
                                 }
 
                                 bullets.pop_back();
-
+                                bulletSize--;
                             }
                             if (ogreaux == 0) { j == bulletSize; }
                             bulletSize--;
