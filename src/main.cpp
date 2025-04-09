@@ -242,6 +242,12 @@ public:
         }
 
     }
+    void ResetPlayer() {
+    
+        playerPos = { (float)screenWidth / 2, (float)screenHeight / 2 };
+        status = true;
+    
+    }
 
     void Movement() {
 
@@ -717,10 +723,10 @@ public:
     void Draw() {
         
      
-        double porcentaje = tiempoTranscurrido / tiempoFinal;
+        double porcentaje = tiempoFinal/tiempoTranscurrido;
         barraAncho = (int)((1024/2) * (1 - porcentaje));
-
-        if (barraAncho % 2 == 0) {
+        
+        if (barraAncho % 6 == 0) {
 
 
          DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
@@ -731,7 +737,7 @@ public:
         
             DrawRectangle(0, 1024 / 2, aux, 32, GREEN);
         }
-
+        
     }
     void IniciarTiempo() {
 
@@ -789,8 +795,7 @@ public:
         /*BeginDrawing();*/
         BeginDrawing();
 
-        p.Movement();
-        p.Draw();
+        
         // Handle bullet creation with arrow keys
         if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
             IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
@@ -834,22 +839,7 @@ public:
         }
         int i = 0;
         if (ogreaux > 0) {
-            while (i < ogreaux) {
-
-                enemigo[i].CheckColisions(p);
-
-                if (p.status == true) {
-
-                    enemigo[i].MovementEnemy(p);
-
-
-                }
-
-                enemigo[i].Draw();
-
-                i++;
-
-            }
+            
             i = 0;
             int j = 0;
             int aux = 0;
@@ -910,18 +900,36 @@ public:
 
 
             }
+            i = 0;
+
+            while (i < deadogres) {
+
+
+                dead[i].Draw();
+                i++;
+
+            }
+            i = 0;
+            while (i < ogreaux) {
+
+                enemigo[i].CheckColisions(p);
+
+                if (p.status == true) {
+
+                    enemigo[i].MovementEnemy(p);
+
+
+                }
+
+                enemigo[i].Draw();
+
+                i++;
+
+            }
         }
         
 
-        i = 0;
-
-        while (i < deadogres) {
         
-        
-            dead[i].Draw();
-            i++;
-        
-        }
 
 
 
@@ -932,7 +940,8 @@ public:
             bullet.UpdatePosition();
             DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
         }
-
+        p.Movement();
+        p.Draw();
         EndDrawing();
         if (p.status == false) {
         
@@ -947,13 +956,14 @@ public:
                 x++;
             }
             x = 0;
-            while (x < bulletaux) {
+            while (x < bulletaux-1) {
                 bullets.pop_back();
                 x++;
             
             
             }
-        
+            tiempoiniciado = false;
+            p.ResetPlayer();
         }
 
         // Set background color (framebuffer clear color)
