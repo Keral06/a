@@ -722,13 +722,13 @@ public:
     }
     void IniciarTiempo() {
 
-        tiempoInicial = (int)GetTime();
+        tiempoInicial = GetTime();
         tiempoFinal = tiempoInicial + 80;
 
     }
     void TiempoQueHaPasado() {
 
-        tiempoTranscurrido = (int) GetTime() - tiempoInicial;
+        tiempoTranscurrido =  GetTime() - tiempoInicial;
 
 
 
@@ -934,7 +934,7 @@ public:
                 x++;
             }
             x = 0;
-            while (x < bulletaux-1) {
+            while (x < bulletaux) {
                 bullets.pop_back();
                 x++;
             
