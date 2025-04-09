@@ -14,6 +14,7 @@ class Mummy;
 class Orc;
 class Shoot;
 class Ogre;
+class time;
 enum Direccion
 {
     ARRIBA,
@@ -348,18 +349,18 @@ public:
     Enemy(int hp, int vel) : Entity(hp, vel, { 0,0 }) {
         int posicion = pos();
         if (posicion == 1) {
-            playerPos = { ((float)screenWidth / 2), 64 };
+            playerPos = { ((float)screenWidth / 2),32 };
         }
         else if (posicion == 2) {
-            playerPos = { 64, ((float)screenHeight / 2) };
+            playerPos = { 32, ((float)screenHeight / 2) };
 
         }
         else if (posicion == 3) {
 
-            playerPos = { ((float)screenWidth / 2), (float)screenHeight - 64 * 2 };
+            playerPos = { ((float)screenWidth / 2), (float)screenHeight - 32 * 2 };
         }
         else {
-            playerPos = { +64, ((float)screenHeight / 2) };
+            playerPos = { 32, ((float)screenHeight / 2) };
 
         }
     }
@@ -474,46 +475,46 @@ public:
         /*EndDrawing();*/
 
     }
-    void Death() {
-    
-    
-        int i = 0;
+    //void Death() {
+    //
+    //
+    //    /*int i = 0;
 
-        while (i < 120) {
-            if (i <= 20) {
-                DrawTexture(Death1, GetPosition().x, GetPosition().y, WHITE);
-            
-            }else if(20 < 1 >= 40) {
-                DrawTexture(Death2, GetPosition().x, GetPosition().y, WHITE);
-            }
-            else if (40 < i >= 60) {
-            
-                DrawTexture(Death3, GetPosition().x, GetPosition().y, WHITE);
-            
-            }
-            else if (60 < i >= 80) {
-            
-                DrawTexture(Death4, GetPosition().x, GetPosition().y, WHITE);
-            }
-            else if (80 < i >= 100) {
-            
-                DrawTexture(Death5, GetPosition().x, GetPosition().y, WHITE);
-            
-            }
-            else {
-            
-                DrawTexture(Death6, GetPosition().x, GetPosition().y, WHITE);
-            
-            }
-        
-        
-        
-            i++;
-        }
-        
-    
-    
-    }
+    //    while (i < 120) {
+    //        if (i <= 20) {
+    //            DrawTexture(Death1, GetPosition().x, GetPosition().y, WHITE);
+    //        
+    //        }else if(20 < 1 >= 40) {
+    //            DrawTexture(Death2, GetPosition().x, GetPosition().y, WHITE);
+    //        }
+    //        else if (40 < i >= 60) {
+    //        
+    //            DrawTexture(Death3, GetPosition().x, GetPosition().y, WHITE);
+    //        
+    //        }
+    //        else if (60 < i >= 80) {
+    //        
+    //            DrawTexture(Death4, GetPosition().x, GetPosition().y, WHITE);
+    //        }
+    //        else if (80 < i >= 100) {
+    //        
+    //            DrawTexture(Death5, GetPosition().x, GetPosition().y, WHITE);
+    //        
+    //        }
+    //        else {
+    //        
+    //            DrawTexture(Death6, GetPosition().x, GetPosition().y, WHITE);
+    //        
+    //        }
+    //    
+    //    
+    //    
+    //        i++;
+    //    }*/
+    //    
+    //
+    //
+    //}
 
     /*void ColisionMonster(Player p) override {
 
@@ -691,7 +692,48 @@ public:
 
 
 };
+class time {
+private:
+    Texture barra = LoadTexture("ui/barra.png");
+    Texture reloj = LoadTexture("ui/reloj.png");
+    double tiempoInicial;
+    double tiempoFinal;
+    double tiempoTranscurrido;
+public:
 
+    time() {
+
+        tiempoFinal = 80;
+        tiempoTranscurrido = 0;
+
+    }
+    void Draw() {
+       
+        double help = tiempoTranscurrido * 520 / 100;
+        DrawRectangle(0, (1024/2),1024/2 , 32, GREEN);
+     
+
+
+    }
+    void IniciarTiempo() {
+
+        tiempoInicial = GetTime();
+        tiempoFinal = tiempoInicial + 80;
+
+    }
+    void TiempoQueHaPasado() {
+
+        tiempoTranscurrido =  GetTime() - tiempoInicial;
+
+
+
+
+    }
+
+
+
+
+};
 
 class Game {
 private:
@@ -699,6 +741,7 @@ private:
     Texture bulletTex = LoadTexture("Bullet_1.png");
     std::vector<DeadOgre>dead;
     int deadogres;
+    bool tiempoiniciado;
 public:
 
     Game() {
@@ -707,11 +750,15 @@ public:
         level Level();
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
-
+        tiempoiniciado = false;
     }
 
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux) {
-
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo) {
+        if (tiempoiniciado = false) {
+        
+            Tiempo.IniciarTiempo();
+            tiempoiniciado = true;
+        }
         ClearBackground(BLACK);
         /*BeginDrawing();*/
         BeginDrawing();
@@ -789,7 +836,7 @@ public:
                             dead.push_back(auxiliari);
                             deadogres++;
 
-                            enemigo[i].Death();
+                           /* enemigo[i].Death();*/
                             if (ogreaux == 1) {
                                 enemigo.pop_back();
                                 ogreaux--;
@@ -825,7 +872,7 @@ public:
                                 bulletSize--;
                             }
                             if (ogreaux == 0) { j == bulletSize; }
-                            bulletSize--;
+                            
                         }
 
 
@@ -838,7 +885,8 @@ public:
 
             }
         }
-
+        Tiempo.TiempoQueHaPasado();
+        Tiempo.Draw();
 
         i = 0;
 
@@ -861,7 +909,27 @@ public:
         }
 
         EndDrawing();
+        if (p.status == false) {
+        
+        
+            p.Death();
 
+            int x = 0;
+
+            while (x < ogreaux) {
+            
+                enemigo.pop_back();
+                x++;
+            }
+            x = 0;
+            while (x < bulletaux) {
+                bullets.pop_back();
+                x++;
+            
+            
+            }
+        
+        }
 
         // Set background color (framebuffer clear color)
 /*  EndDrawing();*/
@@ -1051,8 +1119,9 @@ public:
             x = x + 32;
         }
 
-
     }
+
+   
 
 
 
@@ -1063,23 +1132,7 @@ public:
 
 };
 
-class time : public Stage {
-private:
-    Texture barra = LoadTexture("ui/barra.png");
-    Texture reloj = LoadTexture("ui/reloj.png");
-public:
-    void Draw() {
-        int x = 0;
-        for (int i = 0; i < 16; i++) {
-            DrawTexture(barra, x, 520, WHITE);
-            x = x + 32;
-        }
-        
 
-    }
-    
-
-};
 
 int main() {
     // Tell the window to use vsync and work on high DPI displays
@@ -1097,7 +1150,7 @@ int main() {
 
     //Texture bulletTex = LoadTexture("Bullet_1.png");
 
-
+    time Tiempo();
     SetTargetFPS(60);
     Player p(1, 2);
 
@@ -1119,7 +1172,7 @@ int main() {
     while (!WindowShouldClose()) {
 
 
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux);
+        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui);
         desierto.Draw();
         ui.Draw();
         
