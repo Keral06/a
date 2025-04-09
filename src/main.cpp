@@ -400,10 +400,19 @@ private:
 
     Texture Mon1 = LoadTexture("64x64/128x128_zombie7.png");
     Texture Mon2 = LoadTexture("64x64/128x128_zombie6.png");
+    Texture Death1 = LoadTexture("effects/128x128_hierba1.png");
+    Texture Death2 = LoadTexture("effects/128x128_hierba2.png");
+    Texture Death3 = LoadTexture("effects/128x128_hierba3.png");
+    Texture Death4 = LoadTexture("effects/128x128_hierba4.png");
+    Texture Death5 = LoadTexture("effects/128x128_hierba5.png");
+    Texture Death6 = LoadTexture("effects/128x128_hierba6.png");
+    
+
 public:
 
     Ogre() : Enemy(3, 1) {
 
+        
 
 
 
@@ -465,6 +474,46 @@ public:
         /*EndDrawing();*/
 
     }
+    void Death() {
+    
+    
+        int i = 0;
+
+        while (i < 120) {
+            if (i <= 20) {
+                DrawTexture(Death1, GetPosition().x, GetPosition().y, WHITE);
+            
+            }else if(20 < 1 >= 40) {
+                DrawTexture(Death2, GetPosition().x, GetPosition().y, WHITE);
+            }
+            else if (40 < i >= 60) {
+            
+                DrawTexture(Death3, GetPosition().x, GetPosition().y, WHITE);
+            
+            }
+            else if (60 < i >= 80) {
+            
+                DrawTexture(Death4, GetPosition().x, GetPosition().y, WHITE);
+            }
+            else if (80 < i >= 100) {
+            
+                DrawTexture(Death5, GetPosition().x, GetPosition().y, WHITE);
+            
+            }
+            else {
+            
+                DrawTexture(Death6, GetPosition().x, GetPosition().y, WHITE);
+            
+            }
+        
+        
+        
+            i++;
+        }
+        
+    
+    
+    }
 
     /*void ColisionMonster(Player p) override {
 
@@ -481,10 +530,36 @@ public:
     friend class Colision;
 
 };
-class Shoot : public Entity {
+
+class DeadOgre {
+private:
+    Texture Mon1 = LoadTexture("effects/128x128_hierba6.png");
+    Vector2 playerPos;
+public:
+
+    DeadOgre(Vector2 playerPos) {
+        this->playerPos = playerPos;
+    
+    }
+
+    void Draw() {
+    
+        DrawTexture(Mon1, playerPos.x, playerPos.y, WHITE);
+    
+    }
+
+
+
+};
+class Shoot : public Colision {
+
+private:
+    Vector2 playerPos;
+   
 public:
     friend class Enemy;
-
+    Direccion dir;
+    Vector2 GetPosition() const { return this->playerPos; }
     bool ColisionBullet(Enemy s) {
 
         bool Check = CheckCollisionRecs(this->Square, s.Square);
@@ -493,7 +568,7 @@ public:
 
 
     }
-    Shoot(Player p) : Entity(1, 1, p.GetPosition()) {
+    Shoot(Player p) : Colision(p.GetPosition()) {
         playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (32) };
         // Set direction based on arrow keys instead of player direction
         if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP)) {
@@ -622,14 +697,16 @@ class Game {
 private:
 
     Texture bulletTex = LoadTexture("Bullet_1.png");
-
+    std::vector<DeadOgre>dead;
+    int deadogres;
 public:
 
     Game() {
-
+        deadogres = 0;
         Stage stage();
         level Level();
         /*  BeginDrawing();*/
+        std::vector<DeadOgre>dead;
 
     }
 
@@ -708,6 +785,11 @@ public:
                 while (j < bulletSize) {
                     /*if (ogreaux > 0) {*/
                         if (bullets[j].ColisionBullet(enemigo[i]) == true) {
+                            DeadOgre auxiliari(enemigo[i].GetPosition());
+                            dead.push_back(auxiliari);
+                            deadogres++;
+
+                            enemigo[i].Death();
                             if (ogreaux == 1) {
                                 enemigo.pop_back();
                                 ogreaux--;
@@ -758,7 +840,15 @@ public:
         }
 
 
+        i = 0;
 
+        while (i < deadogres) {
+        
+        
+            dead[i].Draw();
+            i++;
+        
+        }
 
 
 
