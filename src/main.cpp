@@ -707,23 +707,28 @@ public:
         tiempoTranscurrido = 0;
 
     }
+    void DrawInicial() {
+    
+        DrawRectangle(0, 1024 / 2, 1024/2, 32, GREEN);
+    
+    }
     void Draw() {
        
-        double help = tiempoTranscurrido * 520 / 100;
-        DrawRectangle(0, (1024/2),1024/2 , 32, GREEN);
-     
+        double porcentaje = tiempoTranscurrido / tiempoFinal;
+        int barraAncho = (int)(520 * (1 - porcentaje));  // Calculamos el ancho de la barra
 
+        DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
 
     }
     void IniciarTiempo() {
 
-        tiempoInicial = GetTime();
+        tiempoInicial = (int)GetTime();
         tiempoFinal = tiempoInicial + 80;
 
     }
     void TiempoQueHaPasado() {
 
-        tiempoTranscurrido =  GetTime() - tiempoInicial;
+        tiempoTranscurrido = (int) GetTime() - tiempoInicial;
 
 
 
@@ -758,6 +763,14 @@ public:
         
             Tiempo.IniciarTiempo();
             tiempoiniciado = true;
+            Tiempo.DrawInicial();
+        }
+        else {
+        
+            Tiempo.TiempoQueHaPasado();
+            Tiempo.Draw();
+        
+        
         }
         ClearBackground(BLACK);
         /*BeginDrawing();*/
@@ -885,8 +898,7 @@ public:
 
             }
         }
-        Tiempo.TiempoQueHaPasado();
-        Tiempo.Draw();
+        
 
         i = 0;
 
@@ -916,13 +928,13 @@ public:
 
             int x = 0;
 
-            while (x < ogreaux) {
+            while (x < ogreaux-1) {
             
                 enemigo.pop_back();
                 x++;
             }
             x = 0;
-            while (x < bulletaux) {
+            while (x < bulletaux-1) {
                 bullets.pop_back();
                 x++;
             
