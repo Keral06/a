@@ -1,11 +1,4 @@
-/*
-Raylib example file.
-This is an example main file for a simple raylib project.
-Use this as a starting point or replace it with your code.
-
-by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit https://creativecommons.org/publicdomain/zero/1.0/
-
-*/
+//copia
 
 #include "raylib.h"
 
@@ -13,78 +6,49 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include <vector>  // Add this include for std::vector
 
-
-const int screenWidth = 1280;
-const int screenHeight = 800;
+const int screenWidth = 1024 / 2;
+const int screenHeight = 1024 / 2 + 32;
 class Player;
 class Enemy;
 class Mummy;
 class Orc;
+class Shoot;
 class Ogre;
-enum Direccion 
+class time;
+enum Direccion
 {
-ARRIBA,
-ABAJO,
-DERECHA,
-IZQUIERDA,
-DIAGONAL1,
-DIAGONAL2,
-DIAGONAL3,
-DIAGONAL4,
-IDLE
+    ARRIBA,
+    ABAJO,
+    DERECHA,
+    IZQUIERDA,
+    DIAGONAL1,
+    DIAGONAL2,
+    DIAGONAL3,
+    DIAGONAL4,
+    IDLE
 };
 
 class Colision {
 public:
-
-	Colision(Vector2 posicion) {
+    Colision(Vector2 posicion) {
         BeginDrawing();
-		float widthThing = 64;
-		float HeightThing = 64;
+        float widthThing = 32;
+        float HeightThing = 32;
 
-       DrawRectangle( posicion.x, posicion.y, widthThing, HeightThing, BLUE);
-		Square = { widthThing, HeightThing };
-	
-	}
+        DrawRectangle(posicion.x, posicion.y, widthThing, HeightThing, BLANK);
+        Square = { posicion.x,posicion.y, widthThing, HeightThing };
 
-   void ColisionPlayer(Vector2 posicion) {
-
-       DrawRectangle(posicion.x, posicion.y, Square.x, Square.y, BLUE);
-       
-    
-    
     }
+    void ColisionPlayer(Vector2 posicion) {
 
-  /* virtual void ColisionMonster(Player p) {
-
-       bool Check = CheckCollisionRecs(p.Square, Square); 
-
-      
-
+        DrawRectangle(posicion.x, posicion.y, 32, 32, BLANK);
+        Square.x = posicion.x;
+        Square.y = posicion.y;
 
 
-
-    }*/
-  /* 
-   void BulletColision(Entity p) {
-
-       bool Check = CheckCollisionRecs(this->Square, p.Square);
-
-
-
-
-   }*/
-
-
-
-    
-
-    
+    }
 protected:
-	Rectangle Square;
-
-
-
+    Rectangle Square;
 };
 
 class Entity :public Colision {
@@ -93,283 +57,520 @@ public:
         this->hp = hp;
         this->vel = vel;
         dir = IDLE;
-        status = true;
+
     }
 
-	bool Alive() {
-	
-		return true;
-	
-	}
-	Vector2 GetPosition() const { return this->playerPos; }
-	Direccion GetDir() const { return this->dir; }
 
-   
+    Vector2 GetPosition() const { return this->playerPos; }
+    Direccion GetDir() const { return this->dir; }
 
-	int pos(){
-	
-		int a = GetRandomValue(1,4);
-		return a;
-	
-	} 
+
+
+    int pos() {
+
+        int a = GetRandomValue(1, 4);
+        return a;
+
+    }
     Direccion dir;
-	
+
 protected:
-	int hp;
-	int vel;
-	Vector2 playerPos;
-	
-	bool status = Alive();
-	
+    int hp;
+    int vel;
+    Vector2 playerPos;
+
+
+
 
 
 
 };
+
 class Player : public Entity {
 
 private:
-	int lives;
-	int coins;
-    
+    int lives;
+    int coins;
+    Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
+    Texture Abajo = LoadTexture("64x64/personaje.adelante1.png");
+    Texture Abajo2 = LoadTexture("64x64/personaje.adelante3.png");
+    Texture Diagonal12 = LoadTexture("64x64/personaje.derecha2.png");
+    Texture Diagonal13 = LoadTexture("64x64/personaje.derecha3.png");
+    Texture Diagonal22 = LoadTexture("64x64/personaje.izquierda2.png");
+    Texture Diagonal23 = LoadTexture("64x64/personaje.izquierda3.png");
+    Texture Atras1 = LoadTexture("64x64/personaje.detras1.png");
+    Texture Atras2 = LoadTexture("64x64/personaje.detras2.png");
+    bool status;
 
 public:
-
-	Player(int hp, int vel) : Entity(hp, vel, {(float)screenWidth/2, (float)screenHeight/2}) {
-		this->coins = 0;
-		this->lives = 3;
-		this->dir = ARRIBA;
+    friend int main();
+    friend class Game;
+    Player(int hp, int vel) : Entity(hp, vel, { (float)screenWidth / 2, (float)screenHeight / 2 }) {
+        this->coins = 0;
+        this->lives = 3;
+        this->dir = ARRIBA;
         dire = 1;
-	}
+        status = true;
+    }
     int dire;
+    void Draw() {
+        //BeginDrawing();
 
-	void Movement() {
+        if (status == true) {
+            if (dir == DIAGONAL1) {
+                if (dire <= 50) {
 
-        BeginDrawing();
-         Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
-         Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
-	    bool moved = false;
-	    float nextX = playerPos.x;
-	    float nextY = playerPos.y;
-        
-	    if (IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
-	    {
-	        nextX += 2.0f;
-	        nextY -= 2.0f;
-	        dir = DIAGONAL1;
-	        moved = true;
-            
-	    }
-	    else if (IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
-	    {
-	        nextX -= 2.0f;
-	        nextY -= 2.0f;
-	        dir = DIAGONAL2;
-	        moved = true;
-            
-	    }
-	    else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_D))
-	    {
-	        nextX += 2.0f;
-	        nextY += 2.0f;
-	        dir = DIAGONAL3;
-	        moved = true;
-            
-	    }
-	    else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_A))
-	    {
-	        nextX -= 2.0f;
-	        nextY += 2.0f;
-	        dir = DIAGONAL4;
-	        moved = true;
-            
-	    }
-	    else if (IsKeyDown(KEY_D))
-	    {
-	        nextX += 2.0f;
-	        dir = DERECHA;
-	        moved = true;
-            
-	    }
-	    else if (IsKeyDown(KEY_A))
-	    {
-	        nextX -= 2.0f;
-	        dir = IZQUIERDA;
-	        moved = true;
-          
-	    }
-	    else if (IsKeyDown(KEY_W))
-	    {
-	        nextY -= 2.0f;
-	        dir = ARRIBA;
-	        moved = true;
-            
-	    }
-	    else if (IsKeyDown(KEY_S))
-	    {
-	        nextY += 2.0f;
-	        dir = ABAJO;
-	        moved = true;
+                    DrawTexture(Diagonal23, GetPosition().x, GetPosition().y, WHITE);
 
-         
-	    }
 
-	    if (!moved) {
-	        dir = IDLE;
-	    }
+                }
+                else {
 
-        ColisionPlayer(playerPos);
-	    
-	    // Add bounds checking before applying movement
-	    if (nextX >= 0 && nextX <= screenWidth - 128 &&
-	        nextY >= 0 && nextY <= screenHeight - 128) {
-	        playerPos.x = nextX;
-	        playerPos.y = nextY;
-	    }
+                    DrawTexture(Diagonal22, GetPosition().x, GetPosition().y, WHITE);
 
-  
-	}
-	friend class Enemy;
+                }
+            }
+            else if (dir == DIAGONAL2)
+            {
+                if (dire <= 50) {
+
+                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
+
+
+                }
+                else {
+
+                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+
+            }
+            else if (dir == DIAGONAL3)
+            {
+                if (dire <= 50) {
+
+                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+                else {
+
+                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+            }
+            else if (dir == DIAGONAL4)
+            {
+                if (dire <= 50) {
+
+                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+                else {
+
+                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+            }
+            else if (dir == ARRIBA)
+            {
+                if (dire <= 50) {
+
+                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+
+
+                }
+                else {
+
+                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+            }
+            else if (dir == DERECHA)
+            {
+                if (dire <= 50) {
+
+                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
+
+
+                }
+                else {
+
+                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+            }
+            else if (dir == IZQUIERDA)
+            {
+                if (dire <= 50) {
+
+                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
+
+
+                }
+                else {
+
+                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+            }
+            else if (dir == ABAJO)
+            {
+
+
+                if (dire <= 50) {
+
+                    DrawTexture(Abajo1, GetPosition().x, GetPosition().y, WHITE);
+
+
+                }
+                else {
+
+                    DrawTexture(Abajo2, GetPosition().x, GetPosition().y, WHITE);
+
+                }
+
+            }
+            else if (dir == IDLE) {
+
+                DrawTexture(Abajo, GetPosition().x, GetPosition().y, WHITE);
+            }
+            dire++;
+            if (dire == 100) { dire = 0; }
+
+
+
+        }
+
+    }
+
+    void Movement() {
+
+       /* BeginDrawing();*/
+        Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
+        Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
+        bool moved = false;
+        float nextX = playerPos.x;
+        float nextY = playerPos.y;
+
+        if (status == true) {
+
+            if (IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
+            {
+                nextX += 2.0f;
+                nextY -= 2.0f;
+                dir = DIAGONAL1;
+                moved = true;
+
+            }
+            else if (IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
+            {
+                nextX -= 2.0f;
+                nextY -= 2.0f;
+                dir = DIAGONAL2;
+                moved = true;
+
+            }
+            else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_D))
+            {
+                nextX += 2.0f;
+                nextY += 2.0f;
+                dir = DIAGONAL3;
+                moved = true;
+
+            }
+            else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_A))
+            {
+                nextX -= 2.0f;
+                nextY += 2.0f;
+                dir = DIAGONAL4;
+                moved = true;
+
+            }
+            else if (IsKeyDown(KEY_D))
+            {
+                nextX += 2.0f;
+                dir = DERECHA;
+                moved = true;
+
+            }
+            else if (IsKeyDown(KEY_A))
+            {
+                nextX -= 2.0f;
+                dir = IZQUIERDA;
+                moved = true;
+
+            }
+            else if (IsKeyDown(KEY_W))
+            {
+                nextY -= 2.0f;
+                dir = ARRIBA;
+                moved = true;
+
+            }
+            else if (IsKeyDown(KEY_S))
+            {
+                nextY += 2.0f;
+                dir = ABAJO;
+                moved = true;
+
+
+            }
+            if (!moved) {
+                dir = IDLE;
+            }
+            ColisionPlayer(playerPos);
+            if (nextX >= 0 && nextX <= screenWidth - 128 &&
+                nextY >= 0 && nextY <= screenHeight - 128) {
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+
+
+        }
+        else {
+
+
+            Death();
+        }
+
+
+
+    }
+
+    void Death() {}
+    friend class Enemy;
     friend class Colision;
     friend class Ogre;
-
-
 };
 
 class Enemy : public Entity {
 public:
-    Enemy(int hp, int vel) : Entity(hp, vel, {0,0}) {
+    friend class Shoot;
+    Enemy(int hp, int vel) : Entity(hp, vel, { 0,0 }) {
         int posicion = pos();
         if (posicion == 1) {
-            playerPos = { ((float)screenWidth / 2) + 128,  128 / 2 };
+            playerPos = { ((float)screenWidth / 2),32 };
         }
-        if (posicion == 2) {
-			playerPos = { 128 + 128 / 2, ((float)screenHeight / 2) + 128 / 2 };
+        else if (posicion == 2) {
+            playerPos = { 32, ((float)screenHeight / 2) };
 
-		}
-		if (posicion == 3) {
+        }
+        else if (posicion == 3) {
 
-			playerPos = { ((float)screenWidth / 2) + 128 + 128 / 2,-128 / 2 };
-		}
-		if (posicion == 4) {
-			playerPos = { -128 - 128 / 2, ((float)screenHeight / 2) + 128 / 2 };
+            playerPos = { ((float)screenWidth / 2), (float)screenHeight - 32 * 2 };
+        }
+        else {
+            playerPos = { 32, ((float)screenHeight / 2) };
 
-			}
+        }
     }
     friend class Colision;
-	void MovementEnemy(Player p) {
-	    Vector2 player = p.GetPosition();
-	    if (playerPos.x < player.x) {
-	        playerPos.x += vel;  // Changed from -= to +=
-	    }
-	    else {
-	        playerPos.x -= vel;  // Changed from += to -=
-	    }
+    void MovementEnemy(Player p) {
+        Vector2 player = p.GetPosition();
+        if (playerPos.x < player.x) {
+            playerPos.x += vel;  // Changed from -= to +=
+        }
+        else {
+            playerPos.x -= vel;  // Changed from += to -=
+        }
 
-	    if (playerPos.y < player.y) {
-	        playerPos.y += vel;  // Changed from -= to +=
-	    }
-	    else {
-	        playerPos.y -= vel;  // Changed from += to -=
-	    }
-	}
+        if (playerPos.y < player.y) {
+            playerPos.y += vel;  // Changed from -= to +=
+        }
+        else {
+            playerPos.y -= vel;  // Changed from += to -=
+        }
+        ColisionPlayer(playerPos);
+    }
+
+
+
 
 
 protected:
 
 
-
-
-
-};
-
-
-
-class Orc : public Enemy{
-
-public:
-
-	Orc(int hp, int vel) :Enemy(1,1) {
-	
-		
-	
-	}
-
-	
-
-    friend class Colision;
 
 
 
 };
 
 class Ogre : public Enemy {
+private:
+    int dire = 0;
+
+    Texture Mon1 = LoadTexture("64x64/128x128_zombie7.png");
+    Texture Mon2 = LoadTexture("64x64/128x128_zombie6.png");
+    Texture Death1 = LoadTexture("effects/128x128_hierba1.png");
+    Texture Death2 = LoadTexture("effects/128x128_hierba2.png");
+    Texture Death3 = LoadTexture("effects/128x128_hierba3.png");
+    Texture Death4 = LoadTexture("effects/128x128_hierba4.png");
+    Texture Death5 = LoadTexture("effects/128x128_hierba5.png");
+    Texture Death6 = LoadTexture("effects/128x128_hierba6.png");
+    
+
 public:
 
-	Ogre(int hp, int vel) : Enemy(3, 1) {
-	
-	
-	
-	
-	}
-
-    void Update(Player p) {
-
-        if (p.playerPos.x > 0) {
-
-            playerPos.x +=vel;
-
-        }
-        else {
-
-            playerPos.x -=vel;
-
-        }
-
-        if (p.playerPos.y > 0) {
-
-            playerPos.y +=vel;
-        }
-        else {
-
-            playerPos.y -=vel;
-
-        }
-
-    }
-
-     /*void ColisionMonster(Player p) override {
+    Ogre() : Enemy(3, 1) {
 
         
 
 
 
+    }
+    bool CheckColisions(Player& p) {
+
+        bool check = CheckCollisionRecs(this->Square, p.Square);
+        if (check == true) {
+
+            p.status = false;
+        }
+
+        return p.status;
+
+    }
+
+    void Update(Player p) {
+
+        if (p.playerPos.x > 0) {
+
+            playerPos.x += vel;
+
+        }
+        else {
+
+            playerPos.x -= vel;
+
+        }
+
+        if (p.playerPos.y > 0) {
+
+            playerPos.y += vel;
+        }
+        else {
+
+            playerPos.y -= vel;
+
+        }
+
+    }
+    void Draw() {
+
+        /*BeginDrawing();*/
+        if (dire <= 50) {
+
+            DrawTexture(Mon2, GetPosition().x, GetPosition().y, WHITE);
+
+
+        }
+        else {
+
+            DrawTexture(Mon1, GetPosition().x, GetPosition().y, WHITE);
+
+        }
+
+        if (dire == 100) { dire = 0; }
+        dire++;
+
+        /*EndDrawing();*/
+
+    }
+    //void Death() {
+    //
+    //
+    //    /*int i = 0;
+
+    //    while (i < 120) {
+    //        if (i <= 20) {
+    //            DrawTexture(Death1, GetPosition().x, GetPosition().y, WHITE);
+    //        
+    //        }else if(20 < 1 >= 40) {
+    //            DrawTexture(Death2, GetPosition().x, GetPosition().y, WHITE);
+    //        }
+    //        else if (40 < i >= 60) {
+    //        
+    //            DrawTexture(Death3, GetPosition().x, GetPosition().y, WHITE);
+    //        
+    //        }
+    //        else if (60 < i >= 80) {
+    //        
+    //            DrawTexture(Death4, GetPosition().x, GetPosition().y, WHITE);
+    //        }
+    //        else if (80 < i >= 100) {
+    //        
+    //            DrawTexture(Death5, GetPosition().x, GetPosition().y, WHITE);
+    //        
+    //        }
+    //        else {
+    //        
+    //            DrawTexture(Death6, GetPosition().x, GetPosition().y, WHITE);
+    //        
+    //        }
+    //    
+    //    
+    //    
+    //        i++;
+    //    }*/
+    //    
+    //
+    //
+    //}
+
+    /*void ColisionMonster(Player p) override {
 
 
 
 
-    }*/
+
+
+
+
+
+   }*/
 
     friend class Colision;
 
 };
-class Mummy : public Enemy {
+
+class DeadOgre {
+private:
+    Texture Mon1 = LoadTexture("effects/128x128_hierba6.png");
+    Vector2 playerPos;
 public:
 
-	Mummy(int hp, int vel) : Enemy(6, 1) {
+    DeadOgre(Vector2 playerPos) {
+        this->playerPos = playerPos;
+    
+    }
 
+    void Draw() {
+    
+        DrawTexture(Mon1, playerPos.x, playerPos.y, WHITE);
+    
+    }
 
-
-
-	}
-    friend class Colision;
 
 
 };
+class Shoot : public Colision {
 
-class Shoot : public Entity {
+private:
+    Vector2 playerPos;
+   
 public:
-    Shoot(Player p) : Entity(1, 1, p.GetPosition()) {
-        playerPos = { p.GetPosition().x -64/2, p.GetPosition().y -64/2};
+    friend class Enemy;
+    Direccion dir;
+    Vector2 GetPosition() const { return this->playerPos; }
+    bool ColisionBullet(Enemy s) {
+
+        bool Check = CheckCollisionRecs(this->Square, s.Square);
+
+        return Check;
+
+
+    }
+    Shoot(Player p) : Colision(p.GetPosition()) {
+        playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (32) };
         // Set direction based on arrow keys instead of player direction
         if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP)) {
             dir = DIAGONAL1;
@@ -399,46 +600,51 @@ public:
             dir = p.GetDir(); // Fallback to player direction if no arrow key pressed
         }
     }
-    
+
     // Add method to update bullet position
     void UpdatePosition() {
-        switch(dir) {
-            case ARRIBA:
-                playerPos.y -= 5.0f;
+        switch (dir) {
+        case ARRIBA:
+            playerPos.y -= 5.0f;
 
-                break;
-            case ABAJO:
-                playerPos.y += 5.0f;
-                break;
-            case DERECHA:
-                playerPos.x += 5.0f;
-                break;
-            case IZQUIERDA:
-                playerPos.x -= 5.0f;
-                break;
-            case DIAGONAL1:
-                playerPos.x += 5.0f;
-                playerPos.y -= 5.0f;
-                break;
-            case DIAGONAL2:
-                playerPos.x -= 5.0f;
-                playerPos.y -= 5.0f;
-                break;
-            case DIAGONAL3:
-                playerPos.x += 5.0f;
-                playerPos.y += 5.0f;
-                break;
-            case DIAGONAL4:
-                playerPos.x -= 5.0f;
-                playerPos.y += 5.0f;
-                break;
-            default:
-                break;
+            break;
+        case ABAJO:
+            playerPos.y += 5.0f;
+            break;
+        case DERECHA:
+            playerPos.x += 5.0f;
+            break;
+        case IZQUIERDA:
+            playerPos.x -= 5.0f;
+            break;
+        case DIAGONAL1:
+            playerPos.x += 5.0f;
+            playerPos.y -= 5.0f;
+            break;
+        case DIAGONAL2:
+            playerPos.x -= 5.0f;
+            playerPos.y -= 5.0f;
+            break;
+        case DIAGONAL3:
+            playerPos.x += 5.0f;
+            playerPos.y += 5.0f;
+            break;
+        case DIAGONAL4:
+            playerPos.x -= 5.0f;
+            playerPos.y += 5.0f;
+            break;
+        default:
+            break;
         }
+        ColisionPlayer(playerPos);
+
+
     }
+
+
 };
 
-class level  {
+class level {
 protected:
     int levels;
 
@@ -451,7 +657,7 @@ public:
 
     }
 
-   void LevelUp() {
+    void LevelUp() {
 
         levels++;
 
@@ -464,44 +670,479 @@ protected:
     int stage;
 public:
 
-    Stage();
+    
 
-    /*Stage() : level() {
+    Stage() : level() {
 
         stage = 1;
 
-    }*/
+    }
     void StageUp() {
 
         stage++;
 
     }
 
-   int CheckStage() {
+    int CheckStage() {
 
-       return stage;
+        return stage;
 
     }
 
 
 
 };
-class Game {
-
+class time {
+private:
+    Texture barra = LoadTexture("ui/barra.png");
+    Texture reloj = LoadTexture("ui/reloj.png");
+    double tiempoInicial;
+    double tiempoFinal;
+    double tiempoTranscurrido;
 public:
 
-    Game(Player p) {
+    time() {
 
-        Stage();
+        tiempoFinal = 80;
+        tiempoTranscurrido = 0;
+
+    }
+    void DrawInicial() {
+    
+        DrawRectangle(0, 1024 / 2, 1024/2, 32, GREEN);
+    
+    }
+    void Draw() {
+       
+        double porcentaje = tiempoTranscurrido / tiempoFinal;
+        int barraAncho = (int)(520 * (1 - porcentaje));  // Calculamos el ancho de la barra
+
+        DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
+
+    }
+    void IniciarTiempo() {
+
+        tiempoInicial = GetTime();
+        tiempoFinal = tiempoInicial + 80;
+
+    }
+    void TiempoQueHaPasado() {
+
+        tiempoTranscurrido =  GetTime() - tiempoInicial;
+
+
 
 
     }
 
 
+
+
 };
 
+class Game {
+private:
+
+    Texture bulletTex = LoadTexture("Bullet_1.png");
+    std::vector<DeadOgre>dead;
+    int deadogres;
+    bool tiempoiniciado;
+public:
+
+    Game() {
+        deadogres = 0;
+        Stage stage();
+        level Level();
+        /*  BeginDrawing();*/
+        std::vector<DeadOgre>dead;
+        tiempoiniciado = false;
+    }
+
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo) {
+        if (tiempoiniciado = false) {
+        
+            Tiempo.IniciarTiempo();
+            tiempoiniciado = true;
+            Tiempo.DrawInicial();
+        }
+        else {
+        
+            Tiempo.TiempoQueHaPasado();
+            Tiempo.Draw();
+        
+        
+        }
+        ClearBackground(BLACK);
+        /*BeginDrawing();*/
+        BeginDrawing();
+
+        p.Movement();
+        p.Draw();
+        // Handle bullet creation with arrow keys
+        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
+            IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
+            // Add rate limiting for bullets
+            static float shootTimer = 0.0f;
+            if (shootTimer <= 0) {
+                bullets.push_back(Shoot(p));
+                shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
+            }
+            shootTimer -= GetFrameTime();
 
 
+        }
+
+
+
+        // Update and remove off-screen bullets
+        bullets.erase(
+            std::remove_if(bullets.begin(), bullets.end(),
+                [](const Shoot& bullet) {
+                    Vector2 pos = bullet.GetPosition();
+                    return pos.x < 0 || pos.x > screenWidth ||
+                        pos.y < 0 || pos.y > screenHeight;
+                }
+            ),
+            bullets.end()
+        );
+        int bulletSize = bullets.size();
+
+
+
+        /*  BeginDrawing();
+          ClearBackground(RAYWHITE);*/
+
+        if (GetRandomValue(1, 40) == 1 && ogreaux < 2) {
+
+            Ogre auxiliar;
+            enemigo.push_back(auxiliar);
+            ogreaux++;
+
+        }
+        int i = 0;
+        if (ogreaux > 0) {
+            while (i < ogreaux) {
+
+                enemigo[i].CheckColisions(p);
+
+                if (p.status == true) {
+
+                    enemigo[i].MovementEnemy(p);
+
+
+                }
+
+                enemigo[i].Draw();
+
+                i++;
+
+            }
+            i = 0;
+            int j = 0;
+            int aux = 0;
+            while (i < ogreaux) {
+
+                while (j < bulletSize) {
+                    /*if (ogreaux > 0) {*/
+                        if (bullets[j].ColisionBullet(enemigo[i]) == true) {
+                            DeadOgre auxiliari(enemigo[i].GetPosition());
+                            dead.push_back(auxiliari);
+                            deadogres++;
+
+                           /* enemigo[i].Death();*/
+                            if (ogreaux == 1) {
+                                enemigo.pop_back();
+                                ogreaux--;
+                            }
+
+                            else if (ogreaux > 1) {
+                                aux = i;
+                                while (aux < ogreaux - 1) {
+
+                                    enemigo[aux] = enemigo[aux + 1];
+                                    aux++;
+
+                                }
+                                enemigo.pop_back();
+                                ogreaux--;
+
+                            }
+                            
+                            aux = j;
+                            if (bulletSize == 1) {
+
+                                bullets.pop_back();
+                                bulletSize--;
+                            }
+                            else if (bulletSize > 1) {
+                                while (aux < bulletSize - 1) {
+
+                                    bullets[aux] = bullets[aux + 1];
+                                    aux++;
+                                }
+
+                                bullets.pop_back();
+                                bulletSize--;
+                            }
+                            if (ogreaux == 0) { j == bulletSize; }
+                            
+                        }
+
+
+                        j++;
+                    }
+                
+                j = 0;
+                i++;
+
+
+            }
+        }
+        
+
+        i = 0;
+
+        while (i < deadogres) {
+        
+        
+            dead[i].Draw();
+            i++;
+        
+        }
+
+
+
+
+
+        // Update and draw bullets using bullet texture
+        for (auto& bullet : bullets) {
+            bullet.UpdatePosition();
+            DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
+        }
+
+        EndDrawing();
+        if (p.status == false) {
+        
+        
+            p.Death();
+
+            int x = 0;
+
+            while (x < ogreaux-1) {
+            
+                enemigo.pop_back();
+                x++;
+            }
+            x = 0;
+            while (x < bulletaux) {
+                bullets.pop_back();
+                x++;
+            
+            
+            }
+        
+        }
+
+        // Set background color (framebuffer clear color)
+/*  EndDrawing();*/
+    }
+
+
+};
+
+class Background : public Stage {
+private:
+
+    Texture suelo = LoadTexture("stage/64x64_fondo_desierto.png");
+    Texture arbol1 = LoadTexture("stage/64x64_cesped_desierto.png");
+    Texture arbol2 = LoadTexture("stage/64x64_cesped_desierto2.png");
+    Texture desierto1 = LoadTexture("stage/desierto1.png");
+    Texture desierto2 = LoadTexture("stage/desierto2.png");
+    Texture desierto3 = LoadTexture("stage/desierto3.png");
+    Texture desierto4 = LoadTexture("stage/desierto4.png");
+    Texture fondo_desierto = LoadTexture("stage/fondo_desierto.png");
+public:
+    int time = 0;
+    friend int main();
+    int currentTime = GetTime();
+    void Draw() {
+        /* BeginDrawing();*/
+        int x = 0;
+        DrawTexture(suelo, 32, 0, WHITE);
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, 0, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, 0, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        int y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, 0, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, 0, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+
+        }
+        x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, 480, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, 480, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, 480, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, 480, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+
+        }
+        y = 224;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(desierto1, 480, y, WHITE);
+            y = y + 32;
+        }
+        y = 256;
+        for (int i = 0; i < 2; i++) {
+            DrawTexture(desierto1, 0, y, WHITE);
+            y = y + 32;
+        }
+        y = 224;
+        DrawTexture(desierto2, 0, y, WHITE);
+        x = 224;
+        for (int i = 0; i < 2; i++) {
+            DrawTexture(desierto1, x, 480, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(desierto2, x, 480, WHITE);
+        x = 224;
+        DrawTexture(desierto1, x, 0, WHITE);
+        x = x + 32;
+        DrawTexture(desierto2, x, 0, WHITE);
+        x = x + 32;
+        DrawTexture(desierto1, x, 0, WHITE);
+        y = 32;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 448;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 448;
+        y = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto3, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 64;
+        y = 64;
+        for (int i = 0; i < 12; i++)
+        {
+            for (int i = 0; i < 12; i++) {
+                DrawTexture(fondo_desierto, x, y, WHITE);
+                y = y + 32;
+            }
+            y = 64;
+            x = x + 32;
+        }
+
+    }
+
+   
+
+
+
+
+
+        /* EndDrawing();*/
+
+
+};
 
 
 
@@ -518,135 +1159,115 @@ int main() {
     // Load a texture from the resources directory
     Texture logo = LoadTexture("sprites/personaje/128x128_persona7.png");
 
-    Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
-    Texture Abajo = LoadTexture("64x64/personaje.adelante1.png");
-    Texture Abajo2 = LoadTexture("64x64/personaje.adelante3.png");
-    Texture Diagonal1 = LoadTexture("64x64/personaje.derecha.png");
-    Texture Diagonal2 = LoadTexture("64x64/personaje.izquierda.png");
-    Texture Atras = LoadTexture("64x64/personaje.detras.png");
 
-    Texture bulletTex = LoadTexture("Bullet_1.png");
-    
-    
+    //Texture bulletTex = LoadTexture("Bullet_1.png");
+
+    time Tiempo();
     SetTargetFPS(60);
-    Player p(1,2);
+    Player p(1, 2);
 
-    //creation of enemy vector
+    std::vector<Ogre>enemigo;
+    int bulletaux;
+
+    Background desierto;
+    time ui;
+    /* Ogre enemigo;*/
+
+     //creation of enemy vector
     int og = 0;
     //vector<Ogre> ogres(og);
-    
-
+    int ayxi = 0;
+    int ogreaux = 0;
     std::vector<Shoot> bullets;
     int dire = 1;
-   
+    Game game;
     while (!WindowShouldClose()) {
-        p.Movement();
+
+
+        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui);
+        desierto.Draw();
+        ui.Draw();
         
-        // Handle bullet creation with arrow keys
-        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) || 
-            IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
-            // Add rate limiting for bullets
-            static float shootTimer = 0.0f;
-            if (shootTimer <= 0) {
-                bullets.push_back(Shoot(p));
-                shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
-            }
-            shootTimer -= GetFrameTime();
-        }
-        
-        // Update and remove off-screen bullets
-        bullets.erase(
-            std::remove_if(bullets.begin(), bullets.end(),
-                [](const Shoot& bullet) {
-                    Vector2 pos = bullet.GetPosition();
-                    return pos.x < 0 || pos.x > screenWidth ||
-                           pos.y < 0 || pos.y > screenHeight;
-                }
-            ),
-            bullets.end()
-        );
-        
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        
-        // Draw player
-        
-        if (p.dire == DIAGONAL1)
-        {
-            DrawTexture(Diagonal2, p.GetPosition().x, p.GetPosition().y, WHITE);
-        }
-        else if (p.dire == DIAGONAL2)
-        {
-            DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
-        }
-        else if (p.dire == DIAGONAL3)
-        {
-            DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
-        }
-        else if (p.dire == DIAGONAL4)
-        {
-            DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
-        }
-        else if (p.dire == ARRIBA)
-        {
-            DrawTexture(Atras, p.GetPosition().x, p.GetPosition().y, WHITE);
-        }
-        else if (p.dire == DERECHA)
-        {
-            DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
-        }
-        else if (p.dire == IZQUIERDA)
-        {
-            DrawTexture(Diagonal1, p.GetPosition().x, p.GetPosition().y, WHITE);
-        }
-        else if (p.dire == ABAJO)
-        {
-           
+        /* ClearBackground(RAYWHITE);*/
+      /*   ClearBackground(RAYWHITE);           */
+       /*  EndDrawing();*/
+         //p.Movement();
+         //p.Draw();
 
-            if (dire % 2 == 0) {
+         //// Handle bullet creation with arrow keys
+         //if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
+         //    IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
+         //    // Add rate limiting for bullets
+         //    static float shootTimer = 0.0f;
+         //    if (shootTimer <= 0) {
+         //        bullets.push_back(Shoot(p));
+         //        shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
+         //    }
+         //    shootTimer -= GetFrameTime();
+         //}
 
-                DrawTexture(Abajo1, p.GetPosition().x, p.GetPosition().y, WHITE);
+         //// Update and remove off-screen bullets
+         //bullets.erase(
+         //    std::remove_if(bullets.begin(), bullets.end(),
+         //        [](const Shoot& bullet) {
+         //            Vector2 pos = bullet.GetPosition();
+         //            return pos.x < 0 || pos.x > screenWidth ||
+         //                pos.y < 0 || pos.y > screenHeight;
+         //        }
+         //    ),
+         //    bullets.end()
+         //);
+
+         //BeginDrawing();
+         //ClearBackground(RAYWHITE);
+
+         //// Draw player
+         //
+         //enemigo.CheckColisions(p);
+         //if (p.status == true) {
+         //    enemigo.MovementEnemy(p);
 
 
-            }
-            else {
-
-                DrawTexture(Abajo2, p.GetPosition().x,p.GetPosition().y, WHITE);
-
-            }
-            dire++;
-        }
-        else if (p.dir == IDLE) {
-        
-            DrawTexture(Abajo, p.GetPosition().x, p.GetPosition().y, WHITE);
-        }
-        
-        // Update and draw bullets using bullet texture
-        for(auto& bullet : bullets) {
-            bullet.UpdatePosition();
-            DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
-        }
-        
-        EndDrawing();
+         //    ayxi++;
+         //    if (ayxi == 100) { ayxi = 0; }
+         //}
 
 
 
 
-        
-        //primero hago una update de los que ya hay y despues lo que tendría que hacer es crear nuevos
-       /* int aux = 0;
-        while (aux < og) {
 
-            ogres[aux].Update(p);
-            ogres[aux].ColisionMonster(p);
 
-        }*/
+         //
+
+         //enemigo.Draw();
+         //
+         //
+         //// Update and draw bullets using bullet texture
+         //for(auto& bullet : bullets) {
+         //    bullet.UpdatePosition();
+         //    DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
+         //}
+         //
+         //EndDrawing();
+
+
+
+
+
+         //primero hago una update de los que ya hay y despues lo que tendrï¿½a que hacer es crear nuevos
+        /* int aux = 0;
+         while (aux < og) {
+
+             ogres[aux].Update(p);
+             ogres[aux].ColisionMonster(p);
+
+         }*/
 
     }
-    
+
     // Cleanup
-    UnloadTexture(logo);
-    UnloadTexture(bulletTex);  // Don't forget to unload bullet texture
+  /*  UnloadTexture(logo);*/
+   /* UnloadTexture(bulletTex);*/  // Don't forget to unload bullet texture
     CloseWindow();
     return 0;
 }
