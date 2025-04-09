@@ -7,7 +7,7 @@
 #include <vector>  // Add this include for std::vector
 
 const int screenWidth = 1024 / 2;
-const int screenHeight = 1024 / 2;
+const int screenHeight = 1024 / 2 + 32;
 class Player;
 class Enemy;
 class Mummy;
@@ -973,6 +973,24 @@ public:
 
 };
 
+class time : public Stage {
+private:
+    Texture barra = LoadTexture("ui/barra.png");
+    Texture reloj = LoadTexture("ui/reloj.png");
+public:
+    void Draw() {
+        int x = 0;
+        for (int i = 0; i < 16; i++) {
+            DrawTexture(barra, x, 520, WHITE);
+            x = x + 32;
+        }
+        
+
+    }
+    
+
+};
+
 int main() {
     // Tell the window to use vsync and work on high DPI displays
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
@@ -997,6 +1015,7 @@ int main() {
     int bulletaux;
 
     Background desierto;
+    time ui;
     /* Ogre enemigo;*/
 
      //creation of enemy vector
@@ -1012,6 +1031,7 @@ int main() {
 
         game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux);
         desierto.Draw();
+        ui.Draw();
         
         /* ClearBackground(RAYWHITE);*/
       /*   ClearBackground(RAYWHITE);           */
