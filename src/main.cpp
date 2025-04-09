@@ -494,7 +494,7 @@ public:
 
     }
     Shoot(Player p) : Entity(1, 1, p.GetPosition()) {
-        playerPos = { p.GetPosition().x + 65 / 2, p.GetPosition().y + (64) };
+        playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (32) };
         // Set direction based on arrow keys instead of player direction
         if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP)) {
             dir = DIAGONAL1;
