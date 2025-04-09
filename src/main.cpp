@@ -31,8 +31,8 @@ class Colision {
 public:
     Colision(Vector2 posicion) {
         BeginDrawing();
-        float widthThing = 64;
-        float HeightThing = 64;
+        float widthThing = 32;
+        float HeightThing = 32;
 
         DrawRectangle(posicion.x, posicion.y, widthThing, HeightThing, BLANK);
         Square = { posicion.x,posicion.y, widthThing, HeightThing };
@@ -40,7 +40,7 @@ public:
     }
     void ColisionPlayer(Vector2 posicion) {
 
-        DrawRectangle(posicion.x, posicion.y, 64, 64, BLANK);
+        DrawRectangle(posicion.x, posicion.y, 32, 32, BLANK);
         Square.x = posicion.x;
         Square.y = posicion.y;
 
