@@ -699,13 +699,15 @@ private:
     double tiempoInicial;
     double tiempoFinal;
     double tiempoTranscurrido;
+    int barraAncho;
+    int aux;
 public:
 
     time() {
 
         tiempoFinal = 80;
         tiempoTranscurrido = 0;
-
+        barraAncho = 520;
     }
     void DrawInicial() {
     
@@ -713,11 +715,22 @@ public:
     
     }
     void Draw() {
-       
+        
+     
         double porcentaje = tiempoTranscurrido / tiempoFinal;
-        int barraAncho = (int)(520 * (1 - porcentaje));  // Calculamos el ancho de la barra
+        barraAncho = (int)((1024/2) * (1 - porcentaje));
 
-        DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
+        if (barraAncho % 2 == 0) {
+
+
+         DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
+
+         aux = barraAncho;
+        }
+        else {
+        
+            DrawRectangle(0, 1024 / 2, aux, 32, GREEN);
+        }
 
     }
     void IniciarTiempo() {
