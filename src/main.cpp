@@ -343,7 +343,11 @@ public:
 
     }
 
-    void Death() {}
+    void Death() {
+    
+        lives--;
+    
+    }
     friend class Enemy;
     friend class Colision;
     friend class Ogre;
@@ -714,6 +718,8 @@ public:
         tiempoFinal = 80;
         tiempoTranscurrido = 0;
         barraAncho = 520;
+        aux = 0;
+        tiempoInicial = 0;
     }
     void DrawInicial() {
     
@@ -778,7 +784,7 @@ public:
     }
 
     void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo) {
-        if (tiempoiniciado = false) {
+        if (tiempoiniciado == false) {
         
             Tiempo.IniciarTiempo();
             tiempoiniciado = true;
@@ -830,7 +836,7 @@ public:
         /*  BeginDrawing();
           ClearBackground(RAYWHITE);*/
 
-        if (GetRandomValue(1, 40) == 1 && ogreaux < 2) {
+        if (GetRandomValue(1, 40) == 1 && ogreaux < 6) {
 
             Ogre auxiliar;
             enemigo.push_back(auxiliar);
@@ -838,70 +844,81 @@ public:
 
         }
         int i = 0;
-        if (ogreaux > 0) {
-            
+        
             i = 0;
-            int j = 0;
-            int aux = 0;
-            while (i < ogreaux) {
+            if (ogreaux > 0) {
 
-                while (j < bulletSize) {
-                    /*if (ogreaux > 0) {*/
-                        if (bullets[j].ColisionBullet(enemigo[i]) == true) {
-                            DeadOgre auxiliari(enemigo[i].GetPosition());
-                            dead.push_back(auxiliari);
-                            deadogres++;
+                i = 0;
+                int j = 0;
+                int aux = 0;
+                while (i < ogreaux) {
 
-                           /* enemigo[i].Death();*/
-                            if (ogreaux == 1) {
-                                enemigo.pop_back();
-                                ogreaux--;
-                            }
+                    while (j < bulletSize) {
+                        if (i > ogreaux) {
+                        
+                        
+                        }
+                        else {
+                        
+                            if (bullets[j].ColisionBullet(enemigo[i]) == true) {
+                                DeadOgre auxiliari(enemigo[i].GetPosition());
+                                dead.push_back(auxiliari);
+                                deadogres++;
 
-                            else if (ogreaux > 1) {
-                                aux = i;
-                                while (aux < ogreaux - 1) {
-
-                                    enemigo[aux] = enemigo[aux + 1];
-                                    aux++;
-
-                                }
-                                enemigo.pop_back();
-                                ogreaux--;
-
-                            }
-                            
-                            aux = j;
-                            if (bulletSize == 1) {
-
-                                bullets.pop_back();
-                                bulletSize--;
-                            }
-                            else if (bulletSize > 1) {
-                                while (aux < bulletSize - 1) {
-
-                                    bullets[aux] = bullets[aux + 1];
-                                    aux++;
+                                /* enemigo[i].Death();*/
+                                if (ogreaux == 1) {
+                                    enemigo.pop_back();
+                                    ogreaux--;
                                 }
 
-                                bullets.pop_back();
-                                bulletSize--;
+                                else if (ogreaux > 1) {
+                                    aux = i;
+                                    while (aux < ogreaux - 1) {
+
+                                        enemigo[aux] = enemigo[aux + 1];
+                                        aux++;
+
+                                    }
+                                    enemigo.pop_back();
+                                    ogreaux--;
+
+                                }
+
+                                aux = j;
+                                if (bulletSize == 1) {
+
+                                    bullets.pop_back();
+                                    bulletSize--;
+                                }
+                                else if (bulletSize > 1) {
+                                    while (aux < bulletSize - 1) {
+                                        bullets[aux] = bullets[aux + 1];
+                                        aux++;
+                                    }
+
+                                    bullets.pop_back();
+                                    bulletSize--;
+                                }
+                                if (ogreaux == 0) { j = bulletSize; }
+                        
                             }
-                            if (ogreaux == 0) { j == bulletSize; }
+                       
                             
                         }
 
 
                         j++;
                     }
-                
-                j = 0;
-                i++;
+
+                    j = 0;
+                    i++;
 
 
-            }
+                }
+
+            
+             }
             i = 0;
-
             while (i < deadogres) {
 
 
@@ -926,9 +943,6 @@ public:
                 i++;
 
             }
-        }
-        
-
         
 
 
@@ -939,6 +953,7 @@ public:
         for (auto& bullet : bullets) {
             bullet.UpdatePosition();
             DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
+           
         }
         p.Movement();
         p.Draw();
@@ -950,26 +965,42 @@ public:
 
             int x = 0;
 
-            while (x < ogreaux-1) {
+            while (x < ogreaux) {
             
                 enemigo.pop_back();
                 x++;
             }
+            ogreaux -= x;
             x = 0;
-            while (x < bulletaux-1) {
+            while (x < bulletSize) {
                 bullets.pop_back();
                 x++;
             
             
             }
+            bulletSize -= x;
+            
             tiempoiniciado = false;
+            if (p.lives == 0) {
+            
+                GameOver();
+            
+            }
+            else {
             p.ResetPlayer();
+            
+            }
         }
 
         // Set background color (framebuffer clear color)
 /*  EndDrawing();*/
     }
-
+    void GameOver() {
+    
+        DrawRectangle(0, 0, 520, 520, BLACK);
+    
+    
+    }
 
 };
 
