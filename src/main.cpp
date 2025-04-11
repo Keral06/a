@@ -33,6 +33,7 @@ enum Direccion
 
 class Colision {
 public:
+    Colision() {}
     Colision(Vector2 posicion) {
         BeginDrawing();
         float widthThing = 32;
@@ -424,7 +425,7 @@ private:
     
 
 public:
-
+    friend class PowerUpLive;
     Ogre() : Enemy(3, 1) {
 
         
@@ -466,6 +467,7 @@ public:
             playerPos.y -= vel;
 
         }
+
 
     }
     void Draw() {
@@ -546,13 +548,22 @@ public:
     friend class Colision;
 
 };
-class PowerUpLive {
+class PowerUpLive : public Colision {
 private:
-
+    Texture vida = LoadTexture("items/128x128_cabeza.png");
+    Vector2 pos;
 public:
 
-    PowerUpLive() {
+    PowerUpLive(Player p) : Colision() {
+
+        p.lives++;
+
+    }
+
+    PowerUpLive(Ogre &ogre) : Colision(pos) {
+        this ->pos = ogre.GetPosition();
     
+        DrawTexture(vida, pos.x, pos.y, WHITE);
     
     
     }
@@ -563,6 +574,24 @@ public:
     
     }
 
+    void Draw() {
+    
+    
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+
+    bool CheckColisions(Player& p) {
+
+        bool check = CheckCollisionRecs(this->Square, p.Square);
+        if (check == true) {
+
+            p.status = false;
+        }
+
+        return p.status;
+
+    }
 
 };
 
@@ -812,7 +841,7 @@ public:
         tiempoiniciado = false;
     }
 
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo, std:: vector<float>&auxTime, float &HelpMeTime) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo, std:: vector<float>&auxTime, float &HelpMeTime, bag &bag, std::vector <PowerUpLive>&Lives ) {
         if (tiempoiniciado == false) {
         
             Tiempo.IniciarTiempo();
@@ -908,6 +937,14 @@ public:
                                 auxTime.push_back(timehelp);
                                 deadogres++;
                                 ogreaux = enemigo.size();
+
+                                if (GetRandomValue(1, 5) == 5) {
+                                
+                                    PowerUpLive live(enemigo[i]);
+                                    Lives.push_back(live);
+                                   
+                                
+                                }
                                 /* enemigo[i].Death();*/
                                 if (ogreaux == 1) {
                                     enemigo.pop_back();
@@ -964,6 +1001,27 @@ public:
             
              }
             i = 0;
+            while (i < Lives.size() - 1) {
+            
+                Lives[i].Draw();
+                if (Lives[i].CheckColisions(p) == true && bag.items<2) {
+                    bag.items++;
+                    int y = i;
+                    while (y < Lives.size() - 1) {
+                    
+                        Lives[y] = Lives[y + 1];
+                    
+                    }
+                    Lives.pop_back();
+                
+                }
+            
+            }
+            if (IsKeyDown(KEY_SPACE) && bag.items > 0) {
+                bag.items--;
+                PowerUpLive auxy(p);
+            
+            }
             
             while (i < deadogres) {
             
@@ -1301,7 +1359,13 @@ public:
 
 };
 
+struct bag {
 
+    int items;
+    
+
+
+};
 
 int main() {
     // Tell the window to use vsync and work on high DPI displays
@@ -1329,7 +1393,8 @@ int main() {
     Background desierto;
     time ui;
     /* Ogre enemigo;*/
-
+    bag bag;
+    bag.items = 0;
      //creation of enemy vector
     int og = 0;
     //vector<Ogre> ogres(og);
@@ -1339,11 +1404,12 @@ int main() {
     int dire = 1;
     Game game;
     std::vector<float>auxTime;
+    std::vector <PowerUpLive>Lives;
     while (!WindowShouldClose()) {
 
 
 
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime);
+        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, bag, Lives);
     
         desierto.Drawlevel1();
         ui.DrawInicial();
