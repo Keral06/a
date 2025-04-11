@@ -17,6 +17,7 @@ class Mummy;
 class Orc;
 class Shoot;
 class Ogre;
+class PowerUpLive;
 class time;
 enum Direccion
 {
@@ -45,7 +46,7 @@ public:
     }
     void ColisionPlayer(Vector2 posicion) {
 
-        DrawRectangle(posicion.x, posicion.y, 32, 32, BLANK);
+        DrawRectangle(posicion.x, posicion.y, 32, 32, BLUE);
         Square.x = posicion.x;
         Square.y = posicion.y;
 
@@ -248,10 +249,17 @@ public:
         }
 
     }
+   
     void ResetPlayer() {
     
         playerPos = { (float)screenWidth / 2, (float)screenHeight / 2 };
         status = true;
+    
+    }
+    bool CheckPowerUp(PowerUpLive p) {
+    
+        bool check = CheckCollisionRecs(this->Square, p.Square);
+        return check;
     
     }
 
@@ -556,6 +564,8 @@ private:
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Vector2 pos;
 public:
+    friend class Game;
+    friend class Player;
     PowerUpLive(Vector2 position) : Colision(pos) {
         this->pos = position;
 
@@ -570,8 +580,7 @@ public:
 
     }
     bool CheckColisionsPower(Player& p) {
-        this->Square.x = pos.x;
-        this->Square.y = pos.y;
+        
         bool check = CheckCollisionRecs(this->Square, p.Square);
         
 
@@ -712,7 +721,15 @@ public:
         default:
             break;
         }
-        ColisionPlayer(playerPos);
+        ColisionBullet(playerPos);
+
+
+    }
+    void ColisionBullet(Vector2 posicion) {
+
+        DrawRectangle(posicion.x, posicion.y, 3, 3, BLUE);
+        Square.x = posicion.x;
+        Square.y = posicion.y;
 
 
     }
@@ -1054,33 +1071,52 @@ public:
             }
             i = 0;
             deadogres = dead.size();
-            if (deadogres > 1) {
+            /*if (deadogres > 1) {
 
                 if (deadogres == 10) {
                     int hh = 1;
                 
                 }
+            }*/
+
+            if (Lives.size() == 1) {
+                Lives[i].Draw();
+                if (Lives[0].CheckColisionsPower(p) == true && p.bag < 2) {
+
+
+                    Lives.pop_back();
+                    p.bag++;
+
+                }
             }
+            else if (Lives.size() == 0) {
 
-            if (Lives.size() > 1) {
-                while (i < Lives.size() - 1) {
 
-                    Lives[i].Draw();
-                    if (Lives[i].CheckColisionsPower(p) == true && p.bag < 2) {
+            }
+            else {
+
+
+                while (i < Lives.size()) {
+
+                    
+                    if (p.CheckPowerUp(Lives[i]) == true && p.bag < 2) {
                         p.bag++;
                         int y = i;
-                        while (y < Lives.size() - 1) {
+                        
+                        
 
-                            Lives[y] = Lives[y + 1];
+                            while (y < Lives.size() - 1) {
 
-                        }
-                        Lives.pop_back();
+                                Lives[y] = Lives[y + 1];
 
+                            }
+                        
+
+                            Lives.pop_back();
                     }
                     i++;
                 }
             }
-            i = 0;
               
            
             i = 0;
