@@ -6,11 +6,10 @@
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include <vector>  // Add this include for std::vector
 
-<<<<<<< Updated upstream
+
 const int screenWidth = 1024 / 2 + 32*2;
-=======
-const int screenWidth = 1024 / 2 +64;
->>>>>>> Stashed changes
+
+
 const int screenHeight = 1024 / 2 + 32;
 class Player;
 class Enemy;
@@ -1124,7 +1123,7 @@ public:
     void Drawlevel1() {
         /* BeginDrawing();*/
         int x = 0;
-     /*   DrawTexture(vida, 512, 64, WHITE);*/
+        DrawTexture(vida, 512, 64, WHITE);
         DrawTexture(monedaa, 512, 96, BLANK);
         DrawTexture(suelo, 32, 0, WHITE);
         for (int i = 0; i < 7; i++) {
@@ -1343,13 +1342,10 @@ int main() {
     while (!WindowShouldClose()) {
 
 
-<<<<<<< Updated upstream
+
         game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime);
-        desierto.Draw();
-=======
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime);
+    
         desierto.Drawlevel1();
->>>>>>> Stashed changes
         ui.DrawInicial();
 
         
