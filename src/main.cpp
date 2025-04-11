@@ -71,6 +71,7 @@ protected:
     int hp;
     int vel;
     Vector2 playerPos;
+    Sound Walk = LoadSound("sound effects/prairie king walk.ogg"); 
 
 };
 
@@ -315,9 +316,19 @@ public:
 
 
             }
+          
             if (!moved) {
                 dir = IDLE;
+
+                StopSound(Walk);
             }
+            else {
+                if (!IsSoundPlaying(Walk)) {
+                    PlaySound(Walk); // Play the sound only if it’s not already playing
+                }
+                
+            }
+            
             ColisionPlayer(playerPos);
             if (nextX >= 32 && nextX <= screenWidth - 64*2 &&
                 nextY >= 32 && nextY <= screenHeight - 64+32) {
@@ -448,7 +459,7 @@ public:
 
 protected:
 
-
+    Sound Die = LoadSound("sound effects/enemy death.ogg");
 
 
 
@@ -457,7 +468,7 @@ protected:
 class Ogre : public Enemy {
 private:
     int dire = 0;
-
+    
     Texture Mon1 = LoadTexture("64x64/128x128_zombie7.png");
     Texture Mon2 = LoadTexture("64x64/128x128_zombie6.png");
     Texture Death1 = LoadTexture("effects/128x128_hierba1.png");
@@ -477,6 +488,13 @@ public:
 
 
 
+    }
+    void Death() {
+    
+        if (!IsSoundPlaying(Die)) {
+            PlaySound(Die); // Play the sound only if it’s not already playing
+        }
+    
     }
 
 
@@ -557,7 +575,9 @@ class Shoot : public Colision {
 
 private:
     Vector2 playerPos;
+    Sound shooter = LoadSound("sound effects/prairie king bullet.ogg");
 
+   
 public:
     friend class Enemy;
     Direccion dir;
@@ -571,7 +591,11 @@ public:
 
     }
     Shoot(Player p) : Colision(p.GetPosition()) {
+        if (!IsSoundPlaying(shooter)) {
+            PlaySound(shooter); // Play the sound only if it’s not already playing
+        }
         playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (32) };
+       
         // Set direction based on arrow keys instead of player direction
         if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP)) {
             dir = DIAGONAL1;
@@ -802,7 +826,7 @@ public:
 
 
     void UsePowerUp(Player& p) {
-        p.lives++;
+        p.coins++;
 
 
     }
@@ -828,8 +852,10 @@ private:
     std::vector<DeadOgre>dead;
     int deadogres;
     bool tiempoiniciado;
+    Sound power = LoadSound("song/cowboy_powerup.wav");
+    bool gameover = false;
 public:
-
+    friend int main();
     Game() {
         deadogres = 0;
         Stage stage();
@@ -856,6 +882,8 @@ public:
         ClearBackground(BLACK);
         /*BeginDrawing();*/
         BeginDrawing();
+
+        
 
 
         // Handle bullet creation with arrow keys
@@ -929,23 +957,26 @@ public:
 
 
                             /* enemigo[i].Death();*/
-                            if (ogreaux == 1) {
-                                if (GetRandomValue(1, 3) == 1 && Lives.size() ==0) {
+                                int a = 0;
+                                if (GetRandomValue(1, 7) == 1 && Lives.size() ==0) {
                                     Vector2 ee = enemigo[i].GetPosition();
                                     PowerUpLive live(ee);
                                     Lives.push_back(live);
                                    
-
+                                    a = 1;
 
                                 }
-                                else if (GetRandomValue(1, 3) == 2 && money.size() == 0) {
+
+                                enemigo[i].Death();
+                            if (ogreaux == 1) {
+                                /*if (GetRandomValue(1, 3) == 1 && money.size() == 0 && a ==0) {
                                 
                                     Vector2 ee = enemigo[i].GetPosition();
                                     coins coin(ee);
                                     money.push_back(coin);
                                 
                                 
-                                }
+                                }*/
                                 enemigo.pop_back();
 
                             }
@@ -1027,7 +1058,7 @@ public:
         i = 0;
         deadogres = dead.size();
 
-        if (money.size() > 0) {
+       /* if (money.size() > 0) {
         
             money[0].Draw();
 
@@ -1038,12 +1069,15 @@ public:
             
             }
         
-        }
+        }*/
 
         if (Lives.size() > 0) {
         
             Lives[0].Draw();
             if (PlayerPowerUp(p, Lives[0]) == true ) {
+                if (!IsSoundPlaying(power)) {
+                    PlaySound(power); // Play the sound only if it’s not already playing
+                }
                 if (p.bag == 1) {
                     Lives[0].UsePowerUp(p);
                     Lives.pop_back();
@@ -1154,7 +1188,7 @@ public:
             tiempoiniciado = false;
             if (p.lives == 0) {
 
-                GameOver();
+                GameOver(p);
 
             }
             else {
@@ -1166,12 +1200,29 @@ public:
         // Set background color (framebuffer clear color)
 /*  EndDrawing();*/
     }
-    void GameOver() {
+    void GameOver(Player&p) {
 
-        DrawRectangle(0, 0, 520, 520, BLACK);
-
+        
+        gameover = true;
+        p.lives = 3;
+        p.coins = 0;
 
     }
+    void GameOverScreen() {
+        ClearBackground(BLACK);
+        /*BeginDrawing();*/
+        BeginDrawing();
+        DrawText("Game Over", 0, screenHeight / 2, 40, RED);
+        DrawText("To Try again click space bar", 0,( screenHeight / 2)+20, 20, WHITE);
+        EndDrawing();
+        if (IsKeyDown(KEY_SPACE)) {
+        
+            gameover = false;
+        
+        }
+    }
+
+    
 
 };
 bool PlayerPowerUp(Player& p, PowerUpLive& pp) {
@@ -1662,7 +1713,7 @@ public:
          UpdateMusicStream(Overworld);
          if (GetMusicTimePlayed(Overworld) / GetMusicTimeLength(Overworld) > 1) {
          
-             starts = 1;
+             starts = 0;
          }
         
         
@@ -1671,6 +1722,11 @@ public:
 
     
     
+    }
+    void stopmusic() {
+    
+        StopMusicStream(Overworld);
+        starts == 0;
     }
 
 
@@ -1720,12 +1776,20 @@ int main() {
     while (!WindowShouldClose()) {
 
 
-        player.OverworldPlayer();
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
+        if (!game.gameover) {
 
+           player.OverworldPlayer();
+        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
         desierto.Drawlevel1();
         ui.DrawInicial();
         aa.draw(p);
+        
+        }
+        else {
+            player.stopmusic();
+            game.GameOverScreen();
+        }
+
     }
     
     CloseAudioDevice();
