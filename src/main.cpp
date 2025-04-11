@@ -1,16 +1,11 @@
-//copia
 
 #include "raylib.h"
+#include "resource_dir.h"
+#include <vector> 
 
-
-#include "resource_dir.h"	// utility header for SearchAndSetResourceDir
-#include <vector>  // Add this include for std::vector
-
-
-const int screenWidth = 1024 / 2 + 32*2;
-
-
+const int screenWidth = 1024 / 2 + 32 * 2;
 const int screenHeight = 1024 / 2 + 32;
+class Colision;
 class Player;
 class Enemy;
 class Mummy;
@@ -34,7 +29,6 @@ enum Direccion
 
 class Colision {
 public:
-    Colision() {}
     Colision(Vector2 posicion) {
         BeginDrawing();
         float widthThing = 32;
@@ -46,7 +40,7 @@ public:
     }
     void ColisionPlayer(Vector2 posicion) {
 
-        DrawRectangle(posicion.x, posicion.y, 32, 32, BLUE);
+        DrawRectangle(posicion.x, posicion.y, 32, 32, BLANK);
         Square.x = posicion.x;
         Square.y = posicion.y;
 
@@ -64,13 +58,8 @@ public:
         dir = IDLE;
 
     }
-
-
     Vector2 GetPosition() const { return this->playerPos; }
     Direccion GetDir() const { return this->dir; }
-
-
-
     int pos() {
 
         int a = GetRandomValue(1, 4);
@@ -78,16 +67,10 @@ public:
 
     }
     Direccion dir;
-
 protected:
     int hp;
     int vel;
     Vector2 playerPos;
-
-
-
-
-
 
 };
 
@@ -110,6 +93,7 @@ private:
 
 public:
     friend int main();
+    friend class UI;
     friend class Game;
     Player(int hp, int vel) : Entity(hp, vel, { (float)screenWidth / 2, (float)screenHeight / 2 }) {
         this->coins = 0;
@@ -249,23 +233,18 @@ public:
         }
 
     }
-   
+
     void ResetPlayer() {
-    
+
         playerPos = { (float)screenWidth / 2, (float)screenHeight / 2 };
         status = true;
-    
+
     }
-    bool CheckPowerUp(PowerUpLive p) {
-    
-        bool check = CheckCollisionRecs(this->Square, p.Square);
-        return check;
-    
-    }
+
 
     void Movement() {
 
-       /* BeginDrawing();*/
+        /* BeginDrawing();*/
         Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
         Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
         bool moved = false;
@@ -354,18 +333,62 @@ public:
         }
 
 
-
     }
 
+
     void Death() {
-    
+
         lives--;
-    
+
     }
     friend class Enemy;
     friend class Colision;
     friend class Ogre;
     friend class PowerUpLive;
+    friend bool PlayerPowerUp(Player& p, PowerUpLive& pp);
+};
+
+class PowerUpLive : public Colision {
+private:
+    Texture vida = LoadTexture("items/128x128_cabeza.png");
+    Vector2 pos;
+public:
+    friend class Game;
+    friend class Player;
+    friend class Colision;
+    friend bool PlayerPowerUp(Player& p, PowerUpLive& pp);
+    PowerUpLive(Vector2 position) : Colision(pos) {
+        this->pos = position;
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+
+
+    }
+
+    PowerUpLive(Player p) : Colision(pos) {
+
+        p.lives++;
+
+    }
+
+
+
+
+    void UsePowerUp(Player& p) {
+        p.lives++;
+
+
+    }
+
+    void Draw() {
+
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+
+
+
 };
 
 class Enemy : public Entity {
@@ -410,7 +433,17 @@ public:
 
 
 
+    bool CheckColisions(Player& p) {
 
+        bool check = CheckCollisionRecs(this->Square, p.Square);
+        if (check == true) {
+
+            p.status = false;
+        }
+
+        return p.status;
+
+    }
 
 protected:
 
@@ -432,29 +465,19 @@ private:
     Texture Death4 = LoadTexture("effects/128x128_hierba4.png");
     Texture Death5 = LoadTexture("effects/128x128_hierba5.png");
     Texture Death6 = LoadTexture("effects/128x128_hierba6.png");
-    
+
 
 public:
     friend class PowerUpLive;
     friend class Game;
     Ogre() : Enemy(3, 1) {
 
-        
 
 
 
-    }
-    bool CheckColisions(Player& p) {
-
-        bool check = CheckCollisionRecs(this->Square, p.Square);
-        if (check == true) {
-
-            p.status = false;
-        }
-
-        return p.status;
 
     }
+
 
     void Update(Player p) {
 
@@ -499,121 +522,12 @@ public:
         if (dire == 100) { dire = 0; }
         dire++;
 
-        /*EndDrawing();*/
+
 
     }
 
-    //void Death() {
-    //
-    //
-    //    /*int i = 0;
-
-    //    while (i < 120) {
-    //        if (i <= 20) {
-    //            DrawTexture(Death1, GetPosition().x, GetPosition().y, WHITE);
-    //        
-    //        }else if(20 < 1 >= 40) {
-    //            DrawTexture(Death2, GetPosition().x, GetPosition().y, WHITE);
-    //        }
-    //        else if (40 < i >= 60) {
-    //        
-    //            DrawTexture(Death3, GetPosition().x, GetPosition().y, WHITE);
-    //        
-    //        }
-    //        else if (60 < i >= 80) {
-    //        
-    //            DrawTexture(Death4, GetPosition().x, GetPosition().y, WHITE);
-    //        }
-    //        else if (80 < i >= 100) {
-    //        
-    //            DrawTexture(Death5, GetPosition().x, GetPosition().y, WHITE);
-    //        
-    //        }
-    //        else {
-    //        
-    //            DrawTexture(Death6, GetPosition().x, GetPosition().y, WHITE);
-    //        
-    //        }
-    //    
-    //    
-    //    
-    //        i++;
-    //    }*/
-    //    
-    //
-    //
-    //}
-
-    /*void ColisionMonster(Player p) override {
-
-
-
-
-
-
-
-
-
-   }*/
 
     friend class Colision;
-
-};
-class PowerUpLive : public Colision {
-private:
-    Texture vida = LoadTexture("items/128x128_cabeza.png");
-    Vector2 pos;
-public:
-    friend class Game;
-    friend class Player;
-    PowerUpLive(Vector2 position) : Colision(pos) {
-        this->pos = position;
-
-        DrawTexture(vida, pos.x, pos.y, WHITE);
-
-
-    }
-
-    PowerUpLive(Player p) : Colision() {
-
-        p.lives++;
-
-    }
-    bool CheckColisionsPower(Player& p) {
-        
-        bool check = CheckCollisionRecs(this->Square, p.Square);
-        
-
-        return check;
-    
-    }
-
-    
-
-    void UsePowerUp( Player &p) {
-        p.lives++;
-
-    
-    }
-
-    void Draw() {
-    
-    
-        DrawTexture(vida, pos.x, pos.y, WHITE);
-        ColisionPlayer(pos);
-    }
-
-    bool CheckColisions(Player& p) {
-
-        bool check = CheckCollisionRecs(this->Square, p.Square);
-        if (check == true) {
-
-            p.status = false;
-        }
-
-        return p.status;
-
-    }
 
 };
 
@@ -625,23 +539,24 @@ public:
 
     DeadOgre(Vector2 playerPos) {
         this->playerPos = playerPos;
-    
+
     }
 
     void Draw() {
-    
+
         DrawTexture(Mon1, playerPos.x, playerPos.y, WHITE);
-    
+
     }
 
 
 
 };
+
 class Shoot : public Colision {
 
 private:
     Vector2 playerPos;
-   
+
 public:
     friend class Enemy;
     Direccion dir;
@@ -763,7 +678,7 @@ protected:
     int stage;
 public:
 
-    
+
 
     Stage() : level() {
 
@@ -785,6 +700,7 @@ public:
 
 
 };
+
 class time {
 private:
     Texture barra = LoadTexture("ui/barra.png");
@@ -805,28 +721,28 @@ public:
         tiempoInicial = 0;
     }
     void DrawInicial() {
-    
-        DrawRectangle(0, 1024 / 2, 1024/2, 32, GREEN);
-    
+
+        DrawRectangle(0, 1024 / 2, 1024 / 2, 32, GREEN);
+
     }
     void Draw() {
-        
-     
-        double porcentaje = tiempoFinal/tiempoTranscurrido;
-        barraAncho = (int)((1024/2) * (1 - porcentaje));
-        
+
+
+        double porcentaje = tiempoFinal / tiempoTranscurrido;
+        barraAncho = (int)((1024 / 2) * (1 - porcentaje));
+
         if (barraAncho % 6 == 0) {
 
 
-         DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
+            DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
 
-         aux = barraAncho;
+            aux = barraAncho;
         }
         else {
-        
+
             DrawRectangle(0, 1024 / 2, aux, 32, GREEN);
         }
-        
+
     }
     void IniciarTiempo() {
 
@@ -871,25 +787,25 @@ public:
         tiempoiniciado = false;
     }
 
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo, std:: vector<float>&auxTime, float &HelpMeTime, std::vector <PowerUpLive>&Lives ) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives) {
         if (tiempoiniciado == false) {
-        
+
             Tiempo.IniciarTiempo();
             tiempoiniciado = true;
             Tiempo.DrawInicial();
         }
         else {
-        
+
             Tiempo.TiempoQueHaPasado();
             Tiempo.Draw();
-        
-        
+
+
         }
         ClearBackground(BLACK);
         /*BeginDrawing();*/
         BeginDrawing();
 
-        
+
         // Handle bullet creation with arrow keys
         if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
             IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
@@ -906,7 +822,7 @@ public:
 
 
 
-        
+
 
 
         int bulletSize = bullets.size();
@@ -924,264 +840,225 @@ public:
 
         }
         int i = 0;
-        i = 0;// Update and remove off-screen bullets
-        /*bullets.erase(
-            std::remove_if(bullets.begin(), bullets.end(),
-                [](const Shoot& bullet) {
-                    Vector2 pos = bullet.GetPosition();
-                    return pos.x < 0 || pos.x > screenWidth ||
-                        pos.y < 0 || pos.y > screenHeight;
-                }
-            ),
-            bullets.end()*/
-            /* );*/
+        i = 0;
 
         while (i < bulletSize) {
-            
+
             bullets[i].UpdatePosition();
             DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
             i++;
         }
-       
-        
+
+
         ogreaux = enemigo.size();
+        i = 0;
+        if (ogreaux > 0) {
+
             i = 0;
-            if (ogreaux > 0) {
-
-                i = 0;
-                int j = 0;
-                int aux = 0;
-                while (i < ogreaux) {
-
-                    while (j < bulletSize) {
-                        if (i >= ogreaux) {
-                        
-                        
-                        }
-                        else {
-                        
-                            if (bullets[j].ColisionBullet(enemigo[i]) == true) {
-                                if (GetRandomValue(1, 30) == 1) {
-                                    
-                                    PowerUpLive live(enemigo[i].playerPos);
-                                    Lives.push_back(live);
-                                    p.bag++;
-
-
-                                }
-                                DeadOgre auxiliari(enemigo[i].GetPosition());
-                                dead.push_back(auxiliari);
-                                float timehelp = GetTime();
-                                auxTime.push_back(timehelp);
-                                deadogres++;
-                                ogreaux = enemigo.size();
-
-                               
-                                /* enemigo[i].Death();*/
-                                if (ogreaux == 1) {
-                                    if (GetRandomValue(1, 2) == 1) {
-                                        Vector2 ee = enemigo[i].GetPosition();
-                                        PowerUpLive live(ee);
-                                        Lives.push_back(live);
-                                        p.bag++;
-
-
-                                    }
-                                    enemigo.pop_back();
-                                    
-                                }
-
-                                else if (ogreaux > 1) {
-                                    
-                                    aux = i;
-                                    while (aux < ogreaux - 1) {
-
-                                        enemigo[aux] = enemigo[aux + 1];
-                                        aux++;
-
-                                    }
-                                    enemigo.pop_back();
-                                    
-
-                                }
-                                ogreaux = enemigo.size();
-                                bulletSize = bullets.size();
-                                aux = j;
-                                if (bulletSize == 1) {
-
-                                    bullets.pop_back();
-                                    bulletSize--;
-                                }
-                                else if (bulletSize > 1) {
-                                    while (aux < bulletSize - 1) {
-                                        bullets[aux] = bullets[aux + 1];
-                                        aux++;
-                                    }
-
-                                    bullets.pop_back();
-                                   
-                                }
-                                bulletSize = bullets.size();
-                        
-                            }
-                       
-                            
-                        }
-
-                        if (ogreaux == 0) { j = bulletSize; }
-
-                        j++;
-                    }
-
-                    j = 0;
-                    i++;
-
-
-                }
-
-            
-             }
-            
-            
-            if (IsKeyDown(KEY_SPACE) && p.bag > 0) {
-                p.bag--;
-                PowerUpLive auxy(p);
-            
-            }
-            i = 0;
-            
-            while (i < deadogres) {
-            
-            
-                    dead[i].Draw();
-
-                    float auxiliart = GetTime();
-
-                    i++;
-                    if (GetRandomValue(1,4)==2 && auxiliart - auxTime[deadogres - 1] > 5.0f) {
-                    dead.pop_back();
-
-                    auxTime.pop_back();
-                    deadogres = dead.size();
-
-                    HelpMeTime = GetTime();
-
-
-                    }
-            }
-            i = 0;
-            deadogres = dead.size();
-            /*if (deadogres > 1) {
-
-                if (deadogres == 10) {
-                    int hh = 1;
-                
-                }
-            }*/
-
-            if (Lives.size() == 1) {
-                Lives[i].Draw();
-                if (Lives[0].CheckColisionsPower(p) == true && p.bag < 2) {
-
-
-                    Lives.pop_back();
-                    p.bag++;
-
-                }
-            }
-            else if (Lives.size() == 0) {
-
-
-            }
-            else {
-
-
-                while (i < Lives.size()) {
-
-                    
-                    if (p.CheckPowerUp(Lives[i]) == true && p.bag < 2) {
-                        p.bag++;
-                        int y = i;
-                        
-                        
-
-                            while (y < Lives.size() - 1) {
-
-                                Lives[y] = Lives[y + 1];
-
-                            }
-                        
-
-                            Lives.pop_back();
-                    }
-                    i++;
-                }
-            }
-              
-           
-            i = 0;
-            ogreaux = enemigo.size();
+            int j = 0;
+            int aux = 0;
             while (i < ogreaux) {
 
-                enemigo[i].CheckColisions(p);
+                while (j < bulletSize) {
+                    if (i >= ogreaux) {
 
-                if (p.status == true) {
-
-                    enemigo[i].MovementEnemy(p);
-
-
-                }
-
-                enemigo[i].Draw();
-
-                i++;
-
-            }
-            i = 0;
-            bulletSize = bullets.size();
-            while (i < bulletSize) {
-
-                if (0 > bullets[i].GetPosition().x || GetScreenWidth() < bullets[i].GetPosition().x || GetScreenHeight() < bullets[i].GetPosition().y || 0 > bullets[i].GetPosition().y) {
-                    bulletSize = bullets.size();
-                    int p = i;
-                    if (bulletSize == 1) {
-
-                        bullets.pop_back();
-                        bulletSize = 0;
 
                     }
                     else {
 
-                        while (p < bulletSize - 1) {
+                        if (bullets[j].ColisionBullet(enemigo[i]) == true) {
+                           
+                            DeadOgre auxiliari(enemigo[i].GetPosition());
+                            dead.push_back(auxiliari);
+                            float timehelp = GetTime();
+                            auxTime.push_back(timehelp);
+                            deadogres++;
+                            ogreaux = enemigo.size();
 
-                            bullets[p] = bullets[p + 1];
-                            p++;
+
+                            /* enemigo[i].Death();*/
+                            if (ogreaux == 1) {
+                                if (GetRandomValue(1, 2) == 1 && Lives.size() ==0) {
+                                    Vector2 ee = enemigo[i].GetPosition();
+                                    PowerUpLive live(ee);
+                                    Lives.push_back(live);
+                                   
+
+
+                                }
+                                enemigo.pop_back();
+
+                            }
+
+                            else if (ogreaux > 1) {
+
+                                aux = i;
+                                while (aux < ogreaux - 1) {
+
+                                    enemigo[aux] = enemigo[aux + 1];
+                                    aux++;
+
+                                }
+                                enemigo.pop_back();
+
+
+                            }
+                            ogreaux = enemigo.size();
+                            bulletSize = bullets.size();
+                            aux = j;
+                            if (bulletSize == 1) {
+
+                                bullets.pop_back();
+                                bulletSize--;
+                            }
+                            else if (bulletSize > 1) {
+                                while (aux < bulletSize - 1) {
+                                    bullets[aux] = bullets[aux + 1];
+                                    aux++;
+                                }
+
+                                bullets.pop_back();
+
+                            }
+                            bulletSize = bullets.size();
+
                         }
-                        
-                        bullets.pop_back();
 
 
                     }
-                    bulletSize = bullets.size();
+
+                    if (ogreaux == 0) { j = bulletSize; }
+
+                    j++;
                 }
+
+                j = 0;
                 i++;
+
+
             }
-           
-            if (bulletSize > 20) {
+
+
+        }
+
+
+        
+        i = 0;
+
+        while (i < deadogres) {
+
+
+            dead[i].Draw();
+
+          /*  float auxiliart = GetTime();*/
+
+            i++;
+           /* if (GetRandomValue(1, 4) == 2 && auxiliart - auxTime[deadogres - 1] > 5.0f) {
+                dead.pop_back();
+
+                auxTime.pop_back();
+                deadogres = dead.size();
+
+                HelpMeTime = GetTime();*/
+
+
+            
+        }
+        i = 0;
+        deadogres = dead.size();
+
+
+        if (Lives.size() > 0) {
+        
+            Lives[0].Draw();
+            if (PlayerPowerUp(p, Lives[0]) == true ) {
+                if (p.bag == 1) {
+                    Lives[0].UsePowerUp(p);
+                    Lives.pop_back();
+                }
+                else {
+                
+                    p.bag++;
+                    Lives.pop_back();
+                }
+
+
+            }
+
+        
+        }
+        if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
+            p.bag--;
+            PowerUpLive auxy(p);
+            auxy.UsePowerUp(p);
+
+        }
+       
+      
+
+
+        i = 0;
+        ogreaux = enemigo.size();
+        while (i < ogreaux) {
+
+            enemigo[i].CheckColisions(p);
+
+            if (p.status == true) {
+
+                enemigo[i].MovementEnemy(p);
+
+
+            }
+
+            enemigo[i].Draw();
+
+            i++;
+
+        }
+        i = 0;
+        bulletSize = bullets.size();
+        while (i < bulletSize) {
+
+            if (0 > bullets[i].GetPosition().x || GetScreenWidth() < bullets[i].GetPosition().x || GetScreenHeight() < bullets[i].GetPosition().y || 0 > bullets[i].GetPosition().y) {
                 bulletSize = bullets.size();
-            };
+                int p = i;
+                if (bulletSize == 1) {
+
+                    bullets.pop_back();
+                    bulletSize = 0;
+
+                }
+                else {
+
+                    while (p < bulletSize - 1) {
+
+                        bullets[p] = bullets[p + 1];
+                        p++;
+                    }
+
+                    bullets.pop_back();
+
+
+                }
+                bulletSize = bullets.size();
+            }
+            i++;
+        }
+
+        if (bulletSize > 20) {
+            bulletSize = bullets.size();
+        };
         p.Movement();
         p.Draw();
         EndDrawing();
         if (p.status == false) {
-        
-        
-            p.Death();
+
+
 
             int x = 0;
 
             while (x < ogreaux) {
-            
+
                 enemigo.pop_back();
                 x++;
             }
@@ -1190,27 +1067,27 @@ public:
             while (x < bulletSize) {
                 bullets.pop_back();
                 x++;
-            
-            
+
+
             }
             bulletSize = 0;
             x = 0;
-           /* while (x < deadogres) {
-            
-                dead.pop_back();
-                x++;
-            
-            }
-            deadogres = 0;*/
+            /* while (x < deadogres) {
+
+                 dead.pop_back();
+                 x++;
+
+             }
+             deadogres = 0;*/
             tiempoiniciado = false;
             if (p.lives == 0) {
-            
+
                 GameOver();
-            
+
             }
             else {
-            p.ResetPlayer();
-            
+                p.ResetPlayer();
+
             }
         }
 
@@ -1218,14 +1095,26 @@ public:
 /*  EndDrawing();*/
     }
     void GameOver() {
-    
+
         DrawRectangle(0, 0, 520, 520, BLACK);
-    
-    
+
+
     }
 
 };
+bool PlayerPowerUp(Player& p, PowerUpLive& pp) {
 
+    bool check = CheckCollisionRecs(p.Square, pp.Square);
+    if (check == true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
+
+
+}
 class Background : public Stage {
 private:
 
@@ -1423,7 +1312,7 @@ public:
         DrawTexture(desierto4, 416, y, WHITE);
         y = y + 64;
         DrawTexture(desierto4, 96, y, WHITE);
-        DrawTexture(desierto4,192, y, WHITE);
+        DrawTexture(desierto4, 192, y, WHITE);
         y = y + 32;
         DrawTexture(desierto4, 416, y, WHITE);
         y = y + 32;
@@ -1443,7 +1332,7 @@ public:
                 }
 
             }
-            x = x + 32; 
+            x = x + 32;
 
         }
         x = 480;
@@ -1611,7 +1500,7 @@ public:
         x = x + 64;
         DrawTexture(valla, x, y, WHITE);
         x = 128;
-        y = 352 +32;
+        y = 352 + 32;
         for (int i = 0; i < 2; i++) {
             DrawTexture(valla, x, y, WHITE);
             x = x + 32;
@@ -1620,7 +1509,7 @@ public:
         x = x - 64;
         DrawTexture(valla, x, y, WHITE);
         x = 352;
-        y = 352 +32;
+        y = 352 + 32;
         for (int i = 0; i < 2; i++) {
             DrawTexture(valla, x, y, WHITE);
             x = x - 32;
@@ -1643,12 +1532,12 @@ public:
         DrawTexture(desierto4, 64, y, WHITE);
         DrawTexture(desierto4, 96 + 64, y, WHITE);
         y = y + 32;
-        DrawTexture(desierto4, 480-96, y, WHITE);
+        DrawTexture(desierto4, 480 - 96, y, WHITE);
         y = y + 32;
         DrawTexture(desierto4, 96 + 64, y, WHITE);
         x = 96 + 96 + 64;
         for (int i = 0; i < 3; i++) {
-            DrawTexture(desierto4,x, y, WHITE);
+            DrawTexture(desierto4, x, y, WHITE);
             x = x + 32;
         }
         y = y + 32;
@@ -1658,25 +1547,25 @@ public:
         DrawTexture(desierto4, 96, y, WHITE);
         DrawTexture(desierto4, 224, y, WHITE);
     }
-            /* EndDrawing();*/
+    /* EndDrawing();*/
 
 
 };
-class UI{
+class UI {
 private:
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Texture moneda1 = LoadTexture("items/128x128_moneda1.png");
 public:
     friend int main();
-    void draw() {
+    void draw(Player p) {
         DrawTexture(vida, 512, 64, WHITE);
         DrawTexture(moneda1, 512, 96, WHITE);
+        DrawText(TextFormat("%i", p.lives), 512+32, 66, 20, RED);
+        DrawText(TextFormat("%i", p.coins), 512+32, 96, 20, RED);
+       
     }
 
 };
-
-
-
 int main() {
     // Tell the window to use vsync and work on high DPI displays
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
@@ -1704,8 +1593,8 @@ int main() {
     time ui;
     UI aa;
     /* Ogre enemigo;*/
-    
-    
+
+
      //creation of enemy vector
     int og = 0;
     //vector<Ogre> ogres(og);
@@ -1721,91 +1610,11 @@ int main() {
 
 
         game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives);
-    
+
         desierto.Drawlevel1();
         ui.DrawInicial();
-        aa.draw();
-        
-        /* ClearBackground(RAYWHITE);*/
-      /*   ClearBackground(RAYWHITE);           */
-       /*  EndDrawing();*/
-         //p.Movement();
-         //p.Draw();
-
-         //// Handle bullet creation with arrow keys
-         //if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
-         //    IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
-         //    // Add rate limiting for bullets
-         //    static float shootTimer = 0.0f;
-         //    if (shootTimer <= 0) {
-         //        bullets.push_back(Shoot(p));
-         //        shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
-         //    }
-         //    shootTimer -= GetFrameTime();
-         //}
-
-         //// Update and remove off-screen bullets
-         //bullets.erase(
-         //    std::remove_if(bullets.begin(), bullets.end(),
-         //        [](const Shoot& bullet) {
-         //            Vector2 pos = bullet.GetPosition();
-         //            return pos.x < 0 || pos.x > screenWidth ||
-         //                pos.y < 0 || pos.y > screenHeight;
-         //        }
-         //    ),
-         //    bullets.end()
-         //);
-
-         //BeginDrawing();
-         //ClearBackground(RAYWHITE);
-
-         //// Draw player
-         //
-         //enemigo.CheckColisions(p);
-         //if (p.status == true) {
-         //    enemigo.MovementEnemy(p);
-
-
-         //    ayxi++;
-         //    if (ayxi == 100) { ayxi = 0; }
-         //}
-
-
-
-
-
-
-         //
-
-         //enemigo.Draw();
-         //
-         //
-         //// Update and draw bullets using bullet texture
-         //for(auto& bullet : bullets) {
-         //    bullet.UpdatePosition();
-         //    DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
-         //}
-         //
-         //EndDrawing();
-
-
-
-
-
-         //primero hago una update de los que ya hay y despues lo que tendr�a que hacer es crear nuevos
-        /* int aux = 0;
-         while (aux < og) {
-
-             ogres[aux].Update(p);
-             ogres[aux].ColisionMonster(p);
-
-         }*/
-
+        aa.draw(p);
     }
-
-    // Cleanup
-  /*  UnloadTexture(logo);*/
-   /* UnloadTexture(bulletTex);*/  // Don't forget to unload bullet texture
     CloseWindow();
     return 0;
 }
