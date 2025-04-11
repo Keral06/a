@@ -788,7 +788,7 @@ public:
         tiempoiniciado = false;
     }
 
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo, std:: vector<float>&auxTime) {
         if (tiempoiniciado == false) {
         
             Tiempo.IniciarTiempo();
@@ -823,17 +823,9 @@ public:
 
 
 
-        // Update and remove off-screen bullets
-        bullets.erase(
-            std::remove_if(bullets.begin(), bullets.end(),
-                [](const Shoot& bullet) {
-                    Vector2 pos = bullet.GetPosition();
-                    return pos.x < 0 || pos.x > screenWidth ||
-                        pos.y < 0 || pos.y > screenHeight;
-                }
-            ),
-            bullets.end()
-        );
+        
+
+
         int bulletSize = bullets.size();
 
 
@@ -849,7 +841,27 @@ public:
 
         }
         int i = 0;
+        i = 0;// Update and remove off-screen bullets
+        /*bullets.erase(
+            std::remove_if(bullets.begin(), bullets.end(),
+                [](const Shoot& bullet) {
+                    Vector2 pos = bullet.GetPosition();
+                    return pos.x < 0 || pos.x > screenWidth ||
+                        pos.y < 0 || pos.y > screenHeight;
+                }
+            ),
+            bullets.end()*/
+            /* );*/
+
+        while (i < bulletSize) {
+            
+            bullets[i].UpdatePosition();
+            DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
+            i++;
+        }
+       
         
+        ogreaux = enemigo.size();
             i = 0;
             if (ogreaux > 0) {
 
@@ -859,7 +871,7 @@ public:
                 while (i < ogreaux) {
 
                     while (j < bulletSize) {
-                        if (i > ogreaux) {
+                        if (i >= ogreaux) {
                         
                         
                         }
@@ -868,12 +880,14 @@ public:
                             if (bullets[j].ColisionBullet(enemigo[i]) == true) {
                                 DeadOgre auxiliari(enemigo[i].GetPosition());
                                 dead.push_back(auxiliari);
+                                float timehelp = GetTime();
+                                auxTime.push_back(timehelp);
                                 deadogres++;
-
+                                ogreaux = enemigo.size();
                                 /* enemigo[i].Death();*/
                                 if (ogreaux == 1) {
                                     enemigo.pop_back();
-                                    ogreaux--;
+                                    
                                 }
 
                                 else if (ogreaux > 1) {
@@ -885,10 +899,11 @@ public:
 
                                     }
                                     enemigo.pop_back();
-                                    ogreaux--;
+                                    
 
                                 }
-
+                                ogreaux = enemigo.size();
+                                bulletSize = bullets.size();
                                 aux = j;
                                 if (bulletSize == 1) {
 
@@ -902,15 +917,16 @@ public:
                                     }
 
                                     bullets.pop_back();
-                                    bulletSize--;
+                                   
                                 }
-                                if (ogreaux == 0) { j = bulletSize; }
+                                bulletSize = bullets.size();
                         
                             }
                        
                             
                         }
 
+                        if (ogreaux == 0) { j = bulletSize; }
 
                         j++;
                     }
@@ -925,13 +941,35 @@ public:
              }
             i = 0;
             while (i < deadogres) {
+            
+            
+                    dead[i].Draw();
 
+                    i++;
 
-                dead[i].Draw();
-                i++;
 
             }
             i = 0;
+            deadogres = dead.size();
+            if (deadogres > 1) {
+
+
+                if (auxTime[auxTime.size() - 1] > 5.0f) {
+                    dead.pop_back();
+
+                    auxTime.pop_back();
+                    deadogres = dead.size();
+
+
+
+
+                }
+            }
+                
+              
+           
+            i = 0;
+            ogreaux = enemigo.size();
             while (i < ogreaux) {
 
                 enemigo[i].CheckColisions(p);
@@ -948,18 +986,39 @@ public:
                 i++;
 
             }
-        
+            i = 0;
+            bulletSize = bullets.size();
+            while (i < bulletSize) {
+
+                if (0 > bullets[i].GetPosition().x || GetScreenWidth() < bullets[i].GetPosition().x || GetScreenHeight() < bullets[i].GetPosition().y || 0 > bullets[i].GetPosition().y) {
+                    bulletSize = bullets.size();
+                    int p = i;
+                    if (bulletSize == 1) {
+
+                        bullets.pop_back();
+                        bulletSize = 0;
+
+                    }
+                    else {
+
+                        while (p < bulletSize - 1) {
+
+                            bullets[p] = bullets[p + 1];
+                            p++;
+                        }
+                        
+                        bullets.pop_back();
 
 
-
-
-
-        // Update and draw bullets using bullet texture
-        for (auto& bullet : bullets) {
-            bullet.UpdatePosition();
-            DrawTexture(bulletTex, bullet.GetPosition().x, bullet.GetPosition().y, WHITE);
+                    }
+                    bulletSize = bullets.size();
+                }
+                i++;
+            }
            
-        }
+            if (bulletSize > 20) {
+                bulletSize = bullets.size();
+            };
         p.Movement();
         p.Draw();
         EndDrawing();
@@ -975,7 +1034,7 @@ public:
                 enemigo.pop_back();
                 x++;
             }
-            ogreaux -= x;
+            ogreaux = 0;
             x = 0;
             while (x < bulletSize) {
                 bullets.pop_back();
@@ -983,8 +1042,15 @@ public:
             
             
             }
-            bulletSize -= x;
+            bulletSize = 0;
+            x = 0;
+           /* while (x < deadogres) {
             
+                dead.pop_back();
+                x++;
+            
+            }
+            deadogres = 0;*/
             tiempoiniciado = false;
             if (p.lives == 0) {
             
@@ -1240,10 +1306,11 @@ int main() {
     std::vector<Shoot> bullets;
     int dire = 1;
     Game game;
+    std::vector<float>auxTime;
     while (!WindowShouldClose()) {
 
 
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui);
+        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime);
         desierto.Draw();
         ui.DrawInicial();
 
