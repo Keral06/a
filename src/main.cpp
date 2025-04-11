@@ -93,6 +93,7 @@ private:
 
 public:
     friend int main();
+    friend class coins;
     friend class UI;
     friend class Game;
     Player(int hp, int vel) : Entity(hp, vel, { (float)screenWidth / 2, (float)screenHeight / 2 }) {
@@ -318,8 +319,8 @@ public:
                 dir = IDLE;
             }
             ColisionPlayer(playerPos);
-            if (nextX >= 0 && nextX <= screenWidth - 128 &&
-                nextY >= 0 && nextY <= screenHeight - 128) {
+            if (nextX >= 32 && nextX <= screenWidth - 64*2 &&
+                nextY >= 32 && nextY <= screenHeight - 64+32) {
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
@@ -768,7 +769,58 @@ public:
 
 
 };
+class coins : public Colision {
+private:
+    Texture moneda1 = LoadTexture("items/128x128_moneda1.png");
+    Vector2 pos;
+public:
 
+   
+public:
+    friend class Game;
+    friend class Player;
+    friend class Colision;
+    friend bool PlayerPowerUp(Player& p, PowerUpLive& pp);
+    coins(Vector2 position) : Colision(pos) {
+        this->pos = position;
+
+        DrawTexture(moneda1, pos.x, pos.y, WHITE);
+
+
+    }
+
+    bool ColisionMoney(Player& p) {
+    
+        bool check = CheckCollisionRecs(this->Square, p.Square);
+        return check;
+    
+    
+    
+    }
+
+
+
+
+    void UsePowerUp(Player& p) {
+        p.lives++;
+
+
+    }
+
+    void Draw() {
+
+
+        DrawTexture(moneda1, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+
+
+
+
+
+
+
+};
 class Game {
 private:
 
@@ -787,7 +839,7 @@ public:
         tiempoiniciado = false;
     }
 
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>money) {
         if (tiempoiniciado == false) {
 
             Tiempo.IniciarTiempo();
@@ -878,13 +930,21 @@ public:
 
                             /* enemigo[i].Death();*/
                             if (ogreaux == 1) {
-                                if (GetRandomValue(1, 2) == 1 && Lives.size() ==0) {
+                                if (GetRandomValue(1, 3) == 1 && Lives.size() ==0) {
                                     Vector2 ee = enemigo[i].GetPosition();
                                     PowerUpLive live(ee);
                                     Lives.push_back(live);
                                    
 
 
+                                }
+                                else if (GetRandomValue(1, 3) == 2 && money.size() == 0) {
+                                
+                                    Vector2 ee = enemigo[i].GetPosition();
+                                    coins coin(ee);
+                                    money.push_back(coin);
+                                
+                                
                                 }
                                 enemigo.pop_back();
 
@@ -967,6 +1027,18 @@ public:
         i = 0;
         deadogres = dead.size();
 
+        if (money.size() > 0) {
+        
+            money[0].Draw();
+
+            if (money[0].ColisionMoney(p) == true) {
+            
+                money[0].UsePowerUp(p);
+                money.pop_back();
+            
+            }
+        
+        }
 
         if (Lives.size() > 0) {
         
@@ -1566,10 +1638,50 @@ public:
     }
 
 };
+class music {
+
+private:
+    Music Overworld;
+    
+    int starts;
+
+public:
+
+    music() {
+        Overworld = LoadMusicStream("74.-Journey-Of-The-Prairie-King-_Overworld__1.mp3");;
+        starts = 0;
+    }
+
+    void OverworldPlayer() {
+         UpdateMusicStream(Overworld);
+         if (starts == 0) {
+         
+             PlayMusicStream(Overworld);
+             starts = 1;
+         }
+         UpdateMusicStream(Overworld);
+         if (GetMusicTimePlayed(Overworld) / GetMusicTimeLength(Overworld) > 1) {
+         
+             starts = 1;
+         }
+        
+        
+
+        
+
+    
+    
+    }
+
+
+
+
+
+};
 int main() {
     // Tell the window to use vsync and work on high DPI displays
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-
+    InitAudioDevice();
     // Create the window and OpenGL context
     InitWindow(screenWidth, screenHeight, "Hello Raylib");
 
@@ -1581,7 +1693,7 @@ int main() {
 
 
     //Texture bulletTex = LoadTexture("Bullet_1.png");
-
+    std::vector<coins>money;
     time Tiempo();
     SetTargetFPS(60);
     Player p(1, 2);
@@ -1593,7 +1705,7 @@ int main() {
     time ui;
     UI aa;
     /* Ogre enemigo;*/
-
+    music player;
 
      //creation of enemy vector
     int og = 0;
@@ -1608,13 +1720,15 @@ int main() {
     while (!WindowShouldClose()) {
 
 
-
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives);
+        player.OverworldPlayer();
+        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
 
         desierto.Drawlevel1();
         ui.DrawInicial();
         aa.draw(p);
     }
+    
+    CloseAudioDevice();
     CloseWindow();
     return 0;
 }
