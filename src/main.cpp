@@ -715,7 +715,7 @@ public:
 
     time() {
 
-        tiempoFinal = 80;
+        tiempoFinal = 80.0;
         tiempoTranscurrido = 0;
         barraAncho = 520;
         aux = 0;
@@ -748,17 +748,22 @@ public:
     void IniciarTiempo() {
 
         tiempoInicial = GetTime();
-        tiempoFinal = tiempoInicial + 80;
+        tiempoFinal = tiempoInicial + 10.0;
 
     }
     void TiempoQueHaPasado() {
 
-        tiempoTranscurrido =  GetTime() - tiempoInicial;
-
-
+        tiempoTranscurrido = tiempoFinal - GetTime();
 
 
     }
+    void tiempo() {
+        if (tiempoFinal = tiempoTranscurrido) {
+            /*game over*/
+        }
+
+    }
+
 
 
 
@@ -1240,7 +1245,8 @@ int main() {
 
         game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui);
         desierto.Draw();
-        ui.Draw();
+        ui.DrawInicial();
+
         
         /* ClearBackground(RAYWHITE);*/
       /*   ClearBackground(RAYWHITE);           */
