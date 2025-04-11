@@ -6,7 +6,7 @@
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include <vector>  // Add this include for std::vector
 
-const int screenWidth = 1024 / 2;
+const int screenWidth = 1024 / 2 + 32*2;
 const int screenHeight = 1024 / 2 + 32;
 class Player;
 class Enemy;
@@ -351,6 +351,7 @@ public:
     friend class Enemy;
     friend class Colision;
     friend class Ogre;
+    friend class PowerUpLive;
 };
 
 class Enemy : public Entity {
@@ -485,6 +486,7 @@ public:
         /*EndDrawing();*/
 
     }
+
     //void Death() {
     //
     //
@@ -539,6 +541,25 @@ public:
    }*/
 
     friend class Colision;
+
+};
+class PowerUpLive {
+private:
+
+public:
+
+    PowerUpLive() {
+    
+    
+    
+    }
+
+    void UsePowerUp( Player &p) {
+        p.lives++;
+
+    
+    }
+
 
 };
 
@@ -788,7 +809,7 @@ public:
         tiempoiniciado = false;
     }
 
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo, std:: vector<float>&auxTime) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time &Tiempo, std:: vector<float>&auxTime, float &HelpMeTime) {
         if (tiempoiniciado == false) {
         
             Tiempo.IniciarTiempo();
@@ -940,29 +961,33 @@ public:
             
              }
             i = 0;
+            
             while (i < deadogres) {
             
             
                     dead[i].Draw();
 
+                    float auxiliart = GetTime();
+
                     i++;
-
-
-            }
-            i = 0;
-            deadogres = dead.size();
-            if (deadogres > 1) {
-
-
-                if (auxTime[auxTime.size() - 1] > 5.0f) {
+                    if (GetRandomValue(1,4)==2 && auxiliart - auxTime[deadogres - 1] > 5.0f) {
                     dead.pop_back();
 
                     auxTime.pop_back();
                     deadogres = dead.size();
 
+                    HelpMeTime = GetTime();
 
 
+                    }
+            }
+            i = 0;
+            deadogres = dead.size();
+            if (deadogres > 1) {
 
+                if (deadogres == 10) {
+                    int hh = 1;
+                
                 }
             }
                 
@@ -1290,7 +1315,7 @@ int main() {
     time Tiempo();
     SetTargetFPS(60);
     Player p(1, 2);
-
+    float HelpMeTime = 10;
     std::vector<Ogre>enemigo;
     int bulletaux;
 
@@ -1310,7 +1335,7 @@ int main() {
     while (!WindowShouldClose()) {
 
 
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime);
+        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime);
         desierto.Draw();
         ui.DrawInicial();
 
