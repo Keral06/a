@@ -5,6 +5,8 @@
 
 const int screenWidth = 1024 / 2 + 32 * 2;
 const int screenHeight = 1024 / 2 + 32;
+const int playerScreenX = 1024 / 2;
+const int playerScreenY = 1024 / 2;
 class Colision;
 class Player;
 class Enemy;
@@ -72,6 +74,7 @@ protected:
     int vel;
     Vector2 playerPos;
     Sound Walk = LoadSound("sound effects/prairie king walk.ogg"); 
+    Sound Die = LoadSound("sound effects/enemy death.ogg");
 
 };
 
@@ -97,7 +100,7 @@ public:
     friend class coins;
     friend class UI;
     friend class Game;
-    Player(int hp, int vel) : Entity(hp, vel, { (float)screenWidth / 2, (float)screenHeight / 2 }) {
+    Player(int hp, int vel) : Entity(hp, vel, { (float)playerScreenX / 2, (float)playerScreenY / 2 }) {
         this->coins = 0;
         this->lives = 3;
         this->dir = ARRIBA;
@@ -238,7 +241,7 @@ public:
 
     void ResetPlayer() {
 
-        playerPos = { (float)screenWidth / 2, (float)screenHeight / 2 };
+        playerPos = { (float)playerScreenX / 2, (float)playerScreenY / 2 };
         status = true;
 
     }
@@ -330,8 +333,8 @@ public:
             }
             
             ColisionPlayer(playerPos);
-            if (nextX >= 32 && nextX <= screenWidth - 64*2 &&
-                nextY >= 32 && nextY <= screenHeight - 64+32) {
+            if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+                nextY >= 32 && nextY <= playerScreenY -64) {
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
@@ -350,6 +353,9 @@ public:
 
     void Death() {
 
+        if (!IsSoundPlaying(Die)) {
+            PlaySound(Die); // Play the sound only if it’s not already playing
+        }
         lives--;
 
     }
@@ -409,36 +415,45 @@ public:
     Enemy(int hp, int vel) : Entity(hp, vel, { 0,0 }) {
         int posicion = pos();
         if (posicion == 1) {
-            playerPos = { ((float)screenWidth / 2),32 };
+            playerPos = { ((float)playerScreenX / 2),32 };
         }
         else if (posicion == 2) {
-            playerPos = { 32, ((float)screenHeight / 2) };
+            playerPos = { 32, ((float)playerScreenY / 2) };
 
         }
         else if (posicion == 3) {
 
-            playerPos = { ((float)screenWidth / 2), (float)screenHeight - 32 * 2 };
+            playerPos = { ((float)playerScreenX / 2), (float)playerScreenY - 32 };
         }
         else {
-            playerPos = { 32, ((float)screenHeight / 2) };
+            playerPos = { (float)playerScreenX -32, ((float)playerScreenY / 2)};
 
         }
     }
     friend class Colision;
     void MovementEnemy(Player p) {
         Vector2 player = p.GetPosition();
+        float nextY = playerPos.y;
+        float nextX = playerPos.x;
         if (playerPos.x < player.x) {
-            playerPos.x += vel;  // Changed from -= to +=
+            nextX += vel;  // Changed from -= to +=
         }
         else {
-            playerPos.x -= vel;  // Changed from += to -=
+            nextX -= vel;  // Changed from += to -=
         }
 
         if (playerPos.y < player.y) {
-            playerPos.y += vel;  // Changed from -= to +=
+            nextY += vel;  // Changed from -= to +=
         }
         else {
-            playerPos.y -= vel;  // Changed from += to -=
+           nextY -= vel;  // Changed from += to -=
+        }
+        if (nextX >= 32 && nextX <= playerScreenX - 32) {
+            playerPos.x = nextX;
+            
+        } if(nextY >= 32 && nextY <= playerScreenY - 32) {
+           
+            playerPos.y = nextY;
         }
         ColisionPlayer(playerPos);
     }
@@ -459,7 +474,7 @@ public:
 
 protected:
 
-    Sound Die = LoadSound("sound effects/enemy death.ogg");
+  
 
 
 
@@ -1189,6 +1204,13 @@ public:
             if (p.lives == 0) {
 
                 GameOver(p);
+                int clean = 0;
+                while (clean < dead.size()) {
+
+                    dead.pop_back();
+                    clean++;
+
+                }
 
             }
             else {
@@ -1726,7 +1748,7 @@ public:
     void stopmusic() {
     
         StopMusicStream(Overworld);
-        starts == 0;
+        starts = 0;
     }
 
 
@@ -1786,8 +1808,8 @@ int main() {
         
         }
         else {
-            player.stopmusic();
             game.GameOverScreen();
+            player.stopmusic();
         }
 
     }
