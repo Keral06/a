@@ -1138,7 +1138,7 @@ public:
             /*  BeginDrawing();
               ClearBackground(RAYWHITE);*/
 
-            if (GetRandomValue(1, 40) == 1 && enemigo.size() < 0) {
+            if (GetRandomValue(1, 40) == 1 && enemigo.size() < 15) {
 
                 Ogre auxiliar;
                 enemigo.push_back(auxiliar);
@@ -1423,7 +1423,7 @@ public:
 
                  }
                  deadogres = 0;*/
-                tiempoiniciado = false;
+                
                 if (p.lives < 0) {
                     
                     
@@ -1445,7 +1445,7 @@ public:
                 
                
             }
-            if (Tiempo.TiempoActual() > 50 && p.status == true) {
+            if (Tiempo.TiempoActual() > 90 && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
             EndDrawing();
