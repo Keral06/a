@@ -876,17 +876,18 @@ public:
 
         double porcentaje = tiempoTranscurrido/ tiempoFinal ;
         barraAncho = (int)((playerScreenX) * (1 - porcentaje));
+       
 
         DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
        
        
-       
+        DrawText(TextFormat("Bar Width: %d", barraAncho), 10, 10, 20, BLACK);
 
     }
     void IniciarTiempo() {
 
         tiempoInicial = GetTime();
-        tiempoFinal = tiempoInicial +90.0f;
+        tiempoFinal = tiempoInicial +10;
 
     }
     void TiempoQueHaPasado() {
@@ -1002,7 +1003,7 @@ public:
 
                 Tiempo.IniciarTiempo();
                 tiempoiniciado = true;
-                Tiempo.DrawInicial();
+                
             }
             else {
 
@@ -1392,7 +1393,7 @@ public:
         
         }
 
-        if (Tiempo.TiempoActual() > 2) {
+        if (Tiempo.TiempoActual() > 10) {
             ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
         }
         // Set background color (framebuffer clear color)
