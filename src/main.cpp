@@ -868,37 +868,30 @@ public:
     }
     void DrawInicial() {
 
-        DrawRectangle(0, 1024 / 2, 1024 / 2, 32, GREEN);
+        DrawRectangle(0, 1024 / 2, playerScreenX / 2, 32, GREEN);
 
     }
     void Draw() {
+       
 
+        double porcentaje = tiempoTranscurrido/ tiempoFinal ;
+        barraAncho = (int)((playerScreenX) * (1 - porcentaje));
 
-        double porcentaje = tiempoFinal / tiempoTranscurrido;
-        barraAncho = (int)((1024 / 2) * (1 - porcentaje));
-
-        if (barraAncho % 6 == 0) {
-
-
-            DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
-
-            aux = barraAncho;
-        }
-        else {
-
-            DrawRectangle(0, 1024 / 2, aux, 32, GREEN);
-        }
+        DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
+       
+       
+       
 
     }
     void IniciarTiempo() {
 
         tiempoInicial = GetTime();
-        tiempoFinal = tiempoInicial + 10.0;
+        tiempoFinal = tiempoInicial +90.0f;
 
     }
     void TiempoQueHaPasado() {
-
-        tiempoTranscurrido = tiempoFinal - GetTime();
+        float tiempoAhora = GetTime();
+        tiempoTranscurrido =  tiempoAhora - tiempoInicial;
 
 
     }
@@ -907,6 +900,13 @@ public:
             /*game over*/
         }
 
+    }
+
+    float TiempoActual() {
+    
+        TiempoQueHaPasado();
+        return tiempoTranscurrido;
+    
     }
 
 
@@ -969,6 +969,10 @@ public:
 class Game {
 private:
 
+    int level;
+    bool wonGame = false;
+    int stage;
+
     Texture bulletTex = LoadTexture("Bullet_1.png");
     std::vector<DeadOgre>dead;
     int deadogres;
@@ -982,8 +986,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        Stage stage();
-        level Level();
+        level = 1;
+        stage = 1;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -991,6 +995,9 @@ public:
 
     void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>money) {
         if(p.status){
+            ClearBackground(BLACK);
+            /*BeginDrawing();*/
+            BeginDrawing();
             if (tiempoiniciado == false) {
 
                 Tiempo.IniciarTiempo();
@@ -1004,10 +1011,7 @@ public:
 
 
             }
-            ClearBackground(BLACK);
-            /*BeginDrawing();*/
-            BeginDrawing();
-
+           
 
 
 
@@ -1387,8 +1391,71 @@ public:
         
         
         }
+
+        if (Tiempo.TiempoActual() > 2) {
+            ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+        }
         // Set background color (framebuffer clear color)
 /*  EndDrawing();*/
+    }
+    void ChangeLevel(time& Tiempo, Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, std::vector <PowerUpLive>& Lives) {
+        this->level++;
+
+
+        tiempoiniciado = false;
+        int x = 0;
+
+        while (x < enemigo.size()) {
+
+            enemigo.pop_back();
+            x++;
+        }
+        
+        x = 0;
+        while (x < bullets.size()) {
+            bullets.pop_back();
+            x++;
+
+
+        }
+        
+        x = 0;
+        if (Lives.size() > 0) {
+
+            Lives.pop_back();
+
+        }
+     
+
+
+
+
+
+            int clean = 0;
+            while (clean < dead.size()) {
+
+                dead.pop_back();
+                clean++;
+
+            }
+
+        
+        p.ResetPlayer();
+        if (this->level == 3) {
+
+            wonGame = true;
+
+        }
+        
+    
+    
+    }
+    void GameWon() {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText("You Won!", 40, screenHeight / 2, 40, WHITE);
+        EndDrawing();
+    
     }
     void GameOver(Player&p) {
 
@@ -1412,6 +1479,16 @@ public:
            p.ResetPlayer();
         
         }
+    }
+    int CheckLevel() {
+        return level;
+        
+    
+    }
+
+    int CheckStage() {
+        return stage;
+    
     }
 
     
@@ -1447,6 +1524,8 @@ public:
     int time = 0;
     friend int main();
     int currentTime = GetTime();
+
+    
     void Drawlevel1() {
         /* BeginDrawing();*/
         int x = 0;
@@ -1634,6 +1713,7 @@ public:
         DrawTexture(desierto4, 96, y, WHITE);
 
     }
+
     void Drawlevel2() {
         /* BeginDrawing();*/
         int x = 0;
@@ -1863,7 +1943,24 @@ public:
         DrawTexture(desierto4, 224, y, WHITE);
     }
     /* EndDrawing();*/
+    void LevelDraw(Game g) {
 
+        if (g.CheckLevel() == 1) {
+
+            Drawlevel1();
+        }
+        else if (g.CheckLevel()==2) {
+
+            Drawlevel2();
+
+        }
+        else if (g.CheckLevel() == 3) {
+        
+            ClearBackground(BLACK);
+        
+        }
+
+    }
 
 };
 class UI {
@@ -1974,16 +2071,27 @@ int main() {
     Game game;
     std::vector<float>auxTime;
     std::vector <PowerUpLive>Lives;
+    
     while (!WindowShouldClose()) {
 
 
         if (!game.gameover) {
-
+            if (!game.wonGame) {
+            
            player.OverworldPlayer();
         game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
-        desierto.Drawlevel1();
+        desierto.LevelDraw(game);
+
         ui.DrawInicial();
         aa.draw(p);
+            
+            
+            }
+            else {
+            
+                game.GameWon();
+            
+            }
         
         }
         else {
