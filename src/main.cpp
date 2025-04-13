@@ -16,6 +16,7 @@ class Shoot;
 class Ogre;
 class PowerUpLive;
 class time;
+class Title;
 enum Direccion
 {
     ARRIBA,
@@ -27,6 +28,20 @@ enum Direccion
     DIAGONAL3,
     DIAGONAL4,
     IDLE
+};
+
+
+
+class Title {
+private:
+    Texture titulo = LoadTexture("cabeza2.png");
+
+public:
+    friend int main()
+    {
+        void Draw();
+        DrawTexture(titulo, 200, 200, WHITE);
+    }
 };
 
 class Colision {
@@ -334,7 +349,7 @@ public:
             }
             else {
                 if (!IsSoundPlaying(Walk)) {
-                    PlaySound(Walk); // Play the sound only if it’s not already playing
+                    PlaySound(Walk); // Play the sound only if itï¿½s not already playing
                 }
                 
             }
@@ -395,7 +410,7 @@ public:
     void Death() {
 
         if (!IsSoundPlaying(death)) {
-            PlaySound(death); // Play the sound only if it’s not already playing
+            PlaySound(death); // Play the sound only if itï¿½s not already playing
         }
         lives--;
 
@@ -549,7 +564,7 @@ public:
     void Death() {
     
         if (!IsSoundPlaying(Die)) {
-            PlaySound(Die); // Play the sound only if it’s not already playing
+            PlaySound(Die); // Play the sound only if itï¿½s not already playing
         }
         deathStartTime = GetTime();
     
@@ -713,7 +728,7 @@ public:
 
     Shoot(Player p) : Colision(p.GetPosition()) {
         if (!IsSoundPlaying(shooter)) {
-            PlaySound(shooter); // Play the sound only if it’s not already playing
+            PlaySound(shooter); // Play the sound only if itï¿½s not already playing
         }
         playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (16) };
        
@@ -1213,7 +1228,7 @@ public:
                 Lives[0].Draw();
                 if (PlayerPowerUp(p, Lives[0]) == true) {
                     if (!IsSoundPlaying(power)) {
-                        PlaySound(power); // Play the sound only if it’s not already playing
+                        PlaySound(power); // Play the sound only if itï¿½s not already playing
                     }
                     if (p.bag == 1) {
                         Lives[0].UsePowerUp(p);
@@ -2072,8 +2087,6 @@ int main() {
     Game game;
     std::vector<float>auxTime;
     std::vector <PowerUpLive>Lives;
-    
-    while (!WindowShouldClose()) {
 
 
         if (!game.gameover) {
@@ -2083,26 +2096,66 @@ int main() {
         game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
         desierto.LevelDraw(game);
 
-        ui.DrawInicial();
-        aa.draw(p);
-            
-            
+    Texture titulo = LoadTexture("cabeza2.png");
+    bool showSplashScreen = true;
+
+
+    while (!WindowShouldClose())
+    {
+        if (showSplashScreen)
+        {
+            // Pantalla de inicio
+            if (showSplashScreen)
+            {
+                BeginDrawing();
+                ClearBackground(RAYWHITE);  // Color de fondo
+
+                // Dibujar logo centrado
+                DrawTexture(titulo,
+                    (screenWidth - titulo.width) / 2,
+                    (screenHeight - titulo.height) / 2,
+                    WHITE);
+
+                // Texto indicativo
+                DrawText("Presiona click para continuar",
+                    screenWidth / 2 - MeasureText("Presiona click para continuar", 20) / 2,
+                    screenHeight - 50,
+                    20, DARKGRAY);
+                EndDrawing();
+
+                //  click del raton
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+                {
+                    showSplashScreen = false;
+                }
             }
-            else {
-            
-                game.GameWon();
-            
-            }
+            else
+            {
+                game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives);
+
+                desierto.Drawlevel1();
+                ui.DrawInicial();
+                aa.draw(p);
+                    
+                    
+                    }
+                    else {
+                    
+                        game.GameWon();
+                    
+                    }
+                
+                }
+                else {
+                    game.GameOverScreen(p);
+                    player.stopmusic();
+                }
         
-        }
-        else {
-            game.GameOverScreen(p);
-            player.stopmusic();
+            }
+            
+            CloseAudioDevice();
+            CloseWindow();
+            return 0;
         }
 
-    }
-    
-    CloseAudioDevice();
-    CloseWindow();
-    return 0;
-}
+
