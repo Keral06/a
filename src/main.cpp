@@ -5,6 +5,8 @@
 
 const int screenWidth = 1024 / 2 + 32 * 2;
 const int screenHeight = 1024 / 2 + 32;
+const int playerScreenX = 1024 / 2;
+const int playerScreenY = 1024 / 2;
 class Colision;
 class Player;
 class Enemy;
@@ -86,6 +88,8 @@ protected:
     int hp;
     int vel;
     Vector2 playerPos;
+    Sound Walk = LoadSound("sound effects/prairie king walk.ogg"); 
+    Sound Die = LoadSound("sound effects/enemy death.ogg");
 
 };
 
@@ -103,14 +107,22 @@ private:
     Texture Diagonal23 = LoadTexture("64x64/personaje.izquierda3.png");
     Texture Atras1 = LoadTexture("64x64/personaje.detras1.png");
     Texture Atras2 = LoadTexture("64x64/personaje.detras2.png");
+    Texture Humo1 = LoadTexture("effects/muerte.png");
+    Texture Humo2 = LoadTexture("effects/muerte1.png");
+    Texture Humo3 = LoadTexture("effects/muerte2.png");
+    Texture Humo4 = LoadTexture("muerte3.png");
+    Texture Humo5 = LoadTexture("muerte4.png");
+    Sound death = LoadSound("song/cowboy_dead.wav");
     bool status;
     int bag;
+    float deathStartTime = 0;
 
 public:
     friend int main();
+    friend class coins;
     friend class UI;
     friend class Game;
-    Player(int hp, int vel) : Entity(hp, vel, { (float)screenWidth / 2, (float)screenHeight / 2 }) {
+    Player(int hp, int vel) : Entity(hp, vel, { (float)playerScreenX / 2, (float)playerScreenY / 2 }) {
         this->coins = 0;
         this->lives = 3;
         this->dir = ARRIBA;
@@ -251,7 +263,7 @@ public:
 
     void ResetPlayer() {
 
-        playerPos = { (float)screenWidth / 2, (float)screenHeight / 2 };
+        playerPos = { (float)playerScreenX / 2, (float)playerScreenY / 2 };
         status = true;
 
     }
@@ -329,12 +341,22 @@ public:
 
 
             }
+          
             if (!moved) {
                 dir = IDLE;
+
+                StopSound(Walk);
             }
+            else {
+                if (!IsSoundPlaying(Walk)) {
+                    PlaySound(Walk); // Play the sound only if itï¿½s not already playing
+                }
+                
+            }
+            
             ColisionPlayer(playerPos);
-            if (nextX >= 0 && nextX <= screenWidth - 128 &&
-                nextY >= 0 && nextY <= screenHeight - 128) {
+            if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+                nextY >= 32 && nextY <= playerScreenY -64) {
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
@@ -350,12 +372,55 @@ public:
 
     }
 
+    void DeathAnim() {
+
+
+        float currentTime = GetTime();
+        float elapsed = currentTime - deathStartTime;
+
+        if (elapsed < 0.1) {
+            DrawTexture(Humo1, GetPosition().x, GetPosition().y, WHITE);
+        }
+        else if (elapsed < 0.2) {
+            DrawTexture(Humo2, GetPosition().x, GetPosition().y, WHITE);
+        }
+        else if (elapsed < 0.3) {
+            DrawTexture(Humo3, GetPosition().x, GetPosition().y, WHITE);
+        }
+        else if (elapsed < 0.4) {
+            DrawTexture(Humo4, GetPosition().x, GetPosition().y, WHITE);
+        }
+        else if (elapsed < 0.5) {
+            DrawTexture(Humo5, GetPosition().x, GetPosition().y, WHITE);
+        }
+        if (elapsed > 2) {
+        
+            status = true;
+            
+        
+        }
+        //else {
+        //    // Animation finished
+        //    status = true;
+        //    ResetPlayer();
+        //    // Optionally trigger a respawn or game over screen here
+        //}
+    }
 
     void Death() {
 
+        if (!IsSoundPlaying(death)) {
+            PlaySound(death); // Play the sound only if itï¿½s not already playing
+        }
         lives--;
 
+        deathStartTime = GetTime();
+       
+
     }
+   
+    
+   
     friend class Enemy;
     friend class Colision;
     friend class Ogre;
@@ -412,36 +477,45 @@ public:
     Enemy(int hp, int vel) : Entity(hp, vel, { 0,0 }) {
         int posicion = pos();
         if (posicion == 1) {
-            playerPos = { ((float)screenWidth / 2),32 };
+            playerPos = { ((float)playerScreenX / 2),32 };
         }
         else if (posicion == 2) {
-            playerPos = { 32, ((float)screenHeight / 2) };
+            playerPos = { 32, ((float)playerScreenY / 2) };
 
         }
         else if (posicion == 3) {
 
-            playerPos = { ((float)screenWidth / 2), (float)screenHeight - 32 * 2 };
+            playerPos = { ((float)playerScreenX / 2), (float)playerScreenY - 32 };
         }
         else {
-            playerPos = { 32, ((float)screenHeight / 2) };
+            playerPos = { (float)playerScreenX -32, ((float)playerScreenY / 2)};
 
         }
     }
     friend class Colision;
     void MovementEnemy(Player p) {
         Vector2 player = p.GetPosition();
+        float nextY = playerPos.y;
+        float nextX = playerPos.x;
         if (playerPos.x < player.x) {
-            playerPos.x += vel;  // Changed from -= to +=
+            nextX += vel;  // Changed from -= to +=
         }
         else {
-            playerPos.x -= vel;  // Changed from += to -=
+            nextX -= vel;  // Changed from += to -=
         }
 
         if (playerPos.y < player.y) {
-            playerPos.y += vel;  // Changed from -= to +=
+            nextY += vel;  // Changed from -= to +=
         }
         else {
-            playerPos.y -= vel;  // Changed from += to -=
+           nextY -= vel;  // Changed from += to -=
+        }
+        if (nextX >= 32 && nextX <= playerScreenX - 32) {
+            playerPos.x = nextX;
+            
+        } if(nextY >= 32 && nextY <= playerScreenY - 32) {
+           
+            playerPos.y = nextY;
         }
         ColisionPlayer(playerPos);
     }
@@ -462,7 +536,7 @@ public:
 
 protected:
 
-
+  
 
 
 
@@ -471,16 +545,11 @@ protected:
 class Ogre : public Enemy {
 private:
     int dire = 0;
-
+    bool status = true;
     Texture Mon1 = LoadTexture("64x64/128x128_zombie7.png");
     Texture Mon2 = LoadTexture("64x64/128x128_zombie6.png");
-    Texture Death1 = LoadTexture("effects/128x128_hierba1.png");
-    Texture Death2 = LoadTexture("effects/128x128_hierba2.png");
-    Texture Death3 = LoadTexture("effects/128x128_hierba3.png");
-    Texture Death4 = LoadTexture("effects/128x128_hierba4.png");
-    Texture Death5 = LoadTexture("effects/128x128_hierba5.png");
-    Texture Death6 = LoadTexture("effects/128x128_hierba6.png");
-
+   
+    float deathStartTime = 0;
 
 public:
     friend class PowerUpLive;
@@ -492,6 +561,15 @@ public:
 
 
     }
+    void Death() {
+    
+        if (!IsSoundPlaying(Die)) {
+            PlaySound(Die); // Play the sound only if itï¿½s not already playing
+        }
+        deathStartTime = GetTime();
+    
+    }
+    
 
 
     void Update(Player p) {
@@ -550,20 +628,81 @@ class DeadOgre {
 private:
     Texture Mon1 = LoadTexture("effects/128x128_hierba6.png");
     Vector2 playerPos;
+    Texture Death1 = LoadTexture("effects/128x128_hierba1.png");
+    Texture Death2 = LoadTexture("effects/128x128_hierba2.png");
+    Texture Death3 = LoadTexture("effects/128x128_hierba3.png");
+    Texture Death4 = LoadTexture("effects/128x128_hierba4.png");
+    Texture Death5 = LoadTexture("effects/128x128_hierba5.png");
+    Texture Death6 = LoadTexture("effects/128x128_hierba6.png");
+    float deathStartTime = 0;
+    bool isFinished = false;
 public:
 
     DeadOgre(Vector2 playerPos) {
         this->playerPos = playerPos;
+        deathStartTime = GetTime();
 
     }
 
     void Draw() {
-
+        if (isFinished == false) {
+        
+            DeathAnim();
+        
+        }
+        else {
         DrawTexture(Mon1, playerPos.x, playerPos.y, WHITE);
+        
+        
+        }
 
     }
+    bool Delete() {
+    
+    
+        float currentTime = GetTime();
+        float elapsed = currentTime - deathStartTime;
+        if (elapsed > 5) {
+        
+        
+            return true;
+        }
+
+        return false;
+    
+    }
+
+    void DeathAnim() {
 
 
+        float currentTime = GetTime();
+        float elapsed = currentTime - deathStartTime;
+
+        if (elapsed < 0.1) {
+            DrawTexture(Death1, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.2) {
+            DrawTexture(Death2, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.3) {
+            DrawTexture(Death3, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.4) {
+            DrawTexture(Death4, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.5) {
+            DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.6) {
+            DrawTexture(Death6, playerPos.x, playerPos.y, WHITE);
+        }
+        else {
+            // Animation finished
+            isFinished = true;
+            // Optionally trigger a respawn or game over screen here
+        }
+    }
+    
 
 };
 
@@ -571,7 +710,9 @@ class Shoot : public Colision {
 
 private:
     Vector2 playerPos;
+    Sound shooter = LoadSound("sound effects/prairie king bullet.ogg");
 
+   
 public:
     friend class Enemy;
     Direccion dir;
@@ -584,8 +725,13 @@ public:
 
 
     }
+
     Shoot(Player p) : Colision(p.GetPosition()) {
-        playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (32) };
+        if (!IsSoundPlaying(shooter)) {
+            PlaySound(shooter); // Play the sound only if itï¿½s not already playing
+        }
+        playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (16) };
+       
         // Set direction based on arrow keys instead of player direction
         if (IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP)) {
             dir = DIAGONAL1;
@@ -737,37 +883,30 @@ public:
     }
     void DrawInicial() {
 
-        DrawRectangle(0, 1024 / 2, 1024 / 2, 32, GREEN);
+        DrawRectangle(0, 1024 / 2, playerScreenX / 2, 32, GREEN);
 
     }
     void Draw() {
+       
 
+        double porcentaje = tiempoTranscurrido/ tiempoFinal ;
+        barraAncho = (int)((playerScreenX) * (1 - porcentaje));
 
-        double porcentaje = tiempoFinal / tiempoTranscurrido;
-        barraAncho = (int)((1024 / 2) * (1 - porcentaje));
-
-        if (barraAncho % 6 == 0) {
-
-
-            DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
-
-            aux = barraAncho;
-        }
-        else {
-
-            DrawRectangle(0, 1024 / 2, aux, 32, GREEN);
-        }
+        DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
+       
+       
+       
 
     }
     void IniciarTiempo() {
 
         tiempoInicial = GetTime();
-        tiempoFinal = tiempoInicial + 10.0;
+        tiempoFinal = tiempoInicial +90.0f;
 
     }
     void TiempoQueHaPasado() {
-
-        tiempoTranscurrido = tiempoFinal - GetTime();
+        float tiempoAhora = GetTime();
+        tiempoTranscurrido =  tiempoAhora - tiempoInicial;
 
 
     }
@@ -778,343 +917,596 @@ public:
 
     }
 
+    float TiempoActual() {
+    
+        TiempoQueHaPasado();
+        return tiempoTranscurrido;
+    
+    }
+
 
 
 
 
 };
+class coins : public Colision {
+private:
+    Texture moneda1 = LoadTexture("items/128x128_moneda1.png");
+    Vector2 pos;
+public:
 
+   
+public:
+    friend class Game;
+    friend class Player;
+    friend class Colision;
+    friend bool PlayerPowerUp(Player& p, PowerUpLive& pp);
+    coins(Vector2 position) : Colision(pos) {
+        this->pos = position;
+
+        DrawTexture(moneda1, pos.x, pos.y, WHITE);
+
+
+    }
+
+    bool ColisionMoney(Player& p) {
+    
+        bool check = CheckCollisionRecs(this->Square, p.Square);
+        return check;
+    
+    
+    
+    }
+
+
+
+
+    void UsePowerUp(Player& p) {
+        p.coins++;
+
+
+    }
+
+    void Draw() {
+
+
+        DrawTexture(moneda1, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+
+
+
+
+
+
+
+};
 class Game {
 private:
+
+    int level;
+    bool wonGame = false;
+    int stage;
 
     Texture bulletTex = LoadTexture("Bullet_1.png");
     std::vector<DeadOgre>dead;
     int deadogres;
     bool tiempoiniciado;
+    Sound power = LoadSound("song/cowboy_powerup.wav");
+    Sound Die = LoadSound("song/cowboy_dead.wav");
+    bool gameover = false;
+    float timesincedeletion = 0;
+    float timeoflastdelete = 0;
 public:
-
+    friend int main();
     Game() {
         deadogres = 0;
-        Stage stage();
-        level Level();
+        level = 1;
+        stage = 1;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
     }
 
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives) {
-        if (tiempoiniciado == false) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>money) {
+        if(p.status){
+            ClearBackground(BLACK);
+            /*BeginDrawing();*/
+            BeginDrawing();
+            if (tiempoiniciado == false) {
 
-            Tiempo.IniciarTiempo();
-            tiempoiniciado = true;
-            Tiempo.DrawInicial();
-        }
-        else {
-
-            Tiempo.TiempoQueHaPasado();
-            Tiempo.Draw();
-
-
-        }
-        ClearBackground(BLACK);
-        /*BeginDrawing();*/
-        BeginDrawing();
-
-
-        // Handle bullet creation with arrow keys
-        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
-            IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
-            // Add rate limiting for bullets
-            static float shootTimer = 0.0f;
-            if (shootTimer <= 0) {
-                bullets.push_back(Shoot(p));
-                shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
+                Tiempo.IniciarTiempo();
+                tiempoiniciado = true;
+                Tiempo.DrawInicial();
             }
-            shootTimer -= GetFrameTime();
+            else {
+
+                Tiempo.TiempoQueHaPasado();
+                Tiempo.Draw();
 
 
-        }
-
-
-
-
-
-
-        int bulletSize = bullets.size();
+            }
+           
 
 
 
-        /*  BeginDrawing();
-          ClearBackground(RAYWHITE);*/
-
-        if (GetRandomValue(1, 40) == 1 && ogreaux < 6) {
-
-            Ogre auxiliar;
-            enemigo.push_back(auxiliar);
-            ogreaux++;
-
-        }
-        int i = 0;
-        i = 0;
-
-        while (i < bulletSize) {
-
-            bullets[i].UpdatePosition();
-            DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
-            i++;
-        }
+            // Handle bullet creation with arrow keys
+            if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
+                IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
+                // Add rate limiting for bullets
+                static float shootTimer = 0.0f;
+                if (shootTimer <= 0) {
+                    bullets.push_back(Shoot(p));
+                    shootTimer = 0.4f; // Shoot every 0.2 seconds while holding key
+                }
+                shootTimer -= GetFrameTime();
 
 
-        ogreaux = enemigo.size();
-        i = 0;
-        if (ogreaux > 0) {
+            }
+
+
+
+
+
+
+            int bulletSize = bullets.size();
+
+
+
+            /*  BeginDrawing();
+              ClearBackground(RAYWHITE);*/
+
+            if (GetRandomValue(1, 40) == 1 && ogreaux < 6) {
+
+                Ogre auxiliar;
+                enemigo.push_back(auxiliar);
+                ogreaux++;
+
+            }
+            int i = 0;
+            i = 0;
+
+            while (i < bulletSize) {
+
+                bullets[i].UpdatePosition();
+                DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
+                i++;
+            }
+
+
+            ogreaux = enemigo.size();
+            i = 0;
+            if (ogreaux > 0) {
+
+                i = 0;
+                int j = 0;
+                int aux = 0;
+                while (i < ogreaux) {
+
+                    while (j < bulletSize) {
+                        if (i >= ogreaux) {
+
+
+                        }
+                        else {
+
+                            if (bullets[j].ColisionBullet(enemigo[i]) == true) {
+
+                                DeadOgre auxiliari(enemigo[i].GetPosition());
+                                dead.push_back(auxiliari);
+                                float timehelp = GetTime();
+                                auxTime.push_back(timehelp);
+                                deadogres++;
+                                ogreaux = enemigo.size();
+
+                                int a = 0;
+                                if (GetRandomValue(1, 7) == 1 && Lives.size() == 0) {
+                                    Vector2 ee = enemigo[i].GetPosition();
+                                    PowerUpLive live(ee);
+                                    Lives.push_back(live);
+
+                                    a = 1;
+
+                                }
+
+                                enemigo[i].Death();
+                                
+                                if (ogreaux == 1) {
+                                    /*if (GetRandomValue(1, 3) == 1 && money.size() == 0 && a ==0) {
+
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        coins coin(ee);
+                                        money.push_back(coin);
+
+
+                                    }*/
+                                    enemigo.pop_back();
+
+                                }
+
+                                else if (ogreaux > 1) {
+
+                                    aux = i;
+                                    while (aux < ogreaux - 1) {
+
+                                        enemigo[aux] = enemigo[aux + 1];
+                                        aux++;
+
+                                    }
+                                    enemigo.pop_back();
+
+
+                                }
+                                ogreaux = enemigo.size();
+                                bulletSize = bullets.size();
+                                aux = j;
+                                if (bulletSize == 1) {
+
+                                    bullets.pop_back();
+                                    bulletSize--;
+                                }
+                                else if (bulletSize > 1) {
+                                    while (aux < bulletSize - 1) {
+                                        bullets[aux] = bullets[aux + 1];
+                                        aux++;
+                                    }
+
+                                    bullets.pop_back();
+
+                                }
+                                bulletSize = bullets.size();
+
+                            }
+
+
+                        }
+
+                        if (ogreaux == 0) { j = bulletSize; }
+
+                        j++;
+                    }
+
+                    j = 0;
+                    i++;
+
+
+                }
+
+
+            }
+
+
 
             i = 0;
-            int j = 0;
-            int aux = 0;
+
+            while (i < dead.size()) {
+
+
+                dead[i].Draw();
+                if (dead[i].Delete() == true) {
+                
+                   
+
+                    
+                    dead.pop_back();
+                
+                
+                }
+                /*  float auxiliart = GetTime();*/
+
+                i++;
+                /* if (GetRandomValue(1, 4) == 2 && auxiliart - auxTime[deadogres - 1] > 5.0f) {
+                     dead.pop_back();
+
+                     auxTime.pop_back();
+                     deadogres = dead.size();
+
+                     HelpMeTime = GetTime();*/
+
+
+
+            }
+            i = 0;
+            deadogres = dead.size();
+
+            /* if (money.size() > 0) {
+
+                 money[0].Draw();
+
+                 if (money[0].ColisionMoney(p) == true) {
+
+                     money[0].UsePowerUp(p);
+                     money.pop_back();
+
+                 }
+
+             }*/
+
+            if (Lives.size() > 0) {
+
+                Lives[0].Draw();
+                if (PlayerPowerUp(p, Lives[0]) == true) {
+                    if (!IsSoundPlaying(power)) {
+                        PlaySound(power); // Play the sound only if itï¿½s not already playing
+                    }
+                    if (p.bag == 1) {
+                        Lives[0].UsePowerUp(p);
+                        Lives.pop_back();
+                    }
+                    else {
+
+                        p.bag++;
+                        Lives.pop_back();
+                    }
+
+
+                }
+
+
+            }
+            if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
+                p.bag--;
+                PowerUpLive auxy(p);
+                auxy.UsePowerUp(p);
+
+            }
+
+
+
+
+            i = 0;
+            ogreaux = enemigo.size();
             while (i < ogreaux) {
 
-                while (j < bulletSize) {
-                    if (i >= ogreaux) {
+                enemigo[i].CheckColisions(p);
 
+                if (p.status == true) {
+
+                    enemigo[i].MovementEnemy(p);
+
+
+                }
+
+                enemigo[i].Draw();
+
+                i++;
+
+            }
+            i = 0;
+            bulletSize = bullets.size();
+            while (i < bulletSize) {
+
+                if (0 > bullets[i].GetPosition().x || GetScreenWidth() < bullets[i].GetPosition().x || GetScreenHeight() < bullets[i].GetPosition().y || 0 > bullets[i].GetPosition().y) {
+                    bulletSize = bullets.size();
+                    int p = i;
+                    if (bulletSize == 1) {
+
+                        bullets.pop_back();
+                        bulletSize = 0;
 
                     }
                     else {
 
-                        if (bullets[j].ColisionBullet(enemigo[i]) == true) {
-                           
-                            DeadOgre auxiliari(enemigo[i].GetPosition());
-                            dead.push_back(auxiliari);
-                            float timehelp = GetTime();
-                            auxTime.push_back(timehelp);
-                            deadogres++;
-                            ogreaux = enemigo.size();
+                        while (p < bulletSize - 1) {
 
-
-                            /* enemigo[i].Death();*/
-                            if (ogreaux == 1) {
-                                if (GetRandomValue(1, 2) == 1 && Lives.size() ==0) {
-                                    Vector2 ee = enemigo[i].GetPosition();
-                                    PowerUpLive live(ee);
-                                    Lives.push_back(live);
-                                   
-
-
-                                }
-                                enemigo.pop_back();
-
-                            }
-
-                            else if (ogreaux > 1) {
-
-                                aux = i;
-                                while (aux < ogreaux - 1) {
-
-                                    enemigo[aux] = enemigo[aux + 1];
-                                    aux++;
-
-                                }
-                                enemigo.pop_back();
-
-
-                            }
-                            ogreaux = enemigo.size();
-                            bulletSize = bullets.size();
-                            aux = j;
-                            if (bulletSize == 1) {
-
-                                bullets.pop_back();
-                                bulletSize--;
-                            }
-                            else if (bulletSize > 1) {
-                                while (aux < bulletSize - 1) {
-                                    bullets[aux] = bullets[aux + 1];
-                                    aux++;
-                                }
-
-                                bullets.pop_back();
-
-                            }
-                            bulletSize = bullets.size();
-
+                            bullets[p] = bullets[p + 1];
+                            p++;
                         }
 
+                        bullets.pop_back();
+
 
                     }
-
-                    if (ogreaux == 0) { j = bulletSize; }
-
-                    j++;
+                    bulletSize = bullets.size();
                 }
-
-                j = 0;
                 i++;
-
-
             }
 
-
-        }
-
-
-        
-        i = 0;
-
-        while (i < deadogres) {
-
-
-            dead[i].Draw();
-
-          /*  float auxiliart = GetTime();*/
-
-            i++;
-           /* if (GetRandomValue(1, 4) == 2 && auxiliart - auxTime[deadogres - 1] > 5.0f) {
-                dead.pop_back();
-
-                auxTime.pop_back();
-                deadogres = dead.size();
-
-                HelpMeTime = GetTime();*/
-
-
-            
-        }
-        i = 0;
-        deadogres = dead.size();
-
-
-        if (Lives.size() > 0) {
-        
-            Lives[0].Draw();
-            if (PlayerPowerUp(p, Lives[0]) == true ) {
-                if (p.bag == 1) {
-                    Lives[0].UsePowerUp(p);
-                    Lives.pop_back();
-                }
-                else {
-                
-                    p.bag++;
-                    Lives.pop_back();
-                }
-
-
-            }
-
-        
-        }
-        if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
-            p.bag--;
-            PowerUpLive auxy(p);
-            auxy.UsePowerUp(p);
-
-        }
-       
-      
-
-
-        i = 0;
-        ogreaux = enemigo.size();
-        while (i < ogreaux) {
-
-            enemigo[i].CheckColisions(p);
-
-            if (p.status == true) {
-
-                enemigo[i].MovementEnemy(p);
-
-
-            }
-
-            enemigo[i].Draw();
-
-            i++;
-
-        }
-        i = 0;
-        bulletSize = bullets.size();
-        while (i < bulletSize) {
-
-            if (0 > bullets[i].GetPosition().x || GetScreenWidth() < bullets[i].GetPosition().x || GetScreenHeight() < bullets[i].GetPosition().y || 0 > bullets[i].GetPosition().y) {
+            if (bulletSize > 20) {
                 bulletSize = bullets.size();
-                int p = i;
-                if (bulletSize == 1) {
+            };
+            p.Movement();
+            p.Draw();
 
+            if (p.status == false) {
+
+
+
+                int x = 0;
+
+                while (x < ogreaux) {
+
+                    enemigo.pop_back();
+                    x++;
+                }
+                ogreaux = 0;
+                x = 0;
+                while (x < bulletSize) {
                     bullets.pop_back();
-                    bulletSize = 0;
+                    x++;
+
 
                 }
-                else {
+                bulletSize = 0;
+                x = 0;
+                if (Lives.size() > 0) {
+                
+                    Lives.pop_back();
+                
+                }
+                /* while (x < deadogres) {
 
-                    while (p < bulletSize - 1) {
+                     dead.pop_back();
+                     x++;
 
-                        bullets[p] = bullets[p + 1];
-                        p++;
+                 }
+                 deadogres = 0;*/
+                tiempoiniciado = false;
+                if (p.lives < 0) {
+                    
+                    
+                     
+                    
+                    
+                    
+                    
+                    int clean = 0;
+                    while (clean < dead.size()) {
+
+                        dead.pop_back();
+                        clean++;
+
                     }
 
-                    bullets.pop_back();
+                }
+                
+                
+               
+            }
+            EndDrawing();
+        }
+        else {
+        
+            ClearBackground(BLACK);
+            /*BeginDrawing();*/
+            BeginDrawing();
+            int i = 0;
+
+            while (i < dead.size()) {
+
+
+                dead[i].Draw();
+                if (dead[i].Delete() == true) {
+
+
+
+
+                    dead.pop_back();
 
 
                 }
-                bulletSize = bullets.size();
-            }
-            i++;
-        }
+                /*  float auxiliart = GetTime();*/
 
-        if (bulletSize > 20) {
-            bulletSize = bullets.size();
-        };
-        p.Movement();
-        p.Draw();
-        EndDrawing();
-        if (p.status == false) {
-
-
-
-            int x = 0;
-
-            while (x < ogreaux) {
-
-                enemigo.pop_back();
-                x++;
-            }
-            ogreaux = 0;
-            x = 0;
-            while (x < bulletSize) {
-                bullets.pop_back();
-                x++;
+                i++;
+              
 
 
             }
-            bulletSize = 0;
-            x = 0;
-            /* while (x < deadogres) {
-
-                 dead.pop_back();
-                 x++;
-
-             }
-             deadogres = 0;*/
-            tiempoiniciado = false;
-            if (p.lives == 0) {
-
-                GameOver();
-
+            i = 0;
+            p.DeathAnim();
+            if (p.status == true && p.lives < 0) {
+                GameOver(p);
             }
-            else {
+            if(p.status==true) {
+            
                 p.ResetPlayer();
-
             }
+
+            EndDrawing();
+        
+        
         }
 
+        if (Tiempo.TiempoActual() > 2) {
+            ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+        }
         // Set background color (framebuffer clear color)
 /*  EndDrawing();*/
     }
-    void GameOver() {
+    void ChangeLevel(time& Tiempo, Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, std::vector <PowerUpLive>& Lives) {
+        this->level++;
 
-        DrawRectangle(0, 0, 520, 520, BLACK);
 
+        tiempoiniciado = false;
+        int x = 0;
+
+        while (x < enemigo.size()) {
+
+            enemigo.pop_back();
+            x++;
+        }
+        
+        x = 0;
+        while (x < bullets.size()) {
+            bullets.pop_back();
+            x++;
+
+
+        }
+        
+        x = 0;
+        if (Lives.size() > 0) {
+
+            Lives.pop_back();
+
+        }
+     
+
+
+
+
+
+            int clean = 0;
+            while (clean < dead.size()) {
+
+                dead.pop_back();
+                clean++;
+
+            }
+
+        
+        p.ResetPlayer();
+        if (this->level == 3) {
+
+            wonGame = true;
+
+        }
+        
+    
+    
+    }
+    void GameWon() {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText("You Won!", 40, screenHeight / 2, 40, WHITE);
+        EndDrawing();
+    
+    }
+    void GameOver(Player&p) {
+
+        
+        gameover = true;
+        p.lives = 3;
+        p.coins = 0;
 
     }
+    void GameOverScreen(Player&p) {
+        ClearBackground(BLACK);
+        /*BeginDrawing();*/
+        BeginDrawing();
+        
+        DrawText("Game Over", 40, screenHeight / 2, 40, WHITE);
+        DrawText("To Try again click space bar", 40,( screenHeight / 2)+50, 20, WHITE);
+        EndDrawing();
+        if (IsKeyDown(KEY_SPACE)) {
+        
+            gameover = false;
+           p.ResetPlayer();
+        
+        }
+    }
+    int CheckLevel() {
+        return level;
+        
+    
+    }
+
+    int CheckStage() {
+        return stage;
+    
+    }
+
+    
 
 };
 bool PlayerPowerUp(Player& p, PowerUpLive& pp) {
@@ -1147,6 +1539,8 @@ public:
     int time = 0;
     friend int main();
     int currentTime = GetTime();
+
+    
     void Drawlevel1() {
         /* BeginDrawing();*/
         int x = 0;
@@ -1334,6 +1728,7 @@ public:
         DrawTexture(desierto4, 96, y, WHITE);
 
     }
+
     void Drawlevel2() {
         /* BeginDrawing();*/
         int x = 0;
@@ -1563,7 +1958,24 @@ public:
         DrawTexture(desierto4, 224, y, WHITE);
     }
     /* EndDrawing();*/
+    void LevelDraw(Game g) {
 
+        if (g.CheckLevel() == 1) {
+
+            Drawlevel1();
+        }
+        else if (g.CheckLevel()==2) {
+
+            Drawlevel2();
+
+        }
+        else if (g.CheckLevel() == 3) {
+        
+            ClearBackground(BLACK);
+        
+        }
+
+    }
 
 };
 class UI {
@@ -1575,19 +1987,70 @@ public:
     void draw(Player p) {
         DrawTexture(vida, 512, 64, WHITE);
         DrawTexture(moneda1, 512, 96, WHITE);
+        if (p.lives < 0) {
+        
+            DrawText("0", 512 + 32, 66, 20, RED);
+        
+        }
+        else {
+        
         DrawText(TextFormat("%i", p.lives), 512+32, 66, 20, RED);
+        
+        }
         DrawText(TextFormat("%i", p.coins), 512+32, 96, 20, RED);
        
     }
 
 };
+class music {
+
+private:
+    Music Overworld;
+    
+    int starts;
+
+public:
+
+    music() {
+        Overworld = LoadMusicStream("74.-Journey-Of-The-Prairie-King-_Overworld__1.mp3");;
+        starts = 0;
+    }
+
+    void OverworldPlayer() {
+         UpdateMusicStream(Overworld);
+         if (starts == 0) {
+         
+             PlayMusicStream(Overworld);
+             starts = 1;
+         }
+         UpdateMusicStream(Overworld);
+         if (GetMusicTimePlayed(Overworld) / GetMusicTimeLength(Overworld) > 1) {
+         
+             starts = 0;
+         }
+        
+        
+
+        
+
+    
+    
+    }
+    void stopmusic() {
+    
+        StopMusicStream(Overworld);
+        starts = 0;
+    }
 
 
-int main()
-{
+
+
+
+};
+int main() {
     // Tell the window to use vsync and work on high DPI displays
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-
+    InitAudioDevice();
     // Create the window and OpenGL context
     InitWindow(screenWidth, screenHeight, "Hello Raylib");
 
@@ -1599,7 +2062,7 @@ int main()
 
 
     //Texture bulletTex = LoadTexture("Bullet_1.png");
-
+    std::vector<coins>money;
     time Tiempo();
     SetTargetFPS(60);
     Player p(1, 2);
@@ -1611,7 +2074,7 @@ int main()
     time ui;
     UI aa;
     /* Ogre enemigo;*/
-
+    music player;
 
      //creation of enemy vector
     int og = 0;
@@ -1625,6 +2088,12 @@ int main()
     std::vector <PowerUpLive>Lives;
 
 
+        if (!game.gameover) {
+            if (!game.wonGame) {
+            
+           player.OverworldPlayer();
+        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
+        desierto.LevelDraw(game);
 
     Texture titulo = LoadTexture("cabeza2.png");
     bool showSplashScreen = true;
@@ -1653,7 +2122,7 @@ int main()
                     20, DARKGRAY);
                 EndDrawing();
 
-                // Verificar click del rat¨®n
+                //  click del raton
                 if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
                 {
                     showSplashScreen = false;
@@ -1666,14 +2135,26 @@ int main()
                 desierto.Drawlevel1();
                 ui.DrawInicial();
                 aa.draw(p);
-
+                    
+                    
+                    }
+                    else {
+                    
+                        game.GameWon();
+                    
+                    }
+                
+                }
+                else {
+                    game.GameOverScreen(p);
+                    player.stopmusic();
+                }
+        
             }
+            
+            CloseAudioDevice();
             CloseWindow();
             return 0;
-
-
-
         }
-    }
-}
+
 
