@@ -14,6 +14,7 @@ class Shoot;
 class Ogre;
 class PowerUpLive;
 class time;
+class Title;
 enum Direccion
 {
     ARRIBA,
@@ -25,6 +26,20 @@ enum Direccion
     DIAGONAL3,
     DIAGONAL4,
     IDLE
+};
+
+
+
+class Title {
+private:
+    Texture titulo = LoadTexture("cabeza2.png");
+
+public:
+    friend int main()
+    {
+        void Draw();
+        DrawTexture(titulo, 200, 200, WHITE);
+    }
 };
 
 class Colision {
@@ -1566,7 +1581,10 @@ public:
     }
 
 };
-int main() {
+
+
+int main()
+{
     // Tell the window to use vsync and work on high DPI displays
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
@@ -1605,16 +1623,57 @@ int main() {
     Game game;
     std::vector<float>auxTime;
     std::vector <PowerUpLive>Lives;
-    while (!WindowShouldClose()) {
 
 
 
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives);
+    Texture titulo = LoadTexture("cabeza2.png");
+    bool showSplashScreen = true;
 
-        desierto.Drawlevel1();
-        ui.DrawInicial();
-        aa.draw(p);
+
+    while (!WindowShouldClose())
+    {
+        if (showSplashScreen)
+        {
+            // Pantalla de inicio
+            if (showSplashScreen)
+            {
+                BeginDrawing();
+                ClearBackground(RAYWHITE);  // Color de fondo
+
+                // Dibujar logo centrado
+                DrawTexture(titulo,
+                    (screenWidth - titulo.width) / 2,
+                    (screenHeight - titulo.height) / 2,
+                    WHITE);
+
+                // Texto indicativo
+                DrawText("Presiona click para continuar",
+                    screenWidth / 2 - MeasureText("Presiona click para continuar", 20) / 2,
+                    screenHeight - 50,
+                    20, DARKGRAY);
+                EndDrawing();
+
+                // Verificar click del rat¨®n
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+                {
+                    showSplashScreen = false;
+                }
+            }
+            else
+            {
+                game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives);
+
+                desierto.Drawlevel1();
+                ui.DrawInicial();
+                aa.draw(p);
+
+            }
+            CloseWindow();
+            return 0;
+
+
+
+        }
     }
-    CloseWindow();
-    return 0;
 }
+
