@@ -32,17 +32,7 @@ enum Direccion
 
 
 
-class Title {
-private:
-    Texture titulo = LoadTexture("cabeza2.png");
 
-public:
-    friend int main()
-    {
-        void Draw();
-        DrawTexture(titulo, 200, 200, WHITE);
-    }
-};
 
 class Colision {
 public:
@@ -269,7 +259,7 @@ public:
     }
 
 
-    void Movement() {
+    void Movement(int level) {
 
         /* BeginDrawing();*/
         Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
@@ -357,9 +347,101 @@ public:
             ColisionPlayer(playerPos);
             if (nextX >= 32 && nextX <= playerScreenX - 64 &&
                 nextY >= 32 && nextY <= playerScreenY -64) {
-                playerPos.x = nextX;
-                playerPos.y = nextY;
+
+                if (level == 1) {
+                
+                
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                }
+                else if (level == 2) {
+                 
+                    
+                    if (nextX < 96 || (nextX >192 && nextX < 288) || (nextX > 384)) {
+                    
+                    
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+                    
+                    }
+                    else if (nextX<192 && nextX<384) {
+
+                        if (nextY < 416 && nextY>160) {
+                        
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        
+                        
+                        
+                        }
+                    
+                    
+                    
+                    }
+                    else {
+                    
+                        if (nextY < 128 || nextY>192 && nextY < 320 || nextY>416) {
+                        
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        
+                        
+                        }
+                    
+                    
+                    }
+                   /* else {
+                    
+                        if (nextY < 32 * 4 || (nextY > 6 * 34 && nextY < 11 * 34) || nextY>13 * 34) {
+                        
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        
+                        }
+                    
+                    
+                    }*/
+                
+                }
+                
             }
+            /*x = 128;
+            y = 128;
+            for (int i = 0; i < 2; i++) {
+                DrawTexture(valla, x, y, WHITE);
+                x = x + 32;
+            }
+            y = y + 32;
+            x = x - 64;
+            DrawTexture(valla, x, y, WHITE);
+            x = 352;
+            y = 128;
+            for (int i = 0; i < 2; i++) {
+                DrawTexture(valla, x, y, WHITE);
+                x = x - 32;
+            }
+            y = y + 32;
+            x = x + 64;
+            DrawTexture(valla, x, y, WHITE);
+            x = 128;
+            y = 352 + 32;
+            for (int i = 0; i < 2; i++) {
+                DrawTexture(valla, x, y, WHITE);
+                x = x + 32;
+            }
+            y = y - 32;
+            x = x - 64;
+            DrawTexture(valla, x, y, WHITE);
+            x = 352;
+            y = 352 + 32;
+            for (int i = 0; i < 2; i++) {
+                DrawTexture(valla, x, y, WHITE);
+                x = x - 32;
+            }
+            y = y - 32;
+            x = x + 64;
+            DrawTexture(valla, x, y, WHITE);
+            y = 64;*/
 
 
         }
@@ -901,7 +983,7 @@ public:
     void IniciarTiempo() {
 
         tiempoInicial = GetTime();
-        tiempoFinal = tiempoInicial +90.0f;
+        tiempoFinal = tiempoInicial +80.0f;
 
     }
     void TiempoQueHaPasado() {
@@ -1056,7 +1138,7 @@ public:
             /*  BeginDrawing();
               ClearBackground(RAYWHITE);*/
 
-            if (GetRandomValue(1, 40) == 1 && ogreaux < 6) {
+            if (GetRandomValue(1, 40) == 1 && enemigo.size() < 0) {
 
                 Ogre auxiliar;
                 enemigo.push_back(auxiliar);
@@ -1305,7 +1387,7 @@ public:
             if (bulletSize > 20) {
                 bulletSize = bullets.size();
             };
-            p.Movement();
+            p.Movement(this->level);
             p.Draw();
 
             if (p.status == false) {
@@ -1314,14 +1396,14 @@ public:
 
                 int x = 0;
 
-                while (x < ogreaux) {
+                while (0 < enemigo.size()) {
 
                     enemigo.pop_back();
                     x++;
                 }
                 ogreaux = 0;
                 x = 0;
-                while (x < bulletSize) {
+                while (0 < bullets.size()) {
                     bullets.pop_back();
                     x++;
 
@@ -1362,6 +1444,9 @@ public:
                 
                 
                
+            }
+            if (Tiempo.TiempoActual() > 50 && p.status == true) {
+                ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
             EndDrawing();
         }
@@ -1407,9 +1492,7 @@ public:
         
         }
 
-        if (Tiempo.TiempoActual() > 2) {
-            ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
-        }
+        
         // Set background color (framebuffer clear color)
 /*  EndDrawing();*/
     }
@@ -1420,16 +1503,16 @@ public:
         tiempoiniciado = false;
         int x = 0;
 
-        while (x < enemigo.size()) {
+        while ( enemigo.size()>0) {
 
             enemigo.pop_back();
-            x++;
+           
         }
         
         x = 0;
-        while (x < bullets.size()) {
+        while (0 < bullets.size()) {
             bullets.pop_back();
-            x++;
+            
 
 
         }
@@ -2047,7 +2130,67 @@ public:
 
 
 };
-int main() {
+
+class Title{
+
+private:
+    //cabeza2
+    Texture view = LoadTexture("cabeza2.png");
+    //IMG_0971
+    Texture Chachi = LoadTexture("pene.png");
+    bool GameBegin = false;
+
+    int alive = 0;
+    float InicialTime = 0;
+public:
+    friend int main();
+    Title() {}
+
+    void Presentation() {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        if (alive != 0) {
+            InicialTime = GetTime();
+        
+
+           
+        
+        
+        }
+        float TimeNow = GetTime();
+            float timepassed = TimeNow - InicialTime;
+
+        if (timepassed < 5) {
+        
+            DrawText("This is an imitation of the game \n Journey of the prairie king", 0, 0, 20, WHITE);
+            DrawText("Projecte 1, CITM, 1r Videojocs", 0, 40, 20, RED);
+            DrawText("Irene, Queralt, Jiayi", 0, 60, 20, RED);
+
+        
+        
+        
+        }
+        else if (timepassed < 10) {
+        
+            DrawTexture(Chachi, screenWidth/2 - 64, screenHeight/2 - 64, WHITE);
+        
+        }
+        else {
+        
+            DrawTexture(view,0, 0, WHITE);
+
+            if (IsKeyDown(KEY_SPACE)) { GameBegin = true; }
+        
+        }
+
+        EndDrawing();
+    
+    }
+
+
+};
+int main() 
+{
     // Tell the window to use vsync and work on high DPI displays
     SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
     InitAudioDevice();
@@ -2086,75 +2229,55 @@ int main() {
     Game game;
     std::vector<float>auxTime;
     std::vector <PowerUpLive>Lives;
+    Title t;
 
+    while (!WindowShouldClose()){
 
-        if (!game.gameover) {
-            if (!game.wonGame) {
-            
-           player.OverworldPlayer();
-        game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
-        desierto.LevelDraw(game);
+        if (t.GameBegin) {
+        
+            if (!game.gameover) {
+                if (!game.wonGame) {
 
-    Texture titulo = LoadTexture("cabeza2.png");
-    bool showSplashScreen = true;
+                    player.OverworldPlayer();
+                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
+                    desierto.LevelDraw(game);
+                    ui.DrawInicial();
+                    aa.draw(p);
 
-
-    while (!WindowShouldClose())
-    {
-        if (showSplashScreen)
-        {
-            // Pantalla de inicio
-            if (showSplashScreen)
-            {
-                BeginDrawing();
-                ClearBackground(RAYWHITE);  // Color de fondo
-
-                // Dibujar logo centrado
-                DrawTexture(titulo,
-                    (screenWidth - titulo.width) / 2,
-                    (screenHeight - titulo.height) / 2,
-                    WHITE);
-
-                // Texto indicativo
-                DrawText("Presiona click para continuar",
-                    screenWidth / 2 - MeasureText("Presiona click para continuar", 20) / 2,
-                    screenHeight - 50,
-                    20, DARKGRAY);
-                EndDrawing();
-
-                //  click del raton
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-                {
-                    showSplashScreen = false;
-                }
-            }
-            else
-            {
-                game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives);
-
-                desierto.Drawlevel1();
-                ui.DrawInicial();
-                aa.draw(p);
-                    
-                    
-                    }
-                    else {
-                    
-                        game.GameWon();
-                    
-                    }
-                
                 }
                 else {
-                    game.GameOverScreen(p);
-                    player.stopmusic();
+
+                    game.GameWon();
+
                 }
-        
+
+
+
             }
+            else {
+                game.GameOverScreen(p);
+                player.stopmusic();
+            }
+
+        
+        
+        
+        }
+        else {
+        
+        
+        
+            t.Presentation();
+        }
+        
+
+               
+
             
+    }
             CloseAudioDevice();
             CloseWindow();
             return 0;
-        }
+        
 
-
+}
