@@ -92,11 +92,11 @@ private:
     Texture Diagonal23 = LoadTexture("64x64/personaje.izquierda3.png");
     Texture Atras1 = LoadTexture("64x64/personaje.detras1.png");
     Texture Atras2 = LoadTexture("64x64/personaje.detras2.png");
-    Texture Humo1 = LoadTexture("effects/128x128_piedra1.png");
-    Texture Humo2 = LoadTexture("effects/128x128_piedra2.png");
-    Texture Humo3 = LoadTexture("effects/128x128_piedra3.png");
-    Texture Humo4 = LoadTexture("effects/128x128_piedra4.png");
-    Texture Humo5 = LoadTexture("effects/128x128_piedra5.png");
+    Texture Humo1 = LoadTexture("effects/muerte.png");
+    Texture Humo2 = LoadTexture("effects/muerte1.png");
+    Texture Humo3 = LoadTexture("effects/muerte2.png");
+    Texture Humo4 = LoadTexture("muerte3.png");
+    Texture Humo5 = LoadTexture("muerte4.png");
     Sound death = LoadSound("song/cowboy_dead.wav");
     bool status;
     int bag;
@@ -381,7 +381,7 @@ public:
         if (elapsed > 2) {
         
             status = true;
-             ResetPlayer();
+            
         
         }
         //else {
@@ -641,6 +641,20 @@ public:
         
         }
 
+    }
+    bool Delete() {
+    
+    
+        float currentTime = GetTime();
+        float elapsed = currentTime - deathStartTime;
+        if (elapsed > 5) {
+        
+        
+            return true;
+        }
+
+        return false;
+    
     }
 
     void DeathAnim() {
@@ -1002,7 +1016,7 @@ public:
                 static float shootTimer = 0.0f;
                 if (shootTimer <= 0) {
                     bullets.push_back(Shoot(p));
-                    shootTimer = 0.2f; // Shoot every 0.2 seconds while holding key
+                    shootTimer = 0.4f; // Shoot every 0.2 seconds while holding key
                 }
                 shootTimer -= GetFrameTime();
 
@@ -1144,11 +1158,19 @@ public:
 
             i = 0;
 
-            while (i < deadogres) {
+            while (i < dead.size()) {
 
 
                 dead[i].Draw();
+                if (dead[i].Delete() == true) {
+                
+                   
 
+                    
+                    dead.pop_back();
+                
+                
+                }
                 /*  float auxiliart = GetTime();*/
 
                 i++;
@@ -1286,6 +1308,11 @@ public:
                 }
                 bulletSize = 0;
                 x = 0;
+                if (Lives.size() > 0) {
+                
+                    Lives.pop_back();
+                
+                }
                 /* while (x < deadogres) {
 
                      dead.pop_back();
@@ -1294,9 +1321,14 @@ public:
                  }
                  deadogres = 0;*/
                 tiempoiniciado = false;
-                if (p.lives == 0) {
-
-                    GameOver(p);
+                if (p.lives < 0) {
+                    
+                    
+                     
+                    
+                    
+                    
+                    
                     int clean = 0;
                     while (clean < dead.size()) {
 
@@ -1306,6 +1338,7 @@ public:
                     }
 
                 }
+                
                
             }
             EndDrawing();
@@ -1317,6 +1350,9 @@ public:
             BeginDrawing();
 
             p.DeathAnim();
+            if (p.status == true && p.lives < 0) {
+                GameOver(p);
+            }
 
             EndDrawing();
         
@@ -1333,19 +1369,18 @@ public:
         p.coins = 0;
 
     }
-    void GameOverScreen() {
+    void GameOverScreen(Player&p) {
         ClearBackground(BLACK);
         /*BeginDrawing();*/
         BeginDrawing();
-        if (!IsSoundPlaying(Die)) {
-            PlaySound(Die); // Play the sound only if it’s not already playing
-        }
-        DrawText("Game Over", 0, screenHeight / 2, 40, RED);
-        DrawText("To Try again click space bar", 0,( screenHeight / 2)+20, 20, WHITE);
+        
+        DrawText("Game Over", 40, screenHeight / 2, 40, WHITE);
+        DrawText("To Try again click space bar", 40,( screenHeight / 2)+50, 20, WHITE);
         EndDrawing();
         if (IsKeyDown(KEY_SPACE)) {
         
             gameover = false;
+           p.ResetPlayer();
         
         }
     }
@@ -1914,7 +1949,7 @@ int main() {
         
         }
         else {
-            game.GameOverScreen();
+            game.GameOverScreen(p);
             player.stopmusic();
         }
 
