@@ -976,6 +976,8 @@ private:
     Sound power = LoadSound("song/cowboy_powerup.wav");
     Sound Die = LoadSound("song/cowboy_dead.wav");
     bool gameover = false;
+    float timesincedeletion = 0;
+    float timeoflastdelete = 0;
 public:
     friend int main();
     Game() {
@@ -1339,6 +1341,7 @@ public:
 
                 }
                 
+                
                
             }
             EndDrawing();
@@ -1348,10 +1351,36 @@ public:
             ClearBackground(BLACK);
             /*BeginDrawing();*/
             BeginDrawing();
+            int i = 0;
 
+            while (i < dead.size()) {
+
+
+                dead[i].Draw();
+                if (dead[i].Delete() == true) {
+
+
+
+
+                    dead.pop_back();
+
+
+                }
+                /*  float auxiliart = GetTime();*/
+
+                i++;
+              
+
+
+            }
+            i = 0;
             p.DeathAnim();
             if (p.status == true && p.lives < 0) {
                 GameOver(p);
+            }
+            if(p.status==true) {
+            
+                p.ResetPlayer();
             }
 
             EndDrawing();
@@ -1846,7 +1875,16 @@ public:
     void draw(Player p) {
         DrawTexture(vida, 512, 64, WHITE);
         DrawTexture(moneda1, 512, 96, WHITE);
+        if (p.lives < 0) {
+        
+            DrawText("0", 512 + 32, 66, 20, RED);
+        
+        }
+        else {
+        
         DrawText(TextFormat("%i", p.lives), 512+32, 66, 20, RED);
+        
+        }
         DrawText(TextFormat("%i", p.coins), 512+32, 96, 20, RED);
        
     }
