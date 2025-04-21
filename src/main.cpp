@@ -1133,7 +1133,7 @@ public:
     void Draw() {
        
         DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
-        double porcentaje = tiempoTranscurrido/ 90.0f ;
+        double porcentaje = tiempoTranscurrido/ 80.0f ;
         barraAncho = (int)((playerScreenX) * (1 - porcentaje));
         /*DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);*/
 
