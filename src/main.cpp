@@ -117,6 +117,7 @@ public:
     friend class coins;
     friend class UI;
     friend class Game;
+    
     Player(int hp, int vel) : Entity(hp, vel, { (float)playerScreenX / 2, (float)playerScreenY / 2 }) {
         this->coins = 0;
         this->lives = 3;
@@ -126,6 +127,16 @@ public:
         bag = 0;
 	} //declara los valores iniciales del jugador
     int dire;
+    void playerAgain() {
+    
+        this->coins = 0;
+        this->lives = 3;
+        this->dir = ARRIBA;
+        dire = 1;
+        status = true;
+        bag = 0;
+    
+    }
     void Draw() {
         //BeginDrawing();
 
@@ -1118,6 +1129,7 @@ public:
         aux = aux+ help - tiempoFake;
 
         tiempoTranscurrido = +aux;
+        tiempoFinal = tiempoFinal +aux;
     
     }
     void pause() {
@@ -1242,6 +1254,7 @@ private:
     bool gameover = false;
     float timesincedeletion = 0;
     float timeoflastdelete = 0;
+    float timeOfLive = 0;
 public:
     friend int main();
     Game() {
@@ -1367,11 +1380,11 @@ public:
                                 ogreaux = enemigo.size();
 
                                 int a = 0;
-                                if (GetRandomValue(1, 7) == 1 && Lives.size() == 0) {
+                                if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
                                     Vector2 ee = enemigo[i].GetPosition();
                                     PowerUpLive live(ee);
                                     Lives.push_back(live);
-
+                                    timeOfLive = GetTime();
                                     a = 1;
 
                                 }
@@ -1491,6 +1504,15 @@ public:
 
             if (Lives.size() > 0) {
 
+                float helper = GetTime();
+
+                float differenceLife = helper - timeOfLive;
+                if (differenceLife > 7) {
+                
+                
+                    Lives.pop_back();
+                
+                }
                 Lives[0].Draw();
                 if (PlayerPowerUp(p, Lives[0]) == true) {
                     if (!IsSoundPlaying(power)) {
@@ -1631,7 +1653,7 @@ public:
                 
                
             }
-            if (Tiempo.TiempoActual() > 90 && p.status == true) {
+            if (Tiempo.TiempoActual() > 80 && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
             EndDrawing();
@@ -1681,7 +1703,8 @@ public:
                 p.ResetPlayer();
                 tiempoFake = false;
             }
-
+            
+           
             EndDrawing();
         
         
@@ -1732,7 +1755,14 @@ public:
 
             }
 
-        
+            float esperar = GetTime();
+            float auxiliar = 0;
+            while (auxiliar < 3) {
+
+                float diferencia = GetTime();
+                auxiliar = diferencia - esperar;
+
+            }
         p.ResetPlayer();
         if (this->level == 3) {
 
@@ -1770,7 +1800,7 @@ public:
         
         EndDrawing();
         
-           p.ResetPlayer();
+           p.playerAgain();
         
         
     }
@@ -2475,6 +2505,7 @@ int main()
                 
                 t.GameBegin = false;
                 gameovertime = false;
+                game.gameover = false;
                 
                 }
             }
