@@ -1427,7 +1427,7 @@ public:
 
 
                         }
-
+						// chequea si la bala colisiona con el ogro
                         if (ogreaux == 0) { j = bulletSize; }
 
                         j++;
@@ -1475,7 +1475,7 @@ public:
             }
             i = 0;
             deadogres = dead.size();
-
+            // dibuja la muerte de los ogros
             /* if (money.size() > 0) {
 
                  money[0].Draw();
@@ -1511,6 +1511,7 @@ public:
 
 
             }
+			//actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
                 p.bag--;
                 PowerUpLive auxy(p);
@@ -1635,6 +1636,7 @@ public:
             }
             EndDrawing();
         }
+		// si el jugador muere o el tiempo se acaba, actualiza el juego, ya sea pasando de nivel o perdiendo la partida
         else {
         
             ClearBackground(BLACK);
@@ -1684,7 +1686,7 @@ public:
         
         
         }
-
+		//reinicia los valores si el jugador pierde una vida
         
         // Set background color (framebuffer clear color)
 /*  EndDrawing();*/
@@ -1741,6 +1743,7 @@ public:
     
     
     }
+	//cambia de nivel y reinicia los valores
     void GameWon() {
         BeginDrawing();
         ClearBackground(BLACK);
@@ -1748,6 +1751,7 @@ public:
         EndDrawing();
     
     }
+    //pantalla de ganaste
     void GameOver(Player&p) {
 
         
@@ -1756,6 +1760,7 @@ public:
         p.coins = 0;
 
     }
+	//pantalla de perdiste
     void GameOverScreen(Player&p) {
         ClearBackground(BLACK);
         /*BeginDrawing();*/
@@ -1781,7 +1786,7 @@ public:
         return stage;
     
     }
-
+    //pantalla de cuando pierdes poder reiniciar el juego
     
 
 };
@@ -1798,6 +1803,7 @@ bool PlayerPowerUp(Player& p, PowerUpLive& pp) {
 
 
 }
+
 class Background : public Stage {
 private:
 
@@ -2254,6 +2260,7 @@ public:
     }
 
 };
+//toda esta classe esta dedicada a dibujar el fondo y sus animaciones
 class UI {
 private:
     Texture reloj = LoadTexture("ui/reloj.png");
@@ -2282,6 +2289,7 @@ public:
     }
 
 };
+//classe dedicada a dibujar todo lo relacionado con la UI (vidas, monedas, etc)
 class music {
 
 private:
@@ -2295,7 +2303,7 @@ public:
         Overworld = LoadMusicStream("74.-Journey-Of-The-Prairie-King-_Overworld__1.mp3");;
         starts = 0;
     }
-
+    //carga la musica
     void OverworldPlayer() {
          UpdateMusicStream(Overworld);
          if (starts == 0) {
@@ -2316,12 +2324,13 @@ public:
     
     
     }
+	//inicia la musica y la resetea si se acaba
     void stopmusic() {
     
         StopMusicStream(Overworld);
         starts = 0;
     }
-
+    //para la musica
 
 
 
@@ -2386,6 +2395,7 @@ public:
 
 
 };
+//dibuja la pantalla de inicio y el texto
 int main() 
 {
     // Tell the window to use vsync and work on high DPI displays
@@ -2478,3 +2488,4 @@ int main()
         
 
 }
+//inicia el juego utilizando todas las classes vistas anteriormente
