@@ -407,86 +407,13 @@ public:
                     
                    }
                     
-               /*     else if (nextX<192 && nextX<384) {
-
-                        if (nextY < 416 && nextY>160) {
-                        
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-                        
-                        
-                        
-                        }
-                    
-                    
-                    
-                    }*/
-                    //else {
-                    //
-                    //    if (nextY < 128 || nextY>192 && nextY < 320 || nextY>416) {
-                    //    
-                    //        playerPos.x = nextX;
-                    //        playerPos.y = nextY;
-                    //    
-                    //    
-                    //    }
-                    //
-                    //
-                    //}
-                   /* else {
-
-                        if (nextY < 32 * 4 || (nextY > 6 * 34 && nextY < 11 * 34) || nextY>13 * 34) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-                        }
-
-
-                    }*/
+               
                 
                 
                 }
                 
             }
-            /*x = 128;
-            y = 128;
-            for (int i = 0; i < 2; i++) {
-                DrawTexture(valla, x, y, WHITE);
-                x = x + 32;
-            }
-            y = y + 32;
-            x = x - 64;
-            DrawTexture(valla, x, y, WHITE);
-            x = 352;
-            y = 128;
-            for (int i = 0; i < 2; i++) {
-                DrawTexture(valla, x, y, WHITE);
-                x = x - 32;
-            }
-            y = y + 32;
-            x = x + 64;
-            DrawTexture(valla, x, y, WHITE);
-            x = 128;
-            y = 352 + 32;
-            for (int i = 0; i < 2; i++) {
-                DrawTexture(valla, x, y, WHITE);
-                x = x + 32;
-            }
-            y = y - 32;
-            x = x - 64;
-            DrawTexture(valla, x, y, WHITE);
-            x = 352;
-            y = 352 + 32;
-            for (int i = 0; i < 2; i++) {
-                DrawTexture(valla, x, y, WHITE);
-                x = x - 32;
-            }
-            y = y - 32;
-            x = x + 64;
-            DrawTexture(valla, x, y, WHITE);
-            y = 64;*/
-
+           
 
         }
         else {
@@ -640,15 +567,76 @@ public:
         else {
            nextY -= vel;  // Changed from += to -=
         }
-       /* if (nextX >= 32 && nextX <= playerScreenX - 32) {
-            playerPos.x = nextX;
-            
-        } if(nextY >= 32 && nextY <= playerScreenY - 32) {
-           
-            playerPos.y = nextY;
-        }*/
+        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+            nextY >= 32 && nextY <= playerScreenY - 64) {
+
+            if (level == 1) {
+
+
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+            else if (level == 2) {
+
+
+                if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
+                    /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                    /*}
+                    else {
+
+                    }*/
+
+
+
+                }
+                else if (nextX <= 188 || nextX >= 288) {
+
+                    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                    else if (nextX <= 188 && nextX >= 158) {
+
+                        if (nextY >= 160 && nextY <= 350) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+                        }
+
+                    }
+                    else if (nextX >= 288 && nextX <= 320) {
+
+                        if (nextY >= 160 && nextY <= 350) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+                        }
+
+                    }
+
+
+                }
+                else {
+
+
+
+                }
+
+
+
+
+            }
+
+        }
         ColisionPlayer(playerPos);
-        
+       
     }
 
 
@@ -976,6 +964,10 @@ public:
                             playerPos.y = nextY;
 
                         }
+                        else {
+                        
+                            eliminate = true;
+                        }
 
                     }
                     else if (nextX >= 288 && nextX <= 320) {
@@ -986,17 +978,31 @@ public:
                             playerPos.y = nextY;
 
                         }
+                        else {
+                        
+                            eliminate = true;
+                        }
 
+                    }
+                    else {
+                    
+                        eliminate = true;
                     }
 
 
                 }
                 else {
 
-
+                    eliminate = true;
 
                 }
+
+
+
+
             }
+
+        }
         ColisionBullet(playerPos);
 
 
@@ -1290,6 +1296,27 @@ public:
                 bullets[i].UpdatePosition(this->level);
                 DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
                 i++;
+                if (bullets[i].eliminate == true) {
+                
+                    bulletSize = bullets.size();
+                   int p = i;
+                    if (bullets.size() == 1) {
+
+                        bullets.pop_back();
+                        
+                    }
+                    else if (bullets.size() > 1) {
+                        while (p < bullets.size() - 1) {
+                            bullets[p] = bullets[p + 1];
+                            p++;
+                        }
+
+                        bullets.pop_back();
+
+                    }
+                    bulletSize = bullets.size();
+                
+                }
             }
 
 
