@@ -2,11 +2,12 @@
 #include "raylib.h"
 #include "resource_dir.h"
 #include <vector> 
-
+/*declarar las medidas de la pantalla jugable y de la pantalla en general*/
 const int screenWidth = 1024 / 2 + 32 * 2;
 const int screenHeight = 1024 / 2 + 32;
 const int playerScreenX = 1024 / 2;
 const int playerScreenY = 1024 / 2;
+// declarar las clases que se usaran
 class Colision;
 class Player;
 class Enemy;
@@ -29,7 +30,7 @@ enum Direccion
     DIAGONAL4,
     IDLE
 };
-
+//direccion usada para el movimiento del jugador y enemigo y las balas
 
 
 
@@ -45,6 +46,7 @@ public:
         Square = { posicion.x,posicion.y, widthThing, HeightThing };
 
     }
+	//dibuja un cuadrado invisible en el escenario para indicar la colision
     void ColisionPlayer(Vector2 posicion) {
 
         DrawRectangle(posicion.x, posicion.y, 32, 32, BLANK);
@@ -53,6 +55,7 @@ public:
 
 
     }
+	//dibuja un cuadrado invisible encima del jugador para poder detectar la colision
 protected:
     Rectangle Square;
 };
@@ -82,7 +85,9 @@ protected:
     Sound Die = LoadSound("sound effects/enemy death.ogg");
 
 };
-
+/*clase padre utilizada para declarar los valores (vida, velocidad) de tanto el player como los enemigos
+tambien se utiliza para los sonidos de movimiento y muerte
+*/
 class Player : public Entity {
 
 private:
@@ -119,7 +124,7 @@ public:
         dire = 1;
         status = true;
         bag = 0;
-    }
+	} //declara los valores iniciales del jugador
     int dire;
     void Draw() {
         //BeginDrawing();
@@ -250,14 +255,14 @@ public:
         }
 
     }
-
+	//dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
     void ResetPlayer() {
 
         playerPos = { (float)playerScreenX / 2, (float)playerScreenY / 2 };
         status = true;
 
     }
-
+	//resetea al jugador cuando muere
 
     void Movement(int level) {
 
@@ -424,7 +429,8 @@ public:
 
 
     }
-
+	//declara el movimiento del jugador dependiendo de la tecla que presione y la direccion en la que se mueve
+    //declara las posiciones donde el jugador no puede acceder, colisiones
     void DeathAnim() {
 
 
@@ -459,7 +465,7 @@ public:
         //    // Optionally trigger a respawn or game over screen here
         //}
     }
-
+	//animacion de muerte del jugador
     void Death() {
 
         if (!IsSoundPlaying(death)) {
@@ -471,7 +477,7 @@ public:
        
 
     }
-   
+	//resetea al jugador despues de morir
     
    
     friend class Enemy;
@@ -497,13 +503,13 @@ public:
 
 
     }
-
+    //dibuja el item de vida +
     PowerUpLive(Player p) : Colision(pos) {
 
         p.lives++;
 
     }
-
+	//suma la vida al jugador despues de recoger el item
 
 
 
@@ -512,14 +518,14 @@ public:
 
 
     }
-
+    //suma la vida
     void Draw() {
 
 
         DrawTexture(vida, pos.x, pos.y, WHITE);
         ColisionPlayer(pos);
     }
-
+	//dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
 
 
 };
@@ -549,6 +555,7 @@ public:
 
         }
     }
+	//declara la posicion inicial del enemigo y sus atributos (velocidad, vida)
     friend class Colision;
     void MovementEnemy(Player p, int level) {
         Vector2 player = p.GetPosition();
@@ -638,7 +645,8 @@ public:
         ColisionPlayer(playerPos);
        
     }
-
+	//declara el movimiento del enemigo y la direccion en la que se mueve dependiendo de la posicion del jugador
+    //declara las posiciones donde el enemigo no puede acceder, colisiones
 
 
     bool CheckColisions(Player& p) {
@@ -652,7 +660,7 @@ public:
         return p.status;
 
     }
-
+	//chequea las colisiones 
 protected:
 
   
@@ -680,6 +688,7 @@ public:
 
 
     }
+    //declara al enemigo
     void Death() {
     
         if (!IsSoundPlaying(Die)) {
@@ -688,7 +697,7 @@ public:
         deathStartTime = GetTime();
     
     }
-    
+	//declara la muerte y el sonido de muerte del enemigo
 
 
     void Update(Player p) {
@@ -716,6 +725,7 @@ public:
 
 
     }
+	//actualiza la posicion y direcion del enemigo dependiendo de la posicion del jugador
     void Draw() {
 
         /*BeginDrawing();*/
@@ -737,6 +747,7 @@ public:
 
 
     }
+	//dibuja el sprite y animacion del enemigo
 
 
     friend class Colision;
@@ -762,7 +773,7 @@ public:
         deathStartTime = GetTime();
 
     }
-
+	//declara la posicion del ogro muerto
     void Draw() {
         if (isFinished == false) {
         
@@ -776,6 +787,7 @@ public:
         }
 
     }
+	//dibuja la animacion del ogro muerto si muere
     bool Delete() {
     
     
@@ -790,6 +802,7 @@ public:
         return false;
     
     }
+	//chequea si el ogro ha muerto hace mas de 5 segundos para eliminar la basura que deja
 
     void DeathAnim() {
 
@@ -821,6 +834,7 @@ public:
             // Optionally trigger a respawn or game over screen here
         }
     }
+	//animacion de muerte del ogro
     
 
 };
@@ -844,6 +858,7 @@ public:
 
 
     }
+	//chequea si la bala colisiona con el enemigo
 
     Shoot(Player p) : Colision(p.GetPosition()) {
         if (!IsSoundPlaying(shooter)) {
@@ -880,6 +895,7 @@ public:
             dir = p.GetDir(); // Fallback to player direction if no arrow key pressed
         }
     }
+    //declara las direcciones y teclas asignadas a disparar
     friend class Game;
     // Add method to update bullet position
     void UpdatePosition(int level) {
@@ -921,7 +937,7 @@ public:
         default:
             break;
         }
-
+		//chequea si la bala ha salido de la pantalla
 
         if (nextX >= 32 && nextX <= playerScreenX - 32 &&
             nextY >= 32 && nextY <= playerScreenY - 32) {
@@ -1004,9 +1020,10 @@ public:
 
         }
         ColisionBullet(playerPos);
-
+		// Check si la bala colisiona con algo del escenario
 
     }
+
     void ColisionBullet(Vector2 posicion) {
 
         DrawRectangle(posicion.x, posicion.y, 3, 3, BLUE);
@@ -1015,6 +1032,7 @@ public:
 
 
     }
+	//dibuja un cuadrado invisible en el escenario para indicar la colision
 
 
 };
@@ -1039,6 +1057,7 @@ public:
     }
 
 };
+//classe para indicar el sistema de niveles
 class Stage : public level {
 
 protected:
@@ -1067,7 +1086,7 @@ public:
 
 
 };
-
+//dibuja la stage correpondiente al nivel
 class time {
 private:
     
@@ -1154,6 +1173,7 @@ public:
 
 
 };
+//dibuja una barra de tiempo que conforme passa el tiempo se va reduciendo
 class coins : public Colision {
 private:
     Texture moneda1 = LoadTexture("items/128x128_moneda1.png");
@@ -1173,7 +1193,7 @@ public:
 
 
     }
-
+	//dibuja el item de monedas
     bool ColisionMoney(Player& p) {
     
         bool check = CheckCollisionRecs(this->Square, p.Square);
@@ -1182,7 +1202,7 @@ public:
     
     
     }
-
+	//suma la moneda al jugador
 
 
 
@@ -1191,14 +1211,14 @@ public:
 
 
     }
-
+	//suma la moneda al jugador
     void Draw() {
 
 
         DrawTexture(moneda1, pos.x, pos.y, WHITE);
         ColisionPlayer(pos);
     }
-
+	//dibuja la textura y una colision alrededor para saber cuando el jugador recoge la moneda
 
 
 
@@ -1232,7 +1252,7 @@ public:
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
     }
-
+	//declara el nivel y stage inicial
     void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>money) {
         if(p.status){
             ClearBackground(BLACK);
@@ -1251,7 +1271,7 @@ public:
 
 
             }
-           
+           //empieza el tiempo, lo dibuja y lo va actualizando
 
 
 
@@ -1268,7 +1288,7 @@ public:
 
 
             }
-
+			//dibuja la bala segun se dispara
 
 
 
@@ -1290,7 +1310,7 @@ public:
             }
             int i = 0;
             i = 0;
-
+			// dibuja el ogro 
             while (i < bullets.size()) {
 
                 bullets[i].UpdatePosition(this->level);
@@ -1319,7 +1339,7 @@ public:
                 }
                 i++;
             }
-
+			// actualiza la posicion de la bala y la dibuja
 
             ogreaux = enemigo.size();
             i = 0;
@@ -1407,7 +1427,7 @@ public:
 
 
                         }
-
+						// chequea si la bala colisiona con el ogro
                         if (ogreaux == 0) { j = bulletSize; }
 
                         j++;
@@ -1455,7 +1475,7 @@ public:
             }
             i = 0;
             deadogres = dead.size();
-
+            // dibuja la muerte de los ogros
             /* if (money.size() > 0) {
 
                  money[0].Draw();
@@ -1491,6 +1511,7 @@ public:
 
 
             }
+			//actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
                 p.bag--;
                 PowerUpLive auxy(p);
@@ -1615,6 +1636,7 @@ public:
             }
             EndDrawing();
         }
+		// si el jugador muere o el tiempo se acaba, actualiza el juego, ya sea pasando de nivel o perdiendo la partida
         else {
         
             ClearBackground(BLACK);
@@ -1664,7 +1686,7 @@ public:
         
         
         }
-
+		//reinicia los valores si el jugador pierde una vida
         
         // Set background color (framebuffer clear color)
 /*  EndDrawing();*/
@@ -1721,6 +1743,7 @@ public:
     
     
     }
+	//cambia de nivel y reinicia los valores
     void GameWon() {
         BeginDrawing();
         ClearBackground(BLACK);
@@ -1728,6 +1751,7 @@ public:
         EndDrawing();
     
     }
+    //pantalla de ganaste
     void GameOver(Player&p) {
 
         
@@ -1736,6 +1760,7 @@ public:
         p.coins = 0;
 
     }
+	//pantalla de perdiste
     void GameOverScreen(Player&p) {
         ClearBackground(BLACK);
         /*BeginDrawing();*/
@@ -1761,7 +1786,7 @@ public:
         return stage;
     
     }
-
+    //pantalla de cuando pierdes poder reiniciar el juego
     
 
 };
@@ -1778,6 +1803,7 @@ bool PlayerPowerUp(Player& p, PowerUpLive& pp) {
 
 
 }
+
 class Background : public Stage {
 private:
 
@@ -2234,6 +2260,7 @@ public:
     }
 
 };
+//toda esta classe esta dedicada a dibujar el fondo y sus animaciones
 class UI {
 private:
     Texture reloj = LoadTexture("ui/reloj.png");
@@ -2262,6 +2289,7 @@ public:
     }
 
 };
+//classe dedicada a dibujar todo lo relacionado con la UI (vidas, monedas, etc)
 class music {
 
 private:
@@ -2275,7 +2303,7 @@ public:
         Overworld = LoadMusicStream("74.-Journey-Of-The-Prairie-King-_Overworld__1.mp3");;
         starts = 0;
     }
-
+    //carga la musica
     void OverworldPlayer() {
          UpdateMusicStream(Overworld);
          if (starts == 0) {
@@ -2296,12 +2324,13 @@ public:
     
     
     }
+	//inicia la musica y la resetea si se acaba
     void stopmusic() {
     
         StopMusicStream(Overworld);
         starts = 0;
     }
-
+    //para la musica
 
 
 
@@ -2366,6 +2395,7 @@ public:
 
 
 };
+//dibuja la pantalla de inicio y el texto
 int main() 
 {
     // Tell the window to use vsync and work on high DPI displays
@@ -2458,3 +2488,4 @@ int main()
         
 
 }
+//inicia el juego utilizando todas las classes vistas anteriormente
