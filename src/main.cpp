@@ -583,79 +583,91 @@ public:
             nextY += vel;  // Changed from -= to +=
         }
         else {
-           nextY -= vel;  // Changed from += to -=
+            nextY -= vel;  // Changed from += to -=
         }
+
+
+
+
+
+
         if (nextX >= 32 && nextX <= playerScreenX - 64 &&
-            nextY >= 32 && nextY <= playerScreenY - 64) {
+                nextY >= 32 && nextY <= playerScreenY -64) {
 
-            if (level == 1) {
-
-
-                playerPos.x = nextX;
-                playerPos.y = nextY;
-            }
-            else if (level == 2) {
-
-
-                if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
-                    /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
+                if (level == 1) {
+                
+                
                     playerPos.x = nextX;
                     playerPos.y = nextY;
-                    /*}
+                }
+                else if (level == 2) {
+
+
+                    if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
+						/*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
+							playerPos.x = nextX;
+							playerPos.y = nextY;
+						/*}
+                        else {
+
+                        }*/
+
+
+                     
+                    }
+                    else if (nextX <= 188 || nextX >= 288) {
+                    
+                        if (nextY > 384 || nextY < 96 ||( nextY > 188 && nextY < 324)) {
+                        
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        
+                        
+                        }
+                        else if (nextX<=188 && nextX>=158) {
+                        
+                            if (nextY >= 160&& nextY <=350) {
+                            
+                                playerPos.x = nextX;
+                                playerPos.y = nextY;
+                            
+                            }
+                        
+                        }
+                        else if (nextX >= 288 && nextX<= 320){
+                        
+                            if (nextY >= 160 && nextY <= 350) {
+
+                                playerPos.x = nextX;
+                                playerPos.y = nextY;
+
+                            }
+                        
+                        }
+                    
+                    
+                    }
                     else {
-
-                    }*/
-
-
-
+                    
+                    
+                    
+                   }
+                    
+               
+                
+                
                 }
-                else if (nextX <= 188 || nextX >= 288) {
-
-                    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
-
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
-
-
-                    }
-                    else if (nextX <= 188 && nextX >= 158) {
-
-                        if (nextY >= 160 && nextY <= 350) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-                        }
-
-                    }
-                    else if (nextX >= 288 && nextX <= 320) {
-
-                        if (nextY >= 160 && nextY <= 350) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-                        }
-
-                    }
-
-
-                }
-                else {
-
-
-
-                }
-
-
-
-
-            }
-
+                
         }
+           
+
+        
+
+
         ColisionPlayer(playerPos);
-       
     }
+       
+    
 	//declara el movimiento del enemigo y la direccion en la que se mueve dependiendo de la posicion del jugador
     //declara las posiciones donde el enemigo no puede acceder, colisiones
 
@@ -1162,6 +1174,7 @@ public:
 
         tiempoInicial = GetTime();
         tiempoFinal = tiempoInicial +80.0f ;
+        aux = 0;
 
     }
     void TiempoQueHaPasado() {
