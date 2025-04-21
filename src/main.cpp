@@ -1030,6 +1030,10 @@ public:
             }
 
         }
+        else {
+        
+            eliminate = true;
+        }
         ColisionBullet(playerPos);
 		// Check si la bala colisiona con algo del escenario
 
@@ -1128,7 +1132,7 @@ public:
 
         aux = aux+ help - tiempoFake;
 
-      
+        tiempoFinal = tiempoInicial + 80 + aux;
     }
     void pause() {
     
@@ -1156,8 +1160,8 @@ public:
     }
     void IniciarTiempo() {
 
-        tiempoInicial = GetTime() + aux;
-        tiempoFinal = tiempoInicial +80.0f + aux;
+        tiempoInicial = GetTime();
+        tiempoFinal = tiempoInicial +80.0f ;
 
     }
     void TiempoQueHaPasado() {
@@ -1166,10 +1170,11 @@ public:
 
 
     }
-    void tiempo() {
-        if (tiempoFinal == tiempoTranscurrido) {
-            /*game over*/
+    bool tiempo() {
+        if (tiempoTranscurrido > tiempoFinal) {
+            return true;
         }
+        else { false; }
 
     }
 
@@ -1331,7 +1336,7 @@ public:
               
                 if (bullets[i].eliminate == true) {
                 
-                    bulletSize = bullets.size();
+                  
                    int p = i;
                     if (bullets.size() == 1) {
 
@@ -1347,7 +1352,7 @@ public:
                         bullets.pop_back();
 
                     }
-                    bulletSize = bullets.size();
+                    
 
                 }
                 i++;
@@ -1389,25 +1394,20 @@ public:
 
                                 }
 
-                                enemigo[i].Death();
+                                
+                               
                                 
                                 if (enemigo.size() == 1) {
-                                    /*if (GetRandomValue(1, 3) == 1 && money.size() == 0 && a ==0) {
-
-                                        Vector2 ee = enemigo[i].GetPosition();
-                                        coins coin(ee);
-                                        money.push_back(coin);
-
-
-                                    }*/
+                                    enemigo[i].Death();
                                     enemigo.pop_back();
 
                                 }
 
-                                else if (ogreaux > 1) {
+                                else if (enemigo.size() > 1) {
 
                                     aux = i;
-                                    while (aux < ogreaux - 1) {
+                                        enemigo[i].Death();;
+                                    while (aux < enemigo.size() - 1) {
 
                                         enemigo[aux] = enemigo[aux + 1];
                                         aux++;
@@ -1503,17 +1503,12 @@ public:
              }*/
 
             if (Lives.size() > 0) {
-
+                Lives[0].Draw();
                 float helper = GetTime();
 
                 float differenceLife = helper - timeOfLive;
-                if (differenceLife > 7) {
                 
                 
-                    Lives.pop_back();
-                
-                }
-                Lives[0].Draw();
                 if (PlayerPowerUp(p, Lives[0]) == true) {
                     if (!IsSoundPlaying(power)) {
                         PlaySound(power); // Play the sound only if it�s not already playing
@@ -1527,7 +1522,14 @@ public:
                         p.bag++;
                         Lives.pop_back();
                     }*/
+                        
 
+                }
+
+                if (differenceLife > 7) {
+
+
+                    Lives.pop_back();
 
                 }
 
@@ -1653,7 +1655,7 @@ public:
                 
                
             }
-            if (Tiempo.TiempoActual() > 80 && p.status == true) {
+            if (Tiempo.tiempo() ==true && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
             EndDrawing();
@@ -1667,10 +1669,10 @@ public:
             int i = 0;
             Tiempo.Draw();
             if (tiempoFake == false) {
-            
+
                 Tiempo.pause();
                 tiempoFake = true;
-                
+
             }
             
             while (i < dead.size()) {
@@ -1757,12 +1759,7 @@ public:
 
             float esperar = GetTime();
             float auxiliar = 0;
-            while (auxiliar < 3) {
 
-                float diferencia = GetTime();
-                auxiliar = diferencia - esperar;
-
-            }
         p.ResetPlayer();
         if (this->level == 3) {
 
