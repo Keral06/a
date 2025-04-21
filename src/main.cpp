@@ -1769,12 +1769,10 @@ public:
         DrawText("Game Over", 40, screenHeight / 2, 40, WHITE);
         DrawText("To Try again click space bar", 40,( screenHeight / 2)+50, 20, WHITE);
         EndDrawing();
-        if (IsKeyDown(KEY_SPACE)) {
         
-            gameover = false;
            p.ResetPlayer();
         
-        }
+        
     }
     int CheckLevel() {
         return level;
@@ -2437,7 +2435,8 @@ int main()
     std::vector<float>auxTime;
     std::vector <PowerUpLive>Lives;
     Title t;
-
+    bool gameovertime = false;
+    float GOtime = 0;
     while (!WindowShouldClose()){
 
         if (t.GameBegin) {
@@ -2462,8 +2461,22 @@ int main()
 
             }
             else {
+                if (!gameovertime) {
+                    GOtime = GetTime();
+                
+                    gameovertime = true;
+                }
                 game.GameOverScreen(p);
                 player.stopmusic();
+
+                float newTime = GetTime();
+                float difference = newTime - GOtime;
+                if (difference > 3) {
+                
+                t.GameBegin = false;
+                gameovertime = false;
+                
+                }
             }
 
         
