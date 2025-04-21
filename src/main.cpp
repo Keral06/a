@@ -1315,13 +1315,9 @@ public:
 
                     }
                     bulletSize = bullets.size();
-<<<<<<< HEAD
-                    
-=======
-                
->>>>>>> 2afd508fd6f68f8559116bb6bae55345222dfef2
+
                 }
-                i++
+                i++;
             }
 
 
