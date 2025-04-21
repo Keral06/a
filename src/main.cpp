@@ -1071,7 +1071,7 @@ public:
 class time {
 private:
     
-    Texture reloj = LoadTexture("ui/reloj.png");
+    
     double tiempoInicial;
     double tiempoFinal;
     double tiempoTranscurrido;
@@ -1295,7 +1295,7 @@ public:
 
                 bullets[i].UpdatePosition(this->level);
                 DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
-                
+                i++;
                 if (bullets[i].eliminate == true) {
                 
                     bulletSize = bullets.size();
@@ -1315,7 +1315,7 @@ public:
 
                     }
                     bulletSize = bullets.size();
-                    i++;
+                
                 }
             }
 
@@ -2235,6 +2235,7 @@ public:
 };
 class UI {
 private:
+    Texture reloj = LoadTexture("ui/reloj.png");
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Texture moneda1 = LoadTexture("items/128x128_moneda1.png");
     Texture barra = LoadTexture("ui/barra.png");
@@ -2243,7 +2244,8 @@ public:
     void draw(Player p) {
         DrawTexture(vida, 512, 64, WHITE);
         DrawTexture(moneda1, 512, 96, WHITE);
-        DrawTexture(barra, 532, 32, WHITE);
+        DrawTexture(barra, 526, 12, WHITE);
+        DrawTexture(reloj, 512, 512, WHITE);
         if (p.lives < 0) {
         
             DrawText("0", 512 + 32, 66, 20, RED);
