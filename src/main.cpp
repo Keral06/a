@@ -562,6 +562,10 @@ public:
 class Enemy : public Entity {
 public:
     friend class Shoot;
+    friend int main();
+    friend class coins;
+    friend class UI;
+    friend class Game;
     Enemy(int hp, int vel) : Entity(hp, vel, { 0,0 }) {
         int posicion = pos();
         if (posicion == 1) {
@@ -581,7 +585,7 @@ public:
         }
     }
     friend class Colision;
-    void MovementEnemy(Player p) {
+    void MovementEnemy(Player p, int level) {
         Vector2 player = p.GetPosition();
         float nextY = playerPos.y;
         float nextX = playerPos.x;
@@ -606,6 +610,32 @@ public:
             playerPos.y = nextY;
         }
         ColisionPlayer(playerPos);
+        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+            nextY >= 32 && nextY <= playerScreenY - 64) {
+
+            if (level == 1) {
+
+
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+            else if (level == 2) {
+
+
+                if (nextX < 128 || (nextX > 160 && nextX < 256) || (nextX > 384)) {
+                    if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+                    }
+                    else {
+
+                    }
+
+
+
+                }
+            }
+        }
     }
 
 
@@ -965,7 +995,7 @@ public:
 
         tiempoFinal = 80.0f;
         tiempoTranscurrido = 0;
-        barraAncho = 600;
+        barraAncho = 512;
         aux = 0;
         tiempoInicial = 0;
     }
@@ -977,8 +1007,9 @@ public:
     void Draw() {
        
         DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
-        double porcentaje = tiempoTranscurrido/ 80.0f ;
+        double porcentaje = tiempoTranscurrido/ 90.0f ;
         barraAncho = (int)((playerScreenX) * (1 - porcentaje));
+        /*DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);*/
 
         
        
@@ -992,7 +1023,8 @@ public:
 
     }
     void TiempoQueHaPasado() {
-        tiempoTranscurrido = GetTime(); - tiempoInicial;
+        float tiempoAhora = GetTime();
+        tiempoTranscurrido = tiempoAhora - tiempoInicial;
 
 
     }
@@ -1006,7 +1038,7 @@ public:
     float TiempoActual() {
     
         TiempoQueHaPasado();
-        return (float)tiempoTranscurrido;
+        return tiempoTranscurrido;
     
     }
 
@@ -1348,7 +1380,7 @@ public:
 
                 if (p.status == true) {
 
-                    enemigo[i].MovementEnemy(p);
+                    enemigo[i].MovementEnemy(p, this->level);
 
 
                 }
@@ -1449,7 +1481,7 @@ public:
                 
                
             }
-            if (Tiempo.TiempoActual() > 79.9 && p.status == true) {
+            if (Tiempo.TiempoActual() > 90 && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
             EndDrawing();
