@@ -362,6 +362,9 @@ public:
 							playerPos.x = nextX;
 							playerPos.y = nextY;
 						}
+                        else {
+
+                        }
 
 
                      
@@ -960,25 +963,24 @@ public:
 
     time() {
 
-        tiempoFinal = 80.0;
+        tiempoFinal = 80.0f;
         tiempoTranscurrido = 0;
-        barraAncho = 520;
+        barraAncho = 600;
         aux = 0;
         tiempoInicial = 0;
     }
     void DrawInicial() {
 
-        DrawRectangle(0, 1024 / 2, playerScreenX / 2, 32, GREEN);
+        //DrawRectangle(0, 1024 / 2, playerScreenX / 2, 32, GREEN);
 
     }
     void Draw() {
        
-
-        double porcentaje = tiempoTranscurrido/ tiempoFinal ;
+        DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
+        double porcentaje = tiempoTranscurrido/ 80.0f ;
         barraAncho = (int)((playerScreenX) * (1 - porcentaje));
 
-        DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
-       
+        
        
        
 
@@ -990,8 +992,7 @@ public:
 
     }
     void TiempoQueHaPasado() {
-        float tiempoAhora = GetTime();
-        tiempoTranscurrido =  tiempoAhora - tiempoInicial;
+        tiempoTranscurrido = GetTime(); - tiempoInicial;
 
 
     }
@@ -1005,7 +1006,7 @@ public:
     float TiempoActual() {
     
         TiempoQueHaPasado();
-        return tiempoTranscurrido;
+        return (float)tiempoTranscurrido;
     
     }
 
@@ -1448,7 +1449,7 @@ public:
                 
                
             }
-            if (Tiempo.TiempoActual() > 90 && p.status == true) {
+            if (Tiempo.TiempoActual() > 79.9 && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
             EndDrawing();
