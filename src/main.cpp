@@ -648,67 +648,7 @@ public:
             playerPos.y = nextY;
         }*/
         ColisionPlayer(playerPos);
-        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
-            nextY >= 32 && nextY <= playerScreenY - 64) {
-
-            if (level == 1) {
-
-
-                playerPos.x = nextX;
-                playerPos.y = nextY;
-            }
-            else if (level == 2) {
-
-
-                if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
-                    /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
-                    playerPos.x = nextX;
-                    playerPos.y = nextY;
-                    /*}
-                    else {
-
-                    }*/
-
-
-
-                }
-                else if (nextX <= 188 || nextX >= 288) {
-
-                    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
-
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
-
-
-                    }
-                    else if (nextX <= 188 && nextX >= 158) {
-
-                        if (nextY >= 160 && nextY <= 350) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-                        }
-
-                    }
-                    else if (nextX >= 288 && nextX <= 320) {
-
-                        if (nextY >= 160 && nextY <= 350) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-                        }
-
-                    }
-
-
-                }
-                else {
-
-
-
-                }
+        
     }
 
 
@@ -902,7 +842,7 @@ class Shoot : public Colision {
 private:
     Vector2 playerPos;
     Sound shooter = LoadSound("sound effects/prairie king bullet.ogg");
-
+    bool eliminate = false;
    
 public:
     friend class Enemy;
@@ -952,42 +892,111 @@ public:
             dir = p.GetDir(); // Fallback to player direction if no arrow key pressed
         }
     }
-
+    friend class Game;
     // Add method to update bullet position
-    void UpdatePosition() {
+    void UpdatePosition(int level) {
+
+        float nextX = playerPos.x;
+        float nextY = playerPos.y;
+
+
         switch (dir) {
         case ARRIBA:
-            playerPos.y -= 5.0f;
+            nextY -= 5.0f;
 
             break;
         case ABAJO:
-            playerPos.y += 5.0f;
+            nextY += 5.0f;
             break;
         case DERECHA:
-            playerPos.x += 5.0f;
+            nextX += 5.0f;
             break;
         case IZQUIERDA:
-            playerPos.x -= 5.0f;
+            nextY -= 5.0f;
             break;
         case DIAGONAL1:
-            playerPos.x += 5.0f;
-            playerPos.y -= 5.0f;
+            nextX += 5.0f;
+            nextY -= 5.0f;
             break;
         case DIAGONAL2:
-            playerPos.x -= 5.0f;
-            playerPos.y -= 5.0f;
+            nextX -= 5.0f;
+            nextY -= 5.0f;
             break;
         case DIAGONAL3:
             playerPos.x += 5.0f;
-            playerPos.y += 5.0f;
+            nextY += 5.0f;
             break;
         case DIAGONAL4:
-            playerPos.x -= 5.0f;
-            playerPos.y += 5.0f;
+            nextX -= 5.0f;
+            nextY += 5.0f;
             break;
         default:
             break;
         }
+
+
+        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+            nextY >= 32 && nextY <= playerScreenY - 64) {
+
+            if (level == 1) {
+
+
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+            else if (level == 2) {
+
+
+                if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
+                    /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                    /*}
+                    else {
+
+                    }*/
+
+
+
+                }
+                else if (nextX <= 188 || nextX >= 288) {
+
+                    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                    else if (nextX <= 188 && nextX >= 158) {
+
+                        if (nextY >= 160 && nextY <= 350) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+                        }
+
+                    }
+                    else if (nextX >= 288 && nextX <= 320) {
+
+                        if (nextY >= 160 && nextY <= 350) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+                        }
+
+                    }
+
+
+                }
+                else {
+
+
+
+                }
+            }
         ColisionBullet(playerPos);
 
 
@@ -1278,7 +1287,7 @@ public:
 
             while (i < bulletSize) {
 
-                bullets[i].UpdatePosition();
+                bullets[i].UpdatePosition(this->level);
                 DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
                 i++;
             }
