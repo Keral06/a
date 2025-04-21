@@ -1037,7 +1037,7 @@ public:
 
     void ColisionBullet(Vector2 posicion) {
 
-        DrawRectangle(posicion.x, posicion.y, 3, 3, BLUE);
+        DrawRectangle(posicion.x, posicion.y, 3, 3, BLANK);
         Square.x = posicion.x;
         Square.y = posicion.y;
 
@@ -1128,9 +1128,7 @@ public:
 
         aux = aux+ help - tiempoFake;
 
-        tiempoTranscurrido = +aux;
-        tiempoFinal = tiempoFinal +aux;
-    
+      
     }
     void pause() {
     
@@ -1145,7 +1143,7 @@ public:
     void Draw() {
        
         DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);
-        double porcentaje = tiempoTranscurrido/ 90.0f ;
+        double porcentaje = tiempoTranscurrido/ tiempoFinal ;
         barraAncho = (int)((playerScreenX) * (1 - porcentaje));
         /*DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);*/
 
@@ -1156,8 +1154,8 @@ public:
     }
     void IniciarTiempo() {
 
-        tiempoInicial = GetTime();
-        tiempoFinal = tiempoInicial +80.0f;
+        tiempoInicial = GetTime() + aux;
+        tiempoFinal = tiempoInicial +80.0f + aux;
 
     }
     void TiempoQueHaPasado() {
@@ -1361,10 +1359,10 @@ public:
                 i = 0;
                 int j = 0;
                 int aux = 0;
-                while (i < ogreaux) {
+                while (i < enemigo.size()) {
 
-                    while (j < bulletSize) {
-                        if (i >= ogreaux) {
+                    while (j < bullets.size()) {
+                        if (i >= enemigo.size()) {
 
 
                         }
@@ -1391,7 +1389,7 @@ public:
 
                                 enemigo[i].Death();
                                 
-                                if (ogreaux == 1) {
+                                if (enemigo.size() == 1) {
                                     /*if (GetRandomValue(1, 3) == 1 && money.size() == 0 && a ==0) {
 
                                         Vector2 ee = enemigo[i].GetPosition();
@@ -1420,13 +1418,13 @@ public:
                                 ogreaux = enemigo.size();
                                 bulletSize = bullets.size();
                                 aux = j;
-                                if (bulletSize == 1) {
+                                if (bullets.size() == 1) {
 
                                     bullets.pop_back();
                                     bulletSize--;
                                 }
-                                else if (bulletSize > 1) {
-                                    while (aux < bulletSize - 1) {
+                                else if (bullets.size() > 1) {
+                                    while (aux < bullets.size() - 1) {
                                         bullets[aux] = bullets[aux + 1];
                                         aux++;
                                     }
@@ -2526,6 +2524,7 @@ int main()
 
             
     }
+
             CloseAudioDevice();
             CloseWindow();
             return 0;
