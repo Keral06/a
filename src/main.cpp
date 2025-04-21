@@ -355,16 +355,18 @@ public:
                     playerPos.y = nextY;
                 }
                 else if (level == 2) {
-                 
-                    
-                    if (nextX < 96 || (nextX >192 && nextX < 288) || (nextX > 384)) {
-                    
-                    
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
-                    
+
+
+                    if (nextX < 128 || (nextX > 160 && nextX < 256) || (nextX > 384)) {
+						if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {
+							playerPos.x = nextX;
+							playerPos.y = nextY;
+						}
+
+
+                     
                     }
-                    else if (nextX<192 && nextX<384) {
+               /*     else if (nextX<192 && nextX<384) {
 
                         if (nextY < 416 && nextY>160) {
                         
@@ -377,30 +379,31 @@ public:
                     
                     
                     
-                    }
-                    else {
-                    
-                        if (nextY < 128 || nextY>192 && nextY < 320 || nextY>416) {
-                        
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-                        
-                        
-                        }
-                    
-                    
-                    }
-                   /* else {
-                    
-                        if (nextY < 32 * 4 || (nextY > 6 * 34 && nextY < 11 * 34) || nextY>13 * 34) {
-                        
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-                        
-                        }
-                    
-                    
                     }*/
+                    //else {
+                    //
+                    //    if (nextY < 128 || nextY>192 && nextY < 320 || nextY>416) {
+                    //    
+                    //        playerPos.x = nextX;
+                    //        playerPos.y = nextY;
+                    //    
+                    //    
+                    //    }
+                    //
+                    //
+                    //}
+                   /* else {
+
+                        if (nextY < 32 * 4 || (nextY > 6 * 34 && nextY < 11 * 34) || nextY>13 * 34) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+                        }
+
+
+                    }*/
+                
                 
                 }
                 
