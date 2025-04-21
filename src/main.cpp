@@ -350,8 +350,8 @@ public:
             }
             
             ColisionPlayer(playerPos);
-            if (nextX >= 32 && nextX <= playerScreenX - 32 &&
-                nextY >= 32 && nextY <= playerScreenY -32) {
+            if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+                nextY >= 32 && nextY <= playerScreenY -64) {
 
                 if (level == 1) {
                 
@@ -548,10 +548,10 @@ public:
         }
         else if (posicion == 3) {
 
-            playerPos = { ((float)playerScreenX / 2), (float)playerScreenY - 32 };
+            playerPos = { ((float)playerScreenX / 2), (float)playerScreenY - 64 };
         }
         else {
-            playerPos = { (float)playerScreenX -32, ((float)playerScreenY / 2)};
+            playerPos = { (float)playerScreenX -64, ((float)playerScreenY / 2)};
 
         }
     }
@@ -574,8 +574,8 @@ public:
         else {
            nextY -= vel;  // Changed from += to -=
         }
-        if (nextX >= 32 && nextX <= playerScreenX - 32 &&
-            nextY >= 32 && nextY <= playerScreenY - 32) {
+        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+            nextY >= 32 && nextY <= playerScreenY - 64) {
 
             if (level == 1) {
 
