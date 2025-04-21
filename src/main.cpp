@@ -1295,7 +1295,7 @@ public:
 
                 bullets[i].UpdatePosition(this->level);
                 DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
-                i++;
+              
                 if (bullets[i].eliminate == true) {
                 
                     bulletSize = bullets.size();
