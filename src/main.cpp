@@ -344,7 +344,7 @@ public:
             }
             else {
                 if (!IsSoundPlaying(Walk)) {
-                    PlaySound(Walk); // Play the sound only if it�s not already playing
+                    PlaySound(Walk); 
                 }
                 
             }
