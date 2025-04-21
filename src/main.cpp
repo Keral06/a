@@ -1291,7 +1291,7 @@ public:
             int i = 0;
             i = 0;
 
-            while (i < bulletSize) {
+            while (i < bullets.size()) {
 
                 bullets[i].UpdatePosition(this->level);
                 DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
@@ -1315,8 +1315,9 @@ public:
 
                     }
                     bulletSize = bullets.size();
-                    i++;
+                    
                 }
+                i++
             }
 
 
