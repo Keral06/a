@@ -1115,9 +1115,9 @@ public:
     
         float help = GetTime();
 
-        aux =+ help - tiempoFake;
+        aux = aux+ help - tiempoFake;
 
-        tiempoTranscurrido = -aux;
+        tiempoTranscurrido = +aux;
     
     }
     void pause() {
@@ -1767,7 +1767,7 @@ public:
         BeginDrawing();
         
         DrawText("Game Over", 40, screenHeight / 2, 40, WHITE);
-        DrawText("To Try again click space bar", 40,( screenHeight / 2)+50, 20, WHITE);
+        
         EndDrawing();
         
            p.ResetPlayer();
@@ -2274,15 +2274,15 @@ public:
         DrawTexture(reloj, 512, 512, WHITE);
         if (p.lives < 0) {
         
-            DrawText("0", 512 + 32, 66, 20, RED);
+            DrawText("0", 512 + 32, 66, 20, WHITE);
         
         }
         else {
         
-        DrawText(TextFormat("%i", p.lives), 512+32, 66, 20, RED);
+        DrawText(TextFormat("%i", p.lives), 512+32, 66, 20, WHITE);
         
         }
-        DrawText(TextFormat("%i", p.coins), 512+32, 96, 20, RED);
+        DrawText(TextFormat("%i", p.coins), 512+32, 96, 20, WHITE);
        
     }
 
