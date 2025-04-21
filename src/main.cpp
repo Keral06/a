@@ -648,8 +648,8 @@ public:
             playerPos.y = nextY;
         }*/
         ColisionPlayer(playerPos);
-        if (nextX >= 32 && nextX <= playerScreenX - 32 &&
-            nextY >= 32 && nextY <= playerScreenY - 32) {
+        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+            nextY >= 32 && nextY <= playerScreenY - 64) {
 
             if (level == 1) {
 
@@ -660,20 +660,55 @@ public:
             else if (level == 2) {
 
 
-                if (nextX < 128 || (nextX > 160 && nextX < 256) || (nextX > 384)) {
-                    if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
-                    }
+                if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
+                    /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                    /*}
                     else {
 
-                    }
+                    }*/
 
 
 
                 }
-            }
-        }
+                else if (nextX <= 188 || nextX >= 288) {
+
+                    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                    else if (nextX <= 188 && nextX >= 158) {
+
+                        if (nextY >= 160 && nextY <= 350) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+                        }
+
+                    }
+                    else if (nextX >= 288 && nextX <= 320) {
+
+                        if (nextY >= 160 && nextY <= 350) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+                        }
+
+                    }
+
+
+                }
+                else {
+
+
+
+                }
     }
 
 
