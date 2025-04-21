@@ -357,18 +357,56 @@ public:
                 else if (level == 2) {
 
 
-                    if (nextX < 128 || (nextX > 160 && nextX < 256) || (nextX > 384)) {
-						if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {
+                    if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
+						/*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
 							playerPos.x = nextX;
 							playerPos.y = nextY;
-						}
+						/*}
                         else {
 
-                        }
+                        }*/
 
 
                      
                     }
+                    else if (nextX <= 188 || nextX >= 288) {
+                    
+                        if (nextY > 384 || nextY < 96 ||( nextY > 188 && nextY < 324)) {
+                        
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        
+                        
+                        }
+                        else if (nextX<=188 && nextX>=158) {
+                        
+                            if (nextY >= 160&& nextY <=350) {
+                            
+                                playerPos.x = nextX;
+                                playerPos.y = nextY;
+                            
+                            }
+                        
+                        }
+                        else if (nextX >= 288 && nextX<= 320){
+                        
+                            if (nextY >= 160 && nextY <= 350) {
+
+                                playerPos.x = nextX;
+                                playerPos.y = nextY;
+
+                            }
+                        
+                        }
+                    
+                    
+                    }
+                    else {
+                    
+                    
+                    
+                   }
+                    
                /*     else if (nextX<192 && nextX<384) {
 
                         if (nextY < 416 && nextY>160) {
@@ -602,16 +640,16 @@ public:
         else {
            nextY -= vel;  // Changed from += to -=
         }
-        if (nextX >= 32 && nextX <= playerScreenX - 32) {
+       /* if (nextX >= 32 && nextX <= playerScreenX - 32) {
             playerPos.x = nextX;
             
         } if(nextY >= 32 && nextY <= playerScreenY - 32) {
            
             playerPos.y = nextY;
-        }
+        }*/
         ColisionPlayer(playerPos);
-        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
-            nextY >= 32 && nextY <= playerScreenY - 64) {
+        if (nextX >= 32 && nextX <= playerScreenX - 32 &&
+            nextY >= 32 && nextY <= playerScreenY - 32) {
 
             if (level == 1) {
 
@@ -988,16 +1026,35 @@ private:
     double tiempoFinal;
     double tiempoTranscurrido;
     int barraAncho;
-    int aux;
+   
+    float tiempoFake;
+    float aux = 0;
 public:
 
+    
     time() {
 
         tiempoFinal = 80.0f;
         tiempoTranscurrido = 0;
         barraAncho = 512;
-        aux = 0;
+        
         tiempoInicial = 0;
+    }
+    void NewTime() {
+    
+    
+    
+        float help = GetTime();
+
+        aux =+ help - tiempoFake;
+
+        tiempoTranscurrido = -aux;
+    
+    }
+    void pause() {
+    
+        tiempoFake = GetTime();
+    
     }
     void DrawInicial() {
 
@@ -1024,12 +1081,12 @@ public:
     }
     void TiempoQueHaPasado() {
         float tiempoAhora = GetTime();
-        tiempoTranscurrido = tiempoAhora - tiempoInicial;
+        tiempoTranscurrido = tiempoAhora - tiempoInicial - aux;
 
 
     }
     void tiempo() {
-        if (tiempoFinal = tiempoTranscurrido) {
+        if (tiempoFinal == tiempoTranscurrido) {
             /*game over*/
         }
 
@@ -1105,7 +1162,7 @@ private:
     int level;
     bool wonGame = false;
     int stage;
-
+    bool tiempoFake = false;
     Texture bulletTex = LoadTexture("Bullet_1.png");
     std::vector<DeadOgre>dead;
     int deadogres;
@@ -1347,15 +1404,15 @@ public:
                     if (!IsSoundPlaying(power)) {
                         PlaySound(power); // Play the sound only if it�s not already playing
                     }
-                    if (p.bag == 1) {
+                  
                         Lives[0].UsePowerUp(p);
                         Lives.pop_back();
-                    }
-                    else {
+                    
+                   /* else {
 
                         p.bag++;
                         Lives.pop_back();
-                    }
+                    }*/
 
 
                 }
@@ -1429,7 +1486,7 @@ public:
             if (p.status == false) {
 
 
-
+                Tiempo.Draw();
                 int x = 0;
 
                 while (0 < enemigo.size()) {
@@ -1492,7 +1549,14 @@ public:
             /*BeginDrawing();*/
             BeginDrawing();
             int i = 0;
-
+            Tiempo.Draw();
+            if (tiempoFake == false) {
+            
+                Tiempo.pause();
+                tiempoFake = true;
+                
+            }
+            
             while (i < dead.size()) {
 
 
@@ -1519,8 +1583,9 @@ public:
                 GameOver(p);
             }
             if(p.status==true) {
-            
+                Tiempo.NewTime();
                 p.ResetPlayer();
+                tiempoFake = false;
             }
 
             EndDrawing();
