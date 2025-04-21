@@ -345,8 +345,8 @@ public:
             }
             
             ColisionPlayer(playerPos);
-            if (nextX >= 32 && nextX <= playerScreenX - 64 &&
-                nextY >= 32 && nextY <= playerScreenY -64) {
+            if (nextX >= 32 && nextX <= playerScreenX - 32 &&
+                nextY >= 32 && nextY <= playerScreenY -32) {
 
                 if (level == 1) {
                 
@@ -567,8 +567,8 @@ public:
         else {
            nextY -= vel;  // Changed from += to -=
         }
-        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
-            nextY >= 32 && nextY <= playerScreenY - 64) {
+        if (nextX >= 32 && nextX <= playerScreenX - 32 &&
+            nextY >= 32 && nextY <= playerScreenY - 32) {
 
             if (level == 1) {
 
@@ -900,7 +900,7 @@ public:
             nextX += 5.0f;
             break;
         case IZQUIERDA:
-            nextY -= 5.0f;
+            nextX -= 5.0f;
             break;
         case DIAGONAL1:
             nextX += 5.0f;
@@ -911,7 +911,7 @@ public:
             nextY -= 5.0f;
             break;
         case DIAGONAL3:
-            playerPos.x += 5.0f;
+            nextX += 5.0f;
             nextY += 5.0f;
             break;
         case DIAGONAL4:
@@ -923,8 +923,8 @@ public:
         }
 
 
-        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
-            nextY >= 32 && nextY <= playerScreenY - 64) {
+        if (nextX >= 32 && nextX <= playerScreenX - 32 &&
+            nextY >= 32 && nextY <= playerScreenY - 32) {
 
             if (level == 1) {
 
