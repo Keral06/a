@@ -1070,7 +1070,7 @@ public:
 
 class time {
 private:
-    Texture barra = LoadTexture("ui/barra.png");
+    
     Texture reloj = LoadTexture("ui/reloj.png");
     double tiempoInicial;
     double tiempoFinal;
@@ -2237,11 +2237,13 @@ class UI {
 private:
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Texture moneda1 = LoadTexture("items/128x128_moneda1.png");
+    Texture barra = LoadTexture("ui/barra.png");
 public:
     friend int main();
     void draw(Player p) {
         DrawTexture(vida, 512, 64, WHITE);
         DrawTexture(moneda1, 512, 96, WHITE);
+        DrawTexture(barra, 532, 32, WHITE);
         if (p.lives < 0) {
         
             DrawText("0", 512 + 32, 66, 20, RED);
