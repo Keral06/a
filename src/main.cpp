@@ -1,4 +1,3 @@
-
 #include "raylib.h"
 #include "resource_dir.h"
 #include <vector> 
@@ -428,23 +427,84 @@ public:
                 
                 }
                 else if (level == 3) {
-                    if (nextX <= 188 || nextX >= 288)
-                    {
-                        if (nextX >= 224 && nextX <= 256) {
-                            if (nextY >= 96 && nextY <= 350) {
-                                playerPos.x = nextX;
-                                playerPos.y = nextY;
-                            }
-
-
+                    if (nextX >= 160 && nextX <= 352/* || nextX <= 128 || nextX >= 384*/) {
+                        if (nextY >= 160 && nextY <= 352/* || nextY <= 128*/) {
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
                         }
+                        else if (nextY <= 128) {
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        }
+                        else if (nextY <= 384) {
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        }
+
                     }
-                  /*  else if (){
+                    else if (nextX <= 200) {
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+                    }
+                    else if (nextX <= 384) {
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+                    }
+                   /* else if (nextX <= 128 && nextX >= 384) {
+                        if (nextY <= 128 && nextY >= 384) {
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        }
+
+                    }*/
+                    //else if (nextX <= 188 || nextX >= 288) {
+
+                    //    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
+
+                    //        playerPos.x = nextX;
+                    //        playerPos.y = nextY;
+
+
+                    //    }
+                    //    else if (nextX <= 188 && nextX >= 158) {
+
+                    //        if (nextY >= 160 && nextY <= 350) {
+
+                    //            playerPos.x = nextX;
+                    //            playerPos.y = nextY;
+
+                    //        }
+
+                    //    }
+                    //    else if (nextX >= 288 && nextX <= 320) {
+
+                    //        if (nextY >= 160 && nextY <= 350) {
+
+                    //            playerPos.x = nextX;
+                    //            playerPos.y = nextY;
+
+                    //        }
+
+                    //    }
+                    
+                   /* else if (nextX <= 128 && nextX >= 150 || nextX <= 384 && nextX >= 416)
+                    {
+                        if (nextY <= 256 && nextY >= 288) {
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+                        }
 
                     }*/
                     else {
 
                     }
+              
+
+                    
+                  /*  else if (){
+
+                    }*/
+                    
                 }
                 
             }
