@@ -2855,6 +2855,7 @@ private:
 public:
     friend int main();
  
+    //mostrar aparicion del storeman
     void aparicion(float deltaTime) {
         if (!isWalking) return;
 
@@ -2868,12 +2869,17 @@ public:
         // Movimiento hacia abajo
         position.y += walkSpeed * deltaTime;
 
-        // Detenerse al llegar al centro vertical
+        // Detenerse al llegar al centro 
         if (position.y >= GetScreenHeight() / 2 - walkFrames[0].height / 2) {
             position.y = GetScreenHeight() / 2 - walkFrames[0].height / 2;
             isWalking = false;
-            currentFrame = 0; // Frame estático cuando se detiene
+            currentFrame = 0; 
         }
+    }
+    //mostrar la tienda
+    void Tienda() {
+
+
     }
 
     void draw() {
@@ -2881,6 +2887,7 @@ public:
         // Dibujar storeman
         DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
     }
+  
 };
 
 
