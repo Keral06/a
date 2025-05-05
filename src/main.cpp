@@ -21,6 +21,7 @@ class Ogre;
 class PowerUpLive;
 class time;
 class Title;
+class Store;
 enum Direccion
 {
     ARRIBA,
@@ -2761,8 +2762,104 @@ public:
     
     }
 
-
 };
+
+
+
+//class Store
+//{
+//private:
+//    //imagen tienda
+//    Texture store = LoadTexture("tienda.png");
+//    //store man
+//    Texture storeman1 = LoadTexture("64x64/128x128_p4.png");
+//    Texture storeman2 = LoadTexture("64x64/128x128_p4-1.png");
+//    Texture storeman3 = LoadTexture("64x64/128x128_p4-2.png");
+//    Texture storeman4 = LoadTexture("64x64/128x128_p4-3.png");
+//    Texture storeman5 = LoadTexture("64x64/128x128_p4-4.png");
+//
+//public:
+//    friend int main();
+//    int time
+//    void Aparicion() 
+//    {
+//        // Dibujar el frame actual del storeman
+//        //empieza a caminar
+//        for ()
+//        DrawTexture(storeman1, 0, 0, WHITE);
+//        DrawTexture(storeman2, 0, 0, WHITE);
+//
+//    }
+//    void Tienda() 
+//    {
+//           // Dibujar el fondo
+//            DrawTexture(store, 0, 0, WHITE);
+//    }
+//
+//};
+
+
+class Store {
+private:
+    Texture storeBackground;
+    Texture walkFrames[2];  // caminar
+    Vector2 position = { 0, 0 };  // Valores temporales
+
+    //imagen tienda
+    Texture store = LoadTexture("tienda.png");
+    //store man
+    Texture storeman1 = LoadTexture("64x64/128x128_p4.png");
+    Texture storeman2 = LoadTexture("64x64/128x128_p4-1.png");
+    Texture storeman3 = LoadTexture("64x64/128x128_p4-2.png");
+    Texture storeman4 = LoadTexture("64x64/128x128_p4-3.png");
+    Texture storeman5 = LoadTexture("64x64/128x128_p4-4.png");
+
+    float animTime = 0;
+    const float animSpeed = 0.2f; // Velocidad cambio de frames
+    const float walkSpeed = 100.0f; // Píxeles por segundo
+    bool isWalking = true;
+    int currentFrame = 0;
+
+public:
+    friend int main();
+ 
+    //mostrar aparicion del storeman
+    void aparicion(float deltaTime) {
+        if (!isWalking) return;
+
+        // Animación de caminar
+        animTime += deltaTime;
+        if (animTime >= animSpeed) {
+            animTime = 0;
+            currentFrame = (currentFrame + 1) % 2; // Alterna entre 0 y 1
+        }
+
+        // Movimiento hacia abajo
+        position.y += walkSpeed * deltaTime;
+
+        // Detenerse al llegar al centro 
+        if (position.y >= GetScreenHeight() / 2 - walkFrames[0].height / 2) {
+            position.y = GetScreenHeight() / 2 - walkFrames[0].height / 2;
+            isWalking = false;
+            currentFrame = 0; 
+        }
+    }
+    //mostrar la tienda
+    void Tienda() {
+
+
+    }
+
+    void draw() {
+
+        // Dibujar storeman
+        DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
+    }
+  
+};
+
+
+
 //dibuja la pantalla de inicio y el texto
 int main() 
 {
@@ -2788,12 +2885,13 @@ int main()
     std::vector<Ogre>enemigo;
     int bulletaux;
 
+    Store a;
+
     Background desierto;
     time ui;
     UI aa;
     /* Ogre enemigo;*/
     music player;
-
      //creation of enemy vector
     int og = 0;
     //vector<Ogre> ogres(og);
@@ -2819,7 +2917,7 @@ int main()
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
-
+                  
                 }
                 else {
 
