@@ -4,6 +4,8 @@
 #include "level.cpp"
 #include "Background.cpp"
 #include "Stage.cpp"
+#include "coins.cpp"
+#include "colision.cpp"
 
 /*declarar las medidas de la pantalla jugable y de la pantalla en general*/
 const int screenWidth = 1024 / 2 + 32 * 2;
@@ -39,30 +41,30 @@ enum Direccion
 
 
 
-class Colision {
-public:
-    Colision(Vector2 posicion) {
-        BeginDrawing();
-        float widthThing = 32;
-        float HeightThing = 32;
-
-        DrawRectangle(posicion.x, posicion.y, widthThing, HeightThing, BLANK);
-        Square = { posicion.x,posicion.y, widthThing, HeightThing };
-
-    }
-	//dibuja un cuadrado invisible en el escenario para indicar la colision
-    void ColisionPlayer(Vector2 posicion) {
-
-        DrawRectangle(posicion.x, posicion.y, 32, 32, BLANK);
-        Square.x = posicion.x;
-        Square.y = posicion.y;
-
-
-    }
-	//dibuja un cuadrado invisible encima del jugador para poder detectar la colision
-protected:
-    Rectangle Square;
-};
+//class Colision {
+//public:
+//    Colision(Vector2 posicion) {
+//        BeginDrawing();
+//        float widthThing = 32;
+//        float HeightThing = 32;
+//
+//        DrawRectangle(posicion.x, posicion.y, widthThing, HeightThing, BLANK);
+//        Square = { posicion.x,posicion.y, widthThing, HeightThing };
+//
+//    }
+//	//dibuja un cuadrado invisible en el escenario para indicar la colision
+//    void ColisionPlayer(Vector2 posicion) {
+//
+//        DrawRectangle(posicion.x, posicion.y, 32, 32, BLANK);
+//        Square.x = posicion.x;
+//        Square.y = posicion.y;
+//
+//
+//    }
+//	//dibuja un cuadrado invisible encima del jugador para poder detectar la colision
+//protected:
+//    Rectangle Square;
+//};
 
 class Entity :public Colision {
 public:
