@@ -118,7 +118,7 @@ public:
     friend class coins;
     friend class UI;
     friend class Game;
-    
+
     Player(int hp, int vel) : Entity(hp, vel, { (float)playerScreenX / 2, (float)playerScreenY / 2 }) {
         this->coins = 0;
         this->lives = 3;
@@ -126,17 +126,17 @@ public:
         dire = 1;
         status = true;
         bag = 0;
-	} //declara los valores iniciales del jugador
+    } //declara los valores iniciales del jugador
     int dire;
     void playerAgain() {
-    
+
         this->coins = 0;
         this->lives = 3;
         this->dir = ARRIBA;
         dire = 1;
         status = true;
         bag = 0;
-    
+
     }
     void Draw() {
         //BeginDrawing();
@@ -267,14 +267,14 @@ public:
         }
 
     }
-	//dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
+    //dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
     void ResetPlayer() {
 
         playerPos = { (float)playerScreenX / 2, (float)playerScreenY / 2 };
         status = true;
 
     }
-	//resetea al jugador cuando muere
+    //resetea al jugador cuando muere
 
     void Movement(int level) {
 
@@ -429,39 +429,78 @@ public:
 
                 }
                 else if (level == 3) {
-                    if (nextX < 224 || (nextX > 256) || (nextX > 416)) {
-                        /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
-                        /*}
+                    if (nextX > 384 || nextX < 96 || (nextX > 220 && nextX < 354)) {
+
+                        if (nextY > 384 || nextY < 96 || (nextY > 220 && nextY < 354)) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+
+                        }
                         else {
 
-                        }*/
-
-
-
+                        }
+  
                     }
-                    else if (nextX < 224  && nextX > 256 /*|| nextX <= 128 || nextX >= 384*/) {
-                        if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)/* || nextY <= 128*/) {
-                            
-                                playerPos.x = nextX;
-                                playerPos.y = nextY;
-                            
-                            
-                        }
-                        else if (nextX >= 288 && nextX <= 320) {
+                    else if ((nextX > 30 && nextX < 230))
+                    {
 
-                            if (nextY >= 160 && nextY <= 350) {
+                        if ((nextY > 30 && nextY < 230)) {
 
-                                playerPos.x = nextX;
-                                playerPos.y = nextY;
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
 
-                            }
 
                         }
-                        else {
+                    }
+                    else if ((nextX > 260 && nextX < 448))
+                    {
+
+                        if ((nextY > 30 && nextY < 230)) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
 
                         }
+                    }
+
+
+                    
+                    //if (nextX < 224 || (nextX > 256) || (nextX > 416)) {
+                    //    /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
+                    //    playerPos.x = nextX;
+                    //    playerPos.y = nextY;
+                    //    /*}
+                    //    else {
+
+                    //    }*/
+
+
+
+                    //}
+                    //else if (nextX < 224  && nextX > 256 /*|| nextX <= 128 || nextX >= 384*/) {
+                    //    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)/* || nextY <= 128*/) {
+                    //        
+                    //            playerPos.x = nextX;
+                    //            playerPos.y = nextY;
+                    //        
+                    //        
+                    //    }
+                    //    else if (nextX >= 288 && nextX <= 320) {
+
+                    //        if (nextY >= 160 && nextY <= 350) {
+
+                    //            playerPos.x = nextX;
+                    //            playerPos.y = nextY;
+
+                    //        }
+
+                    //    }
+                    //    else {
+
+                    //    }
                         //else if (nextX <= 250 && nextX >= 290)
                         //{
                         //    if (nextY <= 130 && nextY >= 170/* || nextY <= 128*/) {
@@ -469,22 +508,22 @@ public:
                         //        playerPos.y = nextY;
                         //    }
                         //}
-                        
-                
-                        
-                        
-                    }
-                    
-                    else {
-                    }
+
+
+
+
                 }
+
+                
             }
         }
+    }
+
 
                 
 
 
-    }
+    
 	//declara el movimiento del jugador dependiendo de la tecla que presione y la direccion en la que se mueve
     //declara las posiciones donde el jugador no puede acceder, colisiones
     void DeathAnim() {
