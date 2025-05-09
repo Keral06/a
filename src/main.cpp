@@ -1157,7 +1157,7 @@ public:
 
     level() {
 
-        levels = 5;
+        levels = 6;
 
     }
 
@@ -1179,7 +1179,7 @@ public:
 
     Stage() : level() {
 
-        stage = 5;
+        stage = 6;
 
     }
     void StageUp() {
@@ -1361,8 +1361,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 5;
-        stage = 5;
+        level = 6;
+        stage = 6;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -1858,7 +1858,7 @@ public:
             float auxiliar = 0;
 
         p.ResetPlayer();
-        if (this->level == 5) {
+        if (this->level == 6) {
 
             wonGame = true;
 
@@ -3032,6 +3032,14 @@ public:
         DrawTexture(desierto4, 352, 416, WHITE);
         DrawTexture(desierto4, 384, 416, WHITE);
     }
+
+    void Drawlevel6(){
+
+    }
+
+    void Drawlevel7() {
+
+    }
     /* EndDrawing();*/
     void LevelDraw(Game g) {
 
@@ -3059,7 +3067,13 @@ public:
             Drawlevel5();
 
         }
+
         else if (g.CheckLevel() == 6) {
+
+            Drawlevel6();
+
+        }
+        else if (g.CheckLevel() == 7) {
         
             ClearBackground(BLACK);
         
