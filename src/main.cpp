@@ -2767,18 +2767,18 @@ public:
 
 class Store {
 private:
-    Texture storeBackground;
+
     Texture walkFrames[2];  // caminar
     Vector2 position = { 0, 0 };  // Valores temporales
 
     //imagen tienda
     Texture store = LoadTexture("tienda.png");
     //store man
-    Texture storeman1 = LoadTexture("64x64/128x128_p4.png");
-    Texture storeman2 = LoadTexture("64x64/128x128_p4-1.png");
-    Texture storeman3 = LoadTexture("64x64/128x128_p4-2.png");
-    Texture storeman4 = LoadTexture("64x64/128x128_p4-3.png");
-    Texture storeman5 = LoadTexture("64x64/128x128_p4-4.png");
+    Texture storeman1 = LoadTexture("64x64/128x128_p4.png");  //animacion aparicion 1
+    Texture storeman2 = LoadTexture("64x64/128x128_p4-1.png"); //animacion aparicion 2
+    Texture storeman3 = LoadTexture("64x64/128x128_p4-2.png"); //quieto delante
+    Texture storeman4 = LoadTexture("64x64/128x128_p4-3.png"); //quieto izquierda
+    Texture storeman5 = LoadTexture("64x64/128x128_p4-4.png"); //quieto derecha
 
     float animTime = 0;
     const float animSpeed = 0.2f; // Velocidad cambio de frames
@@ -2811,15 +2811,19 @@ public:
         }
     }
     //mostrar la tienda
-    void Tienda() {
+    void Tienda() 
+    {
 
 
     }
 
-    void draw() {
+    void draw() 
+    {
 
-        // Dibujar storeman
+        // Dibujar aparicion del storeman
         DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
+
+
     }
   
 };
