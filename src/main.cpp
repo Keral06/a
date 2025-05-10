@@ -118,6 +118,10 @@ public:
     friend class coins;
     friend class UI;
     friend class Game;
+    friend class Orc;
+    friend class Mariposa;
+    friend class Coffee; 
+    friend  bool PlayerPowerUpCoffee(Player& p, Coffee& pp);
 
     Player(int hp, int vel) : Entity(hp, vel, { (float)playerScreenX / 2, (float)playerScreenY / 2 }) {
         this->coins = 0;
@@ -289,60 +293,60 @@ public:
 
             if (IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
             {
-                nextX += 2.0f;
-                nextY -= 2.0f;
+                nextX += vel;
+                nextY -= vel;;
                 dir = DIAGONAL1;
                 moved = true;
 
             }
             else if (IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
             {
-                nextX -= 2.0f;
-                nextY -= 2.0f;
+                nextX -= vel;
+                nextY -=vel;
                 dir = DIAGONAL2;
                 moved = true;
 
             }
             else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_D))
             {
-                nextX += 2.0f;
-                nextY += 2.0f;
+                nextX += vel;
+                nextY += vel;
                 dir = DIAGONAL3;
                 moved = true;
 
             }
             else if (IsKeyDown(KEY_S) && IsKeyDown(KEY_A))
             {
-                nextX -= 2.0f;
-                nextY += 2.0f;
+                nextX -= vel;
+                nextY += vel;
                 dir = DIAGONAL4;
                 moved = true;
 
             }
             else if (IsKeyDown(KEY_D))
             {
-                nextX += 2.0f;
+                nextX +=vel;
                 dir = DERECHA;
                 moved = true;
 
             }
             else if (IsKeyDown(KEY_A))
             {
-                nextX -= 2.0f;
+                nextX -= vel;
                 dir = IZQUIERDA;
                 moved = true;
 
             }
             else if (IsKeyDown(KEY_W))
             {
-                nextY -= 2.0f;
+                nextY -=vel;
                 dir = ARRIBA;
                 moved = true;
 
             }
             else if (IsKeyDown(KEY_S))
             {
-                nextY += 2.0f;
+                nextY += vel;
                 dir = ABAJO;
                 moved = true;
 
@@ -624,6 +628,123 @@ public:
 
 
 };
+class ScreenNuke : public Colision {
+
+private:
+    Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
+    Vector2 pos;
+public:
+    friend class Game;
+    friend class Player;
+    friend class Colision;
+
+    friend  bool PlayerPowerUpCoffee(Player& p, Coffee& pp);
+    ScreenNuke(Vector2 position) : Colision(pos) {
+        this->pos = position;
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+
+
+    }
+    //dibuja el item de vida +
+    ScreenNuke(Player p) : Colision(pos) {
+
+        
+
+    }
+    //suma la vida al jugador despues de recoger el item
+
+
+
+    void UsePowerUp( std::vector<Ogre>& enemigo, std::vector <Orc>orcs, std::vector <Mariposa>marip) {
+
+        int i = 0;
+
+        while (enemigo.size() != 0) {
+        
+            enemigo.pop_back();
+        
+        
+        }
+        while (orcs.size() != 0) {
+        
+            orcs.pop_back();
+        
+        
+        }
+        while (marip.size() != 0) {
+        
+            marip.pop_back();
+        
+        }
+
+    }
+    
+    //suma la vida
+    void Draw() {
+
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+    //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
+
+
+
+
+
+
+};
+class Coffee : public Colision {
+private:
+    Texture vida = LoadTexture("items/128x128_taza.png");
+    Vector2 pos;
+public:
+    friend class Game;
+    friend class Player;
+    friend class Colision;
+ 
+    friend  bool PlayerPowerUpCoffee(Player& p, Coffee& pp);
+    Coffee(Vector2 position) : Colision(pos) {
+        this->pos = position;
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+
+
+    }
+    //dibuja el item de vida +
+    Coffee(Player p) : Colision(pos) {
+
+        p.vel += 2;
+
+    }
+    //suma la vida al jugador despues de recoger el item
+
+
+
+    void UsePowerUp(Player& p) {
+      
+        p.vel += 2;
+
+    }
+    void StopUsing(Player p) {
+    
+        p.vel -= 2;
+    
+    
+    }
+    //suma la vida
+    void Draw() {
+
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+    //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
+
+
+};
+
 
 class Enemy : public Entity {
 public:
@@ -775,6 +896,94 @@ protected:
 
 
 };
+class Orc : public Enemy {
+
+private:
+    int dire = 0;
+    bool status = true;
+    Texture Mon1 = LoadTexture("64x64/128x128_vaca.png");
+    Texture Mon2 = LoadTexture("64x64/128x128_vaca2.png");
+
+    float deathStartTime = 0;
+
+public:
+    friend class PowerUpLive;
+    friend class Game;
+    Orc() : Enemy(3, 1) {
+
+
+
+
+
+    }
+    //declara al enemigo
+    void Death() {
+
+        if (!IsSoundPlaying(Die)) {
+            PlaySound(Die); // Play the sound only if it�s not already playing
+        }
+        deathStartTime = GetTime();
+
+    }
+    //declara la muerte y el sonido de muerte del enemigo
+
+
+    void Update(Player p) {
+
+        if (p.playerPos.x > 0) {
+
+            playerPos.x += vel;
+
+        }
+        else {
+
+            playerPos.x -= vel;
+
+        }
+
+        if (p.playerPos.y > 0) {
+
+            playerPos.y += vel;
+        }
+        else {
+
+            playerPos.y -= vel;
+
+        }
+
+
+    }
+    //actualiza la posicion y direcion del enemigo dependiendo de la posicion del jugador
+    void Draw() {
+
+        /*BeginDrawing();*/
+        if (dire <= 50) {
+
+            DrawTexture(Mon2, GetPosition().x, GetPosition().y, WHITE);
+
+
+        }
+        else {
+
+            DrawTexture(Mon1, GetPosition().x, GetPosition().y, WHITE);
+
+        }
+
+        if (dire == 100) { dire = 0; }
+        dire++;
+
+
+
+    }
+    //dibuja el sprite y animacion del enemigo
+
+
+    friend class Colision;
+
+
+
+
+};
 
 class Ogre : public Enemy {
 private:
@@ -855,6 +1064,127 @@ public:
 
     }
 	//dibuja el sprite y animacion del enemigo
+
+
+    friend class Colision;
+
+};
+class Mariposa : public Enemy {
+private:
+    int dire = 0;
+    bool status = true;
+    Texture Mon1 = LoadTexture("64x64/128x128_mariposa1.png");
+    Texture Mon2 = LoadTexture("64x64/128x128_mariposa2.png");
+
+    float deathStartTime = 0;
+
+public:
+    friend class PowerUpLive;
+    friend class Game;
+    Mariposa() : Enemy(3, 1) {
+
+
+
+
+
+    }
+    //declara al enemigo
+    void MovementMariposa(Player p) {
+    
+    
+        Vector2 player = p.GetPosition();
+        float nextY = playerPos.y;
+        float nextX = playerPos.x;
+        if (playerPos.x < player.x) {
+            nextX += vel;  // Changed from -= to +=
+        }
+        else {
+            nextX -= vel;  // Changed from += to -=
+        }
+
+        if (playerPos.y < player.y) {
+            nextY += vel;  // Changed from -= to +=
+        }
+        else {
+            nextY -= vel;  // Changed from += to -=
+        }
+
+
+
+
+
+
+        if (nextX >= 32 && nextX <= playerScreenX - 64 &&
+            nextY >= 32 && nextY <= playerScreenY - 64) {
+
+          
+
+
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+    
+    
+    }
+    void Death() {
+
+        if (!IsSoundPlaying(Die)) {
+            PlaySound(Die); // Play the sound only if it�s not already playing
+        }
+        deathStartTime = GetTime();
+
+    }
+    //declara la muerte y el sonido de muerte del enemigo
+
+
+    void Update(Player p) {
+
+        if (p.playerPos.x > 0) {
+
+            playerPos.x += vel;
+
+        }
+        else {
+
+            playerPos.x -= vel;
+
+        }
+
+        if (p.playerPos.y > 0) {
+
+            playerPos.y += vel;
+        }
+        else {
+
+            playerPos.y -= vel;
+
+        }
+
+
+    }
+    //actualiza la posicion y direcion del enemigo dependiendo de la posicion del jugador
+    void Draw() {
+
+        /*BeginDrawing();*/
+        if (dire <= 50) {
+
+            DrawTexture(Mon2, GetPosition().x, GetPosition().y, WHITE);
+
+
+        }
+        else {
+
+            DrawTexture(Mon1, GetPosition().x, GetPosition().y, WHITE);
+
+        }
+
+        if (dire == 100) { dire = 0; }
+        dire++;
+
+
+
+    }
+    //dibuja el sprite y animacion del enemigo
 
 
     friend class Colision;
@@ -1368,7 +1698,7 @@ public:
         tiempoiniciado = false;
     }
 	//declara el nivel y stage inicial
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>money) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>&money, std::vector <Orc>&orcs, std::vector <Mariposa>&marip) {
         if(p.status){
             ClearBackground(BLACK);
             /*BeginDrawing();*/
@@ -1403,7 +1733,7 @@ public:
 
 
             }
-			//dibuja la bala segun se dispara
+			
 
 
 
@@ -1413,225 +1743,231 @@ public:
 
 
 
-            /*  BeginDrawing();
-              ClearBackground(RAYWHITE);*/
+            if (level > 3) {
+                int i = 0;
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
-            if (GetRandomValue(1, 40) == 1 && enemigo.size() < 15) {
+                    Orc auxiliar;
+                    orcs.push_back(auxiliar);
+                    
 
-                Ogre auxiliar;
-                enemigo.push_back(auxiliar);
-                ogreaux++;
+                }
+                if (orcs.size() > 0) {
+
+                  
+                    int j = 0;
+                    int aux = 0;
+                    while (i < orcs.size()) {
+
+                        while (j < orcs.size()) {
+                            if (i >= orcs.size()) {
+
+
+                            }
+                            else {
+
+                                if (bullets[j].ColisionBullet(orcs[i]) == true) {
+
+                                    DeadOgre auxiliari(orcs[i].GetPosition());
+                                    dead.push_back(auxiliari);
+                                    float timehelp = GetTime();
+                                    auxTime.push_back(timehelp);
+                                    deadogres++;
+                                    
+
+                                    int a = 0;
+                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        PowerUpLive live(ee);
+                                        Lives.push_back(live);
+                                        timeOfLive = GetTime();
+                                        a = 1;
+
+                                    }
+
+
+
+
+                                    if (orcs.size() == 1) {
+                                        orcs[i].Death();
+                                        orcs.pop_back();
+
+                                    }
+
+                                    else if (orcs.size() > 1) {
+
+                                        aux = i;
+                                        orcs[i].Death();;
+                                        while (aux < orcs.size() - 1) {
+
+                                            orcs[aux] = orcs[aux + 1];
+                                            aux++;
+
+                                        }
+                                        orcs.pop_back();
+
+
+                                    }
+                                    
+                                    bulletSize = bullets.size();
+                                    aux = j;
+                                    if (bullets.size() == 1) {
+
+                                        bullets.pop_back();
+                                        bulletSize--;
+                                    }
+                                    else if (bullets.size() > 1) {
+                                        while (aux < bullets.size() - 1) {
+                                            bullets[aux] = bullets[aux + 1];
+                                            aux++;
+                                        }
+
+                                        bullets.pop_back();
+
+                                    }
+                                    bulletSize = bullets.size();
+
+                                }
+
+
+                            }
+                            // chequea si la bala colisiona con el ogro
+                            if (orcs.size() == 0) { j = bulletSize; }
+
+                            j++;
+                        }
+
+                        j = 0;
+                        i++;
+
+
+                    }
+
+
+                }
+
+
+
+                
+               
+               
+
+            }
+            if (level > 6) {
+                int i = 0;
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size()+ marip.size()< 15) {
+
+                    Mariposa auxiliar;
+                    marip.push_back(auxiliar);
+
+
+                }
+                if (orcs.size() > 0) {
+
+
+                    int j = 0;
+                    int aux = 0;
+                    while (i < marip.size()) {
+
+                        while (j < marip.size()) {
+                            if (i >= marip.size()) {
+
+
+                            }
+                            else {
+
+                                if (bullets[j].ColisionBullet(orcs[i]) == true) {
+
+                                    DeadOgre auxiliari(orcs[i].GetPosition());
+                                    dead.push_back(auxiliari);
+                                    float timehelp = GetTime();
+                                    auxTime.push_back(timehelp);
+                                    deadogres++;
+
+
+                                    int a = 0;
+                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        PowerUpLive live(ee);
+                                        Lives.push_back(live);
+                                        timeOfLive = GetTime();
+                                        a = 1;
+
+                                    }
+
+
+
+
+                                    if (marip.size() == 1) {
+                                        marip[i].Death();
+                                        marip.pop_back();
+
+                                    }
+
+                                    else if (marip.size() > 1) {
+
+                                        aux = i;
+                                        marip[i].Death();;
+                                        while (aux < marip.size() - 1) {
+
+                                            marip[aux] = marip[aux + 1];
+                                            aux++;
+
+                                        }
+                                        marip.pop_back();
+
+
+                                    }
+
+                                    bulletSize = bullets.size();
+                                    aux = j;
+                                    if (bullets.size() == 1) {
+
+                                        bullets.pop_back();
+                                        bulletSize--;
+                                    }
+                                    else if (bullets.size() > 1) {
+                                        while (aux < bullets.size() - 1) {
+                                            bullets[aux] = bullets[aux + 1];
+                                            aux++;
+                                        }
+
+                                        bullets.pop_back();
+
+                                    }
+                                    bulletSize = bullets.size();
+
+                                }
+
+
+                            }
+                            // chequea si la bala colisiona con el ogro
+                            if (marip.size() == 0) { j = bulletSize; }
+
+                            j++;
+                        }
+
+                        j = 0;
+                        i++;
+
+
+                    }
+
+
+                }
+
+
+
+
+
+
 
             }
             int i = 0;
-            i = 0;
-			// dibuja el ogro 
-            while (i < bullets.size()) {
-
-                bullets[i].UpdatePosition(this->level);
-                DrawTexture(bulletTex, bullets[i].GetPosition().x, bullets[i].GetPosition().y, WHITE);
-              
-                if (bullets[i].eliminate == true) {
-                
-                  
-                   int p = i;
-                    if (bullets.size() == 1) {
-
-                        bullets.pop_back();
-                        
-                    }
-                    else if (bullets.size() > 1) {
-                        while (p < bullets.size() - 1) {
-                            bullets[p] = bullets[p + 1];
-                            p++;
-                        }
-
-                        bullets.pop_back();
-
-                    }
-                    
-
-                }
-                i++;
-            }
-			// actualiza la posicion de la bala y la dibuja
-
-            ogreaux = enemigo.size();
-            i = 0;
-            if (ogreaux > 0) {
-
-                i = 0;
-                int j = 0;
-                int aux = 0;
-                while (i < enemigo.size()) {
-
-                    while (j < bullets.size()) {
-                        if (i >= enemigo.size()) {
-
-
-                        }
-                        else {
-
-                            if (bullets[j].ColisionBullet(enemigo[i]) == true) {
-
-                                DeadOgre auxiliari(enemigo[i].GetPosition());
-                                dead.push_back(auxiliari);
-                                float timehelp = GetTime();
-                                auxTime.push_back(timehelp);
-                                deadogres++;
-                                ogreaux = enemigo.size();
-
-                                int a = 0;
-                                if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
-                                    Vector2 ee = enemigo[i].GetPosition();
-                                    PowerUpLive live(ee);
-                                    Lives.push_back(live);
-                                    timeOfLive = GetTime();
-                                    a = 1;
-
-                                }
-
-                                
-                               
-                                
-                                if (enemigo.size() == 1) {
-                                    enemigo[i].Death();
-                                    enemigo.pop_back();
-
-                                }
-
-                                else if (enemigo.size() > 1) {
-
-                                    aux = i;
-                                        enemigo[i].Death();;
-                                    while (aux < enemigo.size() - 1) {
-
-                                        enemigo[aux] = enemigo[aux + 1];
-                                        aux++;
-
-                                    }
-                                    enemigo.pop_back();
-
-
-                                }
-                                ogreaux = enemigo.size();
-                                bulletSize = bullets.size();
-                                aux = j;
-                                if (bullets.size() == 1) {
-
-                                    bullets.pop_back();
-                                    bulletSize--;
-                                }
-                                else if (bullets.size() > 1) {
-                                    while (aux < bullets.size() - 1) {
-                                        bullets[aux] = bullets[aux + 1];
-                                        aux++;
-                                    }
-
-                                    bullets.pop_back();
-
-                                }
-                                bulletSize = bullets.size();
-
-                            }
-
-
-                        }
-						// chequea si la bala colisiona con el ogro
-                        if (ogreaux == 0) { j = bulletSize; }
-
-                        j++;
-                    }
-
-                    j = 0;
-                    i++;
-
-
-                }
-
-
-            }
-
-
-
-            i = 0;
-
-            while (i < dead.size()) {
-
-
-                dead[i].Draw();
-                if (dead[i].Delete() == true) {
-                
-                   
-
-                    
-                    dead.pop_back();
-                
-                
-                }
-                /*  float auxiliart = GetTime();*/
-
-                i++;
-                /* if (GetRandomValue(1, 4) == 2 && auxiliart - auxTime[deadogres - 1] > 5.0f) {
-                     dead.pop_back();
-
-                     auxTime.pop_back();
-                     deadogres = dead.size();
-
-                     HelpMeTime = GetTime();*/
-
-
-
-            }
-            i = 0;
             deadogres = dead.size();
-            // dibuja la muerte de los ogros
-            /* if (money.size() > 0) {
+           
 
-                 money[0].Draw();
-
-                 if (money[0].ColisionMoney(p) == true) {
-
-                     money[0].UsePowerUp(p);
-                     money.pop_back();
-
-                 }
-
-             }*/
-
-            if (Lives.size() > 0) {
-                Lives[0].Draw();
-                float helper = GetTime();
-
-                float differenceLife = helper - timeOfLive;
-                
-                
-                if (PlayerPowerUp(p, Lives[0]) == true) {
-                    if (!IsSoundPlaying(power)) {
-                        PlaySound(power); // Play the sound only if it�s not already playing
-                    }
-                  
-                        Lives[0].UsePowerUp(p);
-                        Lives.pop_back();
-                    
-                   /* else {
-
-                        p.bag++;
-                        Lives.pop_back();
-                    }*/
-                        
-
-                }
-
-                if (differenceLife > 7) {
-
-
-                    Lives.pop_back();
-
-                }
-
-
-            }
+            
 			//actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
                 p.bag--;
@@ -1657,6 +1993,40 @@ public:
                 }
 
                 enemigo[i].Draw();
+
+                i++;
+
+            }
+            i = 0;
+            while (i < orcs.size()) {
+
+                orcs[i].CheckColisions(p);
+
+                if (p.status == true) {
+
+                    orcs[i].MovementEnemy(p, this->level);
+
+
+                }
+
+                orcs[i].Draw();
+
+                i++;
+
+            }
+            i = 0;
+            while (i < marip.size()) {
+
+                marip[i].CheckColisions(p);
+
+                if (p.status == true) {
+
+                    marip[i].MovementMariposa(p);
+
+
+                }
+
+                marip[i].Draw();
 
                 i++;
 
@@ -1913,6 +2283,19 @@ public:
 
 };
 bool PlayerPowerUp(Player& p, PowerUpLive& pp) {
+
+    bool check = CheckCollisionRecs(p.Square, pp.Square);
+    if (check == true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
+
+
+}
+bool PlayerPowerUpCoffee(Player& p, Coffee& pp) {
 
     bool check = CheckCollisionRecs(p.Square, pp.Square);
     if (check == true) {
@@ -3328,6 +3711,8 @@ int main()
     Game game;
     std::vector<float>auxTime;
     std::vector <PowerUpLive>Lives;
+    std::vector <Orc>orcs;
+    std::vector <Mariposa>marip;
     Title t;
     bool gameovertime = false;
     float GOtime = 0;
@@ -3339,7 +3724,7 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
-                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money);
+                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip);
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
