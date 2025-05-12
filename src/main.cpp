@@ -1124,7 +1124,7 @@ public:
                 playerPos.y = nextY;
             }
     
-    
+        ColisionPlayer(playerPos);
     }
     void Death() {
 
@@ -1687,6 +1687,7 @@ private:
     float timesincedeletion = 0;
     float timeoflastdelete = 0;
     float timeOfLive = 0;
+    int bagItem = 0;
 public:
     friend int main();
     Game() {
@@ -1698,7 +1699,7 @@ public:
         tiempoiniciado = false;
     }
 	//declara el nivel y stage inicial
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>&money, std::vector <Orc>&orcs, std::vector <Mariposa>&marip) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>&money, std::vector <Orc>&orcs, std::vector <Mariposa>&marip, std::vector<Coffee>&cafe) {
         if(p.status){
             ClearBackground(BLACK);
             /*BeginDrawing();*/
@@ -1776,13 +1777,14 @@ public:
                                     
 
                                     int a = 0;
-                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                    if (GetRandomValue(1, 10) == 1 && p.bag == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
                                         timeOfLive = GetTime();
                                         a = 1;
-
+                                        bagItem = 1;
+                                        p.bag++;
                                     }
 
 
@@ -4444,6 +4446,7 @@ int main()
     Title t;
     bool gameovertime = false;
     float GOtime = 0;
+    std::vector<Coffee>cafe;
     while (!WindowShouldClose()){
 
         if (t.GameBegin) {
@@ -4452,7 +4455,7 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
-                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip);
+                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe);
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
