@@ -1501,7 +1501,7 @@ public:
 
     level() {
 
-        levels = 10;
+        levels = 11;
 
     }
 
@@ -1523,7 +1523,7 @@ public:
 
     Stage() : level() {
 
-        stage = 10;
+        stage = 11;
 
     }
     void StageUp() {
@@ -1705,8 +1705,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 10;
-        stage = 10;
+        level = 11;
+        stage = 11;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -2364,7 +2364,7 @@ public:
             float auxiliar = 0;
 
         p.ResetPlayer();
-        if (this->level == 10) {
+        if (this->level == 11) {
 
             wonGame = true;
 
@@ -4980,6 +4980,198 @@ public:
         DrawTexture(balas, 288, 416, WHITE);
 
     }
+    void Drawlevel11() {
+        int x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 0, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 0, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        int y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 0, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 0, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+
+        }
+        x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 480, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 480, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 480, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 480, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+        }
+        x = 64;
+        y = 64;
+        for (int i = 0; i < 12; i++)
+        {
+            for (int i = 0; i < 12; i++) {
+                DrawTexture(fondo_piedra, x, y, WHITE);
+                y = y + 32;
+            }
+            y = 64;
+            x = x + 32;
+        }
+        y = 32;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 448;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 448;
+        y = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 0;
+        x = 0;
+        for (int i = 0; i < 16; i++) {
+            DrawTexture(valla2, x, y, WHITE);
+            x = x + 32;
+        }
+        y = 480;
+        x = 0;
+        for (int i = 0; i < 16; i++) {
+            DrawTexture(valla2, x, y, WHITE);
+            x = x + 32;
+        }
+        y = 224;
+        x = 0;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 224;
+        x = 480;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 32;
+        x = 64;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            x = x + 64;
+
+        }
+        y = 448;
+        x = 64;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            x = x + 64;
+
+        }
+
+    }
 
 
     /* EndDrawing();*/
@@ -5036,6 +5228,11 @@ public:
 
         }
         else if (g.CheckLevel() == 11) {
+
+            Drawlevel11();
+
+        }
+        else if (g.CheckLevel() == 12) {
         
             ClearBackground(BLACK);
         
