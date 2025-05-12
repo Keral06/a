@@ -805,11 +805,6 @@ public:
             nextY -= vel;  // Changed from += to -=
         }
 
-
-
-
-
-
         if (nextX >= 32 && nextX <= playerScreenX - 64 &&
                 nextY >= 32 && nextY <= playerScreenY -64) {
 
@@ -880,9 +875,6 @@ public:
         }
            
 
-        
-
-
         ColisionPlayer(playerPos);
     }
        
@@ -903,12 +895,6 @@ public:
 
     }
 	//chequea las colisiones 
-protected:
-
-  
-
-
-
 };
 class Orc : public Enemy {
 
@@ -923,13 +909,7 @@ private:
 public:
     friend class PowerUpLive;
     friend class Game;
-    Orc() : Enemy(3, 1) {
-
-
-
-
-
-    }
+    Orc() : Enemy(3, 1) {}
     //declara al enemigo
     void Death() {
 
@@ -950,7 +930,6 @@ public:
 
         }
         else {
-
             playerPos.x -= vel;
 
         }
@@ -964,39 +943,24 @@ public:
             playerPos.y -= vel;
 
         }
-
-
     }
     //actualiza la posicion y direcion del enemigo dependiendo de la posicion del jugador
     void Draw() {
 
         /*BeginDrawing();*/
         if (dire <= 50) {
-
             DrawTexture(Mon2, GetPosition().x, GetPosition().y, WHITE);
-
-
         }
         else {
-
             DrawTexture(Mon1, GetPosition().x, GetPosition().y, WHITE);
-
         }
-
         if (dire == 100) { dire = 0; }
         dire++;
-
-
-
     }
     //dibuja el sprite y animacion del enemigo
 
 
     friend class Colision;
-
-
-
-
 };
 
 class Ogre : public Enemy {
@@ -1033,27 +997,18 @@ public:
     void Update(Player p) {
 
         if (p.playerPos.x > 0) {
-
             playerPos.x += vel;
-
         }
         else {
-
             playerPos.x -= vel;
-
         }
 
         if (p.playerPos.y > 0) {
-
             playerPos.y += vel;
         }
         else {
-
             playerPos.y -= vel;
-
         }
-
-
     }
 	//actualiza la posicion y direcion del enemigo dependiendo de la posicion del jugador
     void Draw() {
@@ -5595,7 +5550,5 @@ int main()
             CloseAudioDevice();
             CloseWindow();
             return 0;
-        
-
+       
 }
-//inicia el juego utilizando todas las classes vistas anteriormente
