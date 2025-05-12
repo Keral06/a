@@ -365,7 +365,7 @@ public:
 
             }
 
-            ColisionPlayer(playerPos);
+            
             if (nextX >= 32 && nextX <= playerScreenX - 64 &&
                 nextY >= 32 && nextY <= playerScreenY - 64) {
 
@@ -520,6 +520,16 @@ public:
 
                 
             }
+            if(level>2) {
+                
+
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+
+
+            
+            }
+            ColisionPlayer(playerPos);
         }
     }
 
@@ -2092,7 +2102,7 @@ public:
 
             i = 0;
             ogreaux = enemigo.size();
-            while (i < ogreaux) {
+            while (i < enemigo.size()) {
 
                 enemigo[i].CheckColisions(p);
 
@@ -2116,7 +2126,7 @@ public:
                 if (p.status == true) {
 
                     orcs[i].MovementEnemy(p, this->level);
-
+                    
 
                 }
 
@@ -2180,13 +2190,25 @@ public:
 
             if (p.status == false) {
 
-
+                p.Death();
                 Tiempo.Draw();
                 int x = 0;
 
                 while (0 < enemigo.size()) {
 
                     enemigo.pop_back();
+                    x++;
+                }
+                x = 0;
+                while (0 < marip.size()) {
+
+                    marip.pop_back();
+                    x++;
+                }
+                x = 0;
+                while (0 < orcs.size()) {
+
+                    orcs.pop_back();
                     x++;
                 }
                 ogreaux = 0;
