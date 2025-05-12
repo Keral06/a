@@ -365,7 +365,7 @@ public:
 
             }
 
-            ColisionPlayer(playerPos);
+            
             if (nextX >= 32 && nextX <= playerScreenX - 64 &&
                 nextY >= 32 && nextY <= playerScreenY - 64) {
 
@@ -517,9 +517,23 @@ public:
 
 
                 }
+                else {
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                }
 
                 
             }
+            if(level>2) {
+                
+
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+
+
+            
+            }
+            ColisionPlayer(playerPos);
         }
     }
 
@@ -1124,7 +1138,7 @@ public:
                 playerPos.y = nextY;
             }
     
-        ColisionPlayer(playerPos);
+    
     }
     void Death() {
 
@@ -1487,7 +1501,7 @@ public:
 
     level() {
 
-        levels = 7;
+        levels = 11;
 
     }
 
@@ -1509,7 +1523,7 @@ public:
 
     Stage() : level() {
 
-        stage = 7;
+        stage = 11;
 
     }
     void StageUp() {
@@ -1687,19 +1701,18 @@ private:
     float timesincedeletion = 0;
     float timeoflastdelete = 0;
     float timeOfLive = 0;
-    int bagItem = 0;
 public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 7;
-        stage = 7;
+        level = 11;
+        stage = 11;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
     }
 	//declara el nivel y stage inicial
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>&money, std::vector <Orc>&orcs, std::vector <Mariposa>&marip, std::vector<Coffee>&cafe) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>&money, std::vector <Orc>&orcs, std::vector <Mariposa>&marip) {
         if(p.status){
             ClearBackground(BLACK);
             /*BeginDrawing();*/
@@ -1777,14 +1790,13 @@ public:
                                     
 
                                     int a = 0;
-                                    if (GetRandomValue(1, 10) == 1 && p.bag == 0) {
+                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
                                         timeOfLive = GetTime();
                                         a = 1;
-                                        bagItem = 1;
-                                        p.bag++;
+
                                     }
 
 
@@ -2092,7 +2104,7 @@ public:
 
             i = 0;
             ogreaux = enemigo.size();
-            while (i < ogreaux) {
+            while (i < enemigo.size()) {
 
                 enemigo[i].CheckColisions(p);
 
@@ -2116,7 +2128,7 @@ public:
                 if (p.status == true) {
 
                     orcs[i].MovementEnemy(p, this->level);
-
+                    
 
                 }
 
@@ -2136,6 +2148,7 @@ public:
 
 
                 }
+
 
                 marip[i].Draw();
 
@@ -2180,13 +2193,25 @@ public:
 
             if (p.status == false) {
 
-
+                p.Death();
                 Tiempo.Draw();
                 int x = 0;
 
                 while (0 < enemigo.size()) {
 
                     enemigo.pop_back();
+                    x++;
+                }
+                x = 0;
+                while (0 < marip.size()) {
+
+                    marip.pop_back();
+                    x++;
+                }
+                x = 0;
+                while (0 < orcs.size()) {
+
+                    orcs.pop_back();
                     x++;
                 }
                 ogreaux = 0;
@@ -2339,7 +2364,7 @@ public:
             float auxiliar = 0;
 
         p.ResetPlayer();
-        if (this->level == 7) {
+        if (this->level == 11) {
 
             wonGame = true;
 
@@ -2445,6 +2470,17 @@ private:
     Texture lago3 = LoadTexture("stage/lago11.png");
     Texture lago4 = LoadTexture("stage/lago22.png");
     Texture puente = LoadTexture("stage/barras.png");
+    Texture balas = LoadTexture("stage/piedra4.png");
+    Texture tumba1 = LoadTexture("stage/tumba1.png");
+    Texture tumba2 = LoadTexture("stage/tumba2.png");
+    Texture piedra1 = LoadTexture("stage/piedra1.png");
+    Texture piedra2 = LoadTexture("stage/piedra2.png");
+    Texture piedra3 = LoadTexture("stage/piedra3.png");
+    Texture valla2 = LoadTexture("stage/valla2.png");
+    Texture lago5 = LoadTexture("stage/camino1.png");
+    Texture lago6 = LoadTexture("stage/camino2.png");
+    Texture puente2 = LoadTexture("stage/puente2.png");
+    Texture fondo_piedra = LoadTexture("stage/fondo_piedra.png");
 
 public:
     int time = 0;
@@ -4397,6 +4433,746 @@ public:
         DrawTexture(flores, 224, 384, WHITE);
         DrawTexture(flores, 288, 384, WHITE);
     }
+    void Drawlevel9() {
+        int x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 0, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 0, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        int y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 0, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 0, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+
+        }
+        x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 480, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 480, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 480, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 480, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+        }
+        x = 64;
+        y = 64;
+        for (int i = 0; i < 12; i++)
+        {
+            for (int i = 0; i < 12; i++) {
+                DrawTexture(fondo_piedra, x, y, WHITE);
+                y = y + 32;
+            }
+            y = 64;
+            x = x + 32;
+        }
+        y = 32;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 448;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 448;
+        y = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 224;
+        y = 0;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 0;
+        y = 224;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 224;
+        y = 480;
+        for (int i = 0; i < 2; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(piedra2, x, y, WHITE);
+        x = 480;
+        y = 224;
+        DrawTexture(piedra2, x, y, WHITE);
+        y = y + 32;
+        DrawTexture(piedra1, x, y, WHITE);
+        y = y + 32;
+        DrawTexture(piedra2, x, y, WHITE);
+        y = 128;
+        x = 128;
+        for (int i = 0; i < 2; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 128;
+        x = 160;
+        for (int i = 0; i < 2; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 128;
+        x = 320;
+        for (int i = 0; i < 2; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 128;
+        x = 384;
+        for (int i = 0; i < 2; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 320;
+        x = 128;
+        for (int i = 0; i < 2; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        y = 384;
+        x = 128;
+        for (int i = 0; i < 2; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        y = 320;
+        x = 320;
+        for (int i = 0; i < 2; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            x = x + 64;
+
+        }
+        y = 384;
+        x = 320;
+        for (int i = 0; i < 2; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            x = x + 64;
+
+        }
+        DrawTexture(balas, 96, 128, WHITE);
+        DrawTexture(balas, 224, 128, WHITE);
+        DrawTexture(balas, 192, 160, WHITE);
+        DrawTexture(balas, 416, 160, WHITE);
+        DrawTexture(balas, 224, 256, WHITE);
+        DrawTexture(balas, 320, 256, WHITE);
+        DrawTexture(balas, 416, 288, WHITE);
+        DrawTexture(balas, 192, 320, WHITE);
+        DrawTexture(balas, 64, 384, WHITE);
+        DrawTexture(balas, 384, 416, WHITE);
+
+    }
+    void Drawlevel10() {
+        int x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 0, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 0, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        int y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 0, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 0, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+
+        }
+        x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 480, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 480, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 480, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 480, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+        }
+        x = 64;
+        y = 64;
+        for (int i = 0; i < 12; i++)
+        {
+            for (int i = 0; i < 12; i++) {
+                DrawTexture(fondo_piedra, x, y, WHITE);
+                y = y + 32;
+            }
+            y = 64;
+            x = x + 32;
+        }
+        y = 32;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 448;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 448;
+        y = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 0;
+        y = 32;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(lago5, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago6, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago5, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(puente2, x, y, WHITE);
+            x = x + 32;
+        }
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(lago5, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago6, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 0;
+        y = 448;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(lago5, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago6, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago5, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(puente2, x, y, WHITE);
+            x = x + 32;
+        }
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(lago5, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago6, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 224;
+        y = 0;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 224;
+        y = 480;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 480;
+        y = 224;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 0;
+        y = 224;
+        for (int i = 0; i < 2; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            y = y + 32;
+        }
+        DrawTexture(piedra2, x, y, WHITE);
+        for (int i = 0; i < 1; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 256, 192, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 256, 192, WHITE);
+                }
+
+            }
+        }
+        for (int i = 0; i < 1; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 192, 256, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 192, 256, WHITE);
+                }
+
+            }
+        }
+        for (int i = 0; i < 1; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 320, 256, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 320, 256, WHITE);
+                }
+
+            }
+        }
+        for (int i = 0; i < 1; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 256, 288, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 256, 288, WHITE);
+                }
+
+            }
+        }
+        DrawTexture(balas, 128, 64, WHITE);
+        DrawTexture(balas, 352, 64, WHITE);
+        DrawTexture(balas, 352, 96, WHITE);
+        DrawTexture(balas, 160, 128, WHITE);
+        DrawTexture(balas, 192, 128, WHITE);
+        DrawTexture(balas, 256, 160, WHITE);
+        DrawTexture(balas, 416, 160, WHITE);
+        DrawTexture(balas, 128, 256, WHITE);
+        DrawTexture(balas, 320, 288, WHITE);
+        DrawTexture(balas, 128, 320, WHITE);
+        DrawTexture(balas, 96, 352, WHITE);
+        DrawTexture(balas, 320, 352, WHITE);
+        DrawTexture(balas, 416, 352, WHITE);
+        DrawTexture(balas, 288, 416, WHITE);
+
+    }
+    void Drawlevel11() {
+        int x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 0, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 0, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        int y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 0, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 0, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+
+        }
+        x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 480, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, 480, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 480, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, 480, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+        }
+        x = 64;
+        y = 64;
+        for (int i = 0; i < 12; i++)
+        {
+            for (int i = 0; i < 12; i++) {
+                DrawTexture(fondo_piedra, x, y, WHITE);
+                y = y + 32;
+            }
+            y = 64;
+            x = x + 32;
+        }
+        y = 32;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 448;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 448;
+        y = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(piedra3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 0;
+        x = 0;
+        for (int i = 0; i < 16; i++) {
+            DrawTexture(valla2, x, y, WHITE);
+            x = x + 32;
+        }
+        y = 480;
+        x = 0;
+        for (int i = 0; i < 16; i++) {
+            DrawTexture(valla2, x, y, WHITE);
+            x = x + 32;
+        }
+        y = 224;
+        x = 0;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 224;
+        x = 480;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(piedra1, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 32;
+        x = 64;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            x = x + 64;
+
+        }
+        y = 448;
+        x = 64;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(tumba1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(tumba2, x, y, WHITE);
+                }
+
+            }
+            x = x + 64;
+
+        }
+
+    }
+
 
     /* EndDrawing();*/
     void LevelDraw(Game g) {
@@ -4442,6 +5218,21 @@ public:
 
         }
         else if (g.CheckLevel() == 9) {
+
+            Drawlevel9();
+
+        }
+        else if (g.CheckLevel() == 10) {
+
+            Drawlevel10();
+
+        }
+        else if (g.CheckLevel() == 11) {
+
+            Drawlevel11();
+
+        }
+        else if (g.CheckLevel() == 12) {
         
             ClearBackground(BLACK);
         
@@ -4723,7 +5514,6 @@ int main()
     Title t;
     bool gameovertime = false;
     float GOtime = 0;
-    std::vector<Coffee>cafe;
     while (!WindowShouldClose()){
 
         if (t.GameBegin) {
@@ -4732,7 +5522,7 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
-                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe);
+                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip);
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
