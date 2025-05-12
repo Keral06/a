@@ -5170,6 +5170,16 @@ public:
             x = x + 64;
 
         }
+        DrawTexture(balas, 64, 64, WHITE);
+        DrawTexture(balas, 224, 96, WHITE);
+        DrawTexture(balas, 288, 96, WHITE);
+        DrawTexture(balas, 160, 160, WHITE);
+        DrawTexture(balas, 128, 256, WHITE);
+        DrawTexture(balas, 320, 288, WHITE);
+        DrawTexture(balas, 128, 320, WHITE);
+        DrawTexture(balas, 64, 384, WHITE);
+        DrawTexture(balas, 192, 384, WHITE);
+        DrawTexture(balas, 224, 416, WHITE);
 
     }
 
