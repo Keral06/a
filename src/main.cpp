@@ -1853,7 +1853,7 @@ public:
                
 
             }
-            if (level > 6) {
+            if (level > 6) { //mariposa
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size()+ marip.size()< 15) {
 
@@ -1862,7 +1862,7 @@ public:
 
 
                 }
-                if (orcs.size() > 0) {
+                if (marip.size() > 0) {
 
 
                     int j = 0;
@@ -1876,9 +1876,9 @@ public:
                             }
                             else {
 
-                                if (bullets[j].ColisionBullet(orcs[i]) == true) {
+                                if (bullets[j].ColisionBullet(marip[i]) == true) {
 
-                                    DeadOgre auxiliari(orcs[i].GetPosition());
+                                    DeadOgre auxiliari(marip[i].GetPosition());
                                     dead.push_back(auxiliari);
                                     float timehelp = GetTime();
                                     auxTime.push_back(timehelp);
@@ -1887,7 +1887,7 @@ public:
 
                                     int a = 0;
                                     if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = marip[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
                                         timeOfLive = GetTime();
@@ -1957,7 +1957,116 @@ public:
                 }
 
 
+                if (level > 0) { //ogre
+                    int i = 0;
+                    if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
+                        Ogre auxiliar;
+                        enemigo.push_back(auxiliar);
+
+
+                    }
+                    if (enemigo.size() > 0) {
+
+
+                        int j = 0;
+                        int aux = 0;
+                        while (i < enemigo.size()) {
+
+                            while (j < enemigo.size()) {
+                                if (i >= enemigo.size()) {
+
+
+                                }
+                                else {
+
+                                    if (bullets[j].ColisionBullet(enemigo[i]) == true) {
+
+                                        DeadOgre auxiliari(enemigo[i].GetPosition());
+                                        dead.push_back(auxiliari);
+                                        float timehelp = GetTime();
+                                        auxTime.push_back(timehelp);
+                                        deadogres++;
+
+
+                                        int a = 0;
+                                        if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                            Vector2 ee = enemigo[i].GetPosition();
+                                            PowerUpLive live(ee);
+                                            Lives.push_back(live);
+                                            timeOfLive = GetTime();
+                                            a = 1;
+
+                                        }
+
+
+
+
+                                        if (enemigo.size() == 1) {
+                                            enemigo[i].Death();
+                                            enemigo.pop_back();
+
+                                        }
+
+                                        else if (enemigo.size() > 1) {
+
+                                            aux = i;
+                                            enemigo[i].Death();;
+                                            while (aux < enemigo.size() - 1) {
+
+                                                enemigo[aux] = enemigo[aux + 1];
+                                                aux++;
+
+                                            }
+                                            enemigo.pop_back();
+
+
+                                        }
+
+                                        bulletSize = bullets.size();
+                                        aux = j;
+                                        if (bullets.size() == 1) {
+
+                                            bullets.pop_back();
+                                            bulletSize--;
+                                        }
+                                        else if (bullets.size() > 1) {
+                                            while (aux < bullets.size() - 1) {
+                                                bullets[aux] = bullets[aux + 1];
+                                                aux++;
+                                            }
+
+                                            bullets.pop_back();
+
+                                        }
+                                        bulletSize = bullets.size();
+
+                                    }
+
+
+                                }
+                                // chequea si la bala colisiona con el ogro
+                                if (enemigo.size() == 0) { j = bulletSize; }
+
+                                j++;
+                            }
+
+                            j = 0;
+                            i++;
+
+
+                        }
+
+
+                    }
+
+
+
+
+
+
+
+                }
 
 
 
