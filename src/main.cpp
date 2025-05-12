@@ -1862,7 +1862,7 @@ public:
                                         timeOfLive = GetTime();
                                         a = 1;
 
-                                    }
+                                    }else if(GetRandomValue(1, 10) == 1 && Lives.size() == 0)
 
 
 
@@ -5474,6 +5474,11 @@ int main()
     Game game;
     std::vector<float>auxTime;
     std::vector <PowerUpLive>Lives;
+    std::vector <Coffee>cofe;
+    std::vector <ScreenNuke>SN; 
+    std::vector <coins>money;
+    std::vector <ScreenNuke>SN;
+
     std::vector <Orc>orcs;
     std::vector <Mariposa>marip;
     Title t;
@@ -5487,7 +5492,7 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
-                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip);
+                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cofe, SN);
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
