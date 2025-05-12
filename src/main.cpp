@@ -4586,71 +4586,92 @@ public:
 };
 
 
-
-
-
-class Store {
+class Store{
 private:
+    // Texturas para la animación de caminar
+    Texture walkFrames[2];
 
-    Texture walkFrames[2];  // caminar
-    Vector2 position = { 0, 0 };  // Valores temporales
+    // Texturas del tendero
+    Texture storemanTextures[5]; // [aparición1, aparición2, frente, izquierda, derecha]
 
-    //imagen tienda
-    Texture store = LoadTexture("tienda.png");
-    //store man
-    Texture storeman1 = LoadTexture("64x64/128x128_p4.png");  //animacion aparicion 1
-    Texture storeman2 = LoadTexture("64x64/128x128_p4-1.png"); //animacion aparicion 2
-    Texture storeman3 = LoadTexture("64x64/128x128_p4-2.png"); //quieto delante
-    Texture storeman4 = LoadTexture("64x64/128x128_p4-3.png"); //quieto izquierda
-    Texture storeman5 = LoadTexture("64x64/128x128_p4-4.png"); //quieto derecha
+    // Textura de la tienda
+    Texture store;
 
+    Vector2 position = { 255, 0 };
     float animTime = 0;
-    const float animSpeed = 0.2f; // Velocidad cambio de frames
-    const float walkSpeed = 100.0f; // Píxeles por segundo
+    const float animSpeed = 0.2f;
+    const float walkSpeed = 100.0f;
     bool isWalking = true;
     int currentFrame = 0;
+    bool hasAppeared = false; // Controla si terminó la animación de aparición
 
 public:
     friend int main();
- 
-    //mostrar aparicion del storeman
-    void aparicion(float deltaTime) {
+    Store() {
+        // Cargar texturas de caminata
+        walkFrames[0] = LoadTexture("64x64/128x128_p4.png");
+        walkFrames[1] = LoadTexture("64x64/128x128_p4-1.png");
+
+        // Cargar todas las texturas del tendero
+        storemanTextures[0] = LoadTexture("64x64/128x128_p4.png");
+        storemanTextures[1] = LoadTexture("64x64/128x128_p4-1.png");
+        storemanTextures[2] = LoadTexture("64x64/128x128_p4-2.png");
+        storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
+        storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
+
+        store = LoadTexture("tienda_red.png");
+    }
+
+    ~Store() {
+        // Liberar texturas
+        for (int i = 0; i < 2; i++) UnloadTexture(walkFrames[i]);
+        for (int i = 0; i < 5; i++) UnloadTexture(storemanTextures[i]);
+        UnloadTexture(store);
+    }
+
+    void Update(float deltaTime) {
         if (!isWalking) return;
 
         // Animación de caminar
         animTime += deltaTime;
         if (animTime >= animSpeed) {
             animTime = 0;
-            currentFrame = (currentFrame + 1) % 2; // Alterna entre 0 y 1
+            currentFrame = (currentFrame + 1) % 2;
         }
 
         // Movimiento hacia abajo
         position.y += walkSpeed * deltaTime;
 
-        // Detenerse al llegar al centro 
-        if (position.y >= GetScreenHeight() / 2 - walkFrames[0].height / 2) {
-            position.y = GetScreenHeight() / 2 - walkFrames[0].height / 2;
+        // Detenerse al llegar al centro
+        if (position.y >= 200) //GetScreenHeight() / 2 - walkFrames[0].height / 2) 
+        {
+            position.y = 200;//GetScreenHeight() / 2 - walkFrames[0].height / 2;
             isWalking = false;
-            currentFrame = 0; 
+            hasAppeared = true;
         }
     }
-    //mostrar la tienda
-    void Tienda() 
-    {
 
+    void Draw() {
+        // Dibujar al tendero 
+        if (hasAppeared) { //aparece,camina, y se queda quieto, aparece la tienda
+            // Dibujar tendero quieto (textura de frente)
+            DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
 
+            // dibujar la tienda cuando el tendero está quieto
+            DrawTexture(store , 190, 230, WHITE);
+        }
+        else {
+            // Dibujar animación de aparición
+            DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
+        }
     }
 
-    void draw() 
-    {
-
-        // Dibujar aparicion del storeman
-        DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
-
-
-    }
-  
+    bool HasAppeared() const { return hasAppeared; }
 };
+
+
+
+
 
 
 
@@ -4679,7 +4700,8 @@ int main()
     std::vector<Ogre>enemigo;
     int bulletaux;
 
-    Store a;
+    
+    Store tienda;
 
     Background desierto;
     time ui;
@@ -4714,6 +4736,14 @@ int main()
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
+
+                    ///////////////////////////TIENDA/////////////////////////////////
+
+                    float deltaTime = GetFrameTime();
+                    tienda.Update(deltaTime);
+                    BeginDrawing();
+                    ClearBackground(RAYWHITE);
+                    tienda.Draw();
                   
                 }
                 else {
