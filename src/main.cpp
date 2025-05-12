@@ -1759,7 +1759,7 @@ public:
                     int aux = 0;
                     while (i < orcs.size()) {
 
-                        while (j < orcs.size()) {
+                        while (j < bullets.size()) {
                             if (i >= orcs.size()) {
 
 
@@ -1869,7 +1869,7 @@ public:
                     int aux = 0;
                     while (i < marip.size()) {
 
-                        while (j < marip.size()) {
+                        while (j < bullets.size()) {
                             if (i >= marip.size()) {
 
 
@@ -1973,7 +1973,7 @@ public:
                         int aux = 0;
                         while (i < enemigo.size()) {
 
-                            while (j < enemigo.size()) {
+                            while (j < bullets.size()) {
                                 if (i >= enemigo.size()) {
 
 
