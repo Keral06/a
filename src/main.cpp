@@ -4143,7 +4143,257 @@ public:
         DrawTexture(flores, 384, 416, WHITE);
     }
     void Drawlevel8() {
+        int x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol3, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol4, x, 0, WHITE);
+                }
 
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol3, x, 0, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol4, x, 0, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        int y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol3, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol4, 0, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 5; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol3, 0, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol4, 0, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+
+        }
+        x = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol3, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol4, x, 480, WHITE);
+                }
+
+            }
+            x = x + 32;
+
+        }
+        x = 480;
+        for (int i = 0; i < 6; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol3, x, 480, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol4, x, 480, WHITE);
+                }
+
+            }
+            x = x - 32;
+
+        }
+        y = 0;
+        for (int i = 0; i < 7; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol3, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol4, 480, y, WHITE);
+                }
+
+            }
+            y = y + 32;
+
+        }
+        y = 480;
+        for (int i = 0; i < 5; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol3, 480, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol4, 480, y, WHITE);
+                }
+
+            }
+            y = y - 32;
+        }
+        x = 64;
+        y = 64;
+        for (int i = 0; i < 12; i++)
+        {
+            for (int i = 0; i < 12; i++) {
+                DrawTexture(cesped4, x, y, WHITE);
+                y = y + 32;
+            }
+            y = 64;
+            x = x + 32;
+        }
+        y = 32;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(cesped3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(cesped3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 448;
+        x = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(cesped3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 448;
+        y = 32;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(cesped3, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 224;
+        y = 0;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(cesped1, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 0;
+        y = 224;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(cesped1, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 224;
+        y = 480;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(cesped1, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 480;
+        y = 224;
+        DrawTexture(cesped2, x, y, WHITE);
+        y = y + 32;
+        for (int i = 0; i < 2; i++) {
+            DrawTexture(cesped1, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 0;
+        y = 160;
+        for (int i = 0; i < 2; i++) {
+            DrawTexture(lago4, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago3, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(puente, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 1; i++) {
+            DrawTexture(lago3, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago4, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago3, x, y, WHITE);
+        x = x + 32;
+        DrawTexture(puente, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 1; i++) {
+            DrawTexture(lago3, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago4, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago3, x, y, WHITE);
+        x = x + 32;
+        DrawTexture(puente, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 1; i++) {
+            DrawTexture(lago3, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago4, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago3, x, y, WHITE);
+        x = 0;
+        y = 320;
+        for (int i = 0; i < 2; i++) {
+            DrawTexture(lago4, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago3, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(puente, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 1; i++) {
+            DrawTexture(lago3, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago4, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago3, x, y, WHITE);
+        x = x + 32;
+        DrawTexture(puente, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 1; i++) {
+            DrawTexture(lago3, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago4, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago3, x, y, WHITE);
+        x = x + 32;
+        DrawTexture(puente, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 1; i++) {
+            DrawTexture(lago3, x, y, WHITE);
+            x = x + 32;
+            DrawTexture(lago4, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago3, x, y, WHITE);
+        DrawTexture(flores, 96, 64, WHITE);
+        DrawTexture(flores, 288, 96, WHITE);
+        DrawTexture(flores, 320, 96, WHITE);
+        DrawTexture(flores, 384, 96, WHITE);
+        DrawTexture(flores, 416, 128, WHITE);
+        DrawTexture(flores, 96, 192, WHITE);
+        DrawTexture(flores, 352, 192, WHITE);
+        DrawTexture(flores, 96, 224, WHITE);
+        DrawTexture(flores, 288, 256, WHITE);
+        DrawTexture(flores, 384, 256, WHITE);
+        DrawTexture(flores, 288, 288, WHITE);
+        DrawTexture(flores, 96, 384, WHITE);
+        DrawTexture(flores, 224, 384, WHITE);
+        DrawTexture(flores, 288, 384, WHITE);
     }
 
     /* EndDrawing();*/
@@ -4185,6 +4435,11 @@ public:
 
         }
         else if (g.CheckLevel() == 8) {
+
+            Drawlevel8();
+
+        }
+        else if (g.CheckLevel() == 9) {
         
             ClearBackground(BLACK);
         
