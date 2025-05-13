@@ -4743,17 +4743,8 @@ class Store {
 private:
 
     Texture walkFrames[2];  // caminar
-    Vector2 position = { 0, 0 };  // Valores temporales
-
-    //imagen tienda
-    Texture store = LoadTexture("tienda.png");
-    //store man
-    Texture storeman1 = LoadTexture("64x64/128x128_p4.png");  //animacion aparicion 1
-    Texture storeman2 = LoadTexture("64x64/128x128_p4-1.png"); //animacion aparicion 2
-    Texture storeman3 = LoadTexture("64x64/128x128_p4-2.png"); //quieto delante
-    Texture storeman4 = LoadTexture("64x64/128x128_p4-3.png"); //quieto izquierda
-    Texture storeman5 = LoadTexture("64x64/128x128_p4-4.png"); //quieto derecha
-
+    Texture storemanTextures[5];
+    Texture store;
     Texture CosasDeLaTienda[5];
 
     Vector2 position = { 255, 0 };
@@ -4814,22 +4805,11 @@ public:
         {
             position.y = 200;
             isWalking = false;
+            hasAppeared = true;
             currentFrame = 0;
         }
     }
-    //mostrar la tienda
-    void Tienda()
-    {
-
-
-    }
-
-    void draw()
-    {
-
-        // Dibujar aparicion del storeman
-        DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
-
+  
     void cosas() 
     {
         if (isWalking = false) 
@@ -4851,7 +4831,7 @@ public:
 
     void Draw() {
         // Dibujar al tendero 
-        if (hasAppeared) { //aparece,camina, y se queda quieto, aparece la tienda
+        if (hasAppeared) { 
             // Dibujar tendero quieto (textura de frente)
             DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
 
@@ -4869,7 +4849,7 @@ public:
             DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
         }
     }
-
+    bool HasAppeared() const { return hasAppeared; }
 };
 
 
@@ -4899,7 +4879,7 @@ int main()
     std::vector<Ogre>enemigo;
     int bulletaux;
 
-    Store a;
+    Store tienda;
 
     Background desierto;
     time ui;
