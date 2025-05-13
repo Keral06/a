@@ -5551,6 +5551,117 @@ public:
 
 
 
+    Texture walkFrames[2];  // caminar
+    Texture storemanTextures[5];
+    Texture store;
+    Texture CosasDeLaTienda[5];
+
+    Vector2 position = { 255, 0 };
+    float animTime = 0;
+    const float animSpeed = 0.2f; // Velocidad cambio de frames
+    const float walkSpeed = 100.0f; // Píxeles por segundo
+    bool isWalking = true;
+    int currentFrame = 0;
+    bool hasAppeared = false; 
+
+public:
+    friend int main();
+    friend coins;
+    friend Player;
+    friend Entity;
+    Store() {
+        // Cargar texturas de caminata
+        walkFrames[0] = LoadTexture("64x64/128x128_p4.png");
+        walkFrames[1] = LoadTexture("64x64/128x128_p4-1.png");
+
+        // Cargar todas las texturas del tendero
+        storemanTextures[0] = LoadTexture("64x64/128x128_p4.png");
+        storemanTextures[1] = LoadTexture("64x64/128x128_p4-1.png");
+        storemanTextures[2] = LoadTexture("64x64/128x128_p4-2.png");
+        storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
+        storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
+
+        //textura del fondo tienda
+        store = LoadTexture("tienda_red.png");
+
+        //textura de las cosas de la tienda 
+        CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
+        CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
+        CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
+
+      
+
+    }
+
+  
+    
+    
+    void Update(float deltaTime) {
+        if (!isWalking) return;
+
+        // Animación de caminar
+        animTime += deltaTime;
+        if (animTime >= animSpeed) {
+            animTime = 0;
+            currentFrame = (currentFrame + 1) % 2; // Alterna entre 0 y 1
+        }
+
+        // Movimiento hacia abajo
+        position.y += walkSpeed * deltaTime;
+
+        // Detenerse al llegar a pos 200
+        if (position.y >= 200)  
+        {
+            position.y = 200;
+            isWalking = false;
+            hasAppeared = true;
+            currentFrame = 0;
+        }
+    }
+  
+    void cosas() 
+    {
+        if (isWalking = false) 
+        {
+
+
+        }
+
+
+    }
+
+    void sound()
+    {
+        if (isWalking = true)
+        {
+
+        }
+    }
+
+    void Draw() {
+        // Dibujar al tendero 
+        if (hasAppeared) { 
+            // Dibujar tendero quieto (textura de frente)
+            DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
+
+            // dibujar la tienda cuando el tendero está quieto
+            DrawTexture(store , 190, 230, WHITE);
+            DrawTexture(CosasDeLaTienda[0], 210, 250, WHITE);
+            DrawText("10", 220, 280, 20, BLACK);
+            DrawTexture(CosasDeLaTienda[1], 260, 250, WHITE);
+            DrawText("15", 270, 280, 20, BLACK);
+            DrawTexture(CosasDeLaTienda[2], 310, 250, WHITE);
+            DrawText("10", 320, 280, 20, BLACK);
+        }
+        else {
+            // Dibujar animación de aparición
+            DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
+        }
+    }
+    bool HasAppeared() const { return hasAppeared; }
+};
+
+
 
 
 //dibuja la pantalla de inicio y el texto
@@ -5579,7 +5690,11 @@ int main()
     int bulletaux;
 
 
+
     /*Store tienda;*/
+
+    Store tienda;
+
 
     Background desierto;
     time ui;
@@ -5618,6 +5733,7 @@ int main()
                     ui.DrawInicial();
                     aa.draw(p);
 
+
                     ///////////////////////////TIENDA/////////////////////////////////
 
                     //float deltaTime = GetFrameTime();
@@ -5625,6 +5741,16 @@ int main()
                     //BeginDrawing();
                     //ClearBackground(RAYWHITE);
                     //tienda.Draw();
+
+
+                    ///////////////////////////TIENDA/////////////////////////////
+                    
+                    float deltaTime = GetFrameTime();
+                    tienda.Update(deltaTime);
+                    BeginDrawing();
+                    ClearBackground(RAYWHITE);
+                    tienda.Draw();
+                  /////////////////////////////////////////////////////////////////////
 
                 }
                 else {
