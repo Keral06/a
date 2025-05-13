@@ -5388,16 +5388,21 @@ private:
     // Textura de la tienda
     Texture store;
 
+    Texture CosasDeLaTienda[5];
+
     Vector2 position = { 255, 0 };
     float animTime = 0;
     const float animSpeed = 0.2f;
     const float walkSpeed = 100.0f;
     bool isWalking = true;
     int currentFrame = 0;
-    bool hasAppeared = false; // Controla si terminó la animación de aparición
+    bool hasAppeared = false; 
 
 public:
     friend int main();
+    friend coins;
+    friend Player;
+    friend Entity;
     Store() {
         // Cargar texturas de caminata
         walkFrames[0] = LoadTexture("64x64/128x128_p4.png");
@@ -5410,16 +5415,21 @@ public:
         storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
         storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
 
+        //textura del fondo tienda
         store = LoadTexture("tienda_red.png");
+
+        //textura de las cosas de la tienda 
+        CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
+        CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
+        CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
+
+      
+
     }
 
-    ~Store() {
-        // Liberar texturas
-        for (int i = 0; i < 2; i++) UnloadTexture(walkFrames[i]);
-        for (int i = 0; i < 5; i++) UnloadTexture(storemanTextures[i]);
-        UnloadTexture(store);
-    }
-
+  
+    
+    
     void Update(float deltaTime) {
         if (!isWalking) return;
 
@@ -5433,12 +5443,31 @@ public:
         // Movimiento hacia abajo
         position.y += walkSpeed * deltaTime;
 
-        // Detenerse al llegar al centro
-        if (position.y >= 200) //GetScreenHeight() / 2 - walkFrames[0].height / 2) 
+        // Detenerse al llegar a pos 200
+        if (position.y >= 200)  
         {
-            position.y = 200;//GetScreenHeight() / 2 - walkFrames[0].height / 2;
+            position.y = 200;
             isWalking = false;
             hasAppeared = true;
+        }
+    }
+
+    void cosas() 
+    {
+        if (isWalking = false) 
+        {
+
+
+        }
+
+
+    }
+
+    void sound()
+    {
+        if (isWalking = true)
+        {
+
         }
     }
 
@@ -5450,6 +5479,12 @@ public:
 
             // dibujar la tienda cuando el tendero está quieto
             DrawTexture(store , 190, 230, WHITE);
+            DrawTexture(CosasDeLaTienda[0], 210, 250, WHITE);
+            DrawText("10", 220, 280, 20, BLACK);
+            DrawTexture(CosasDeLaTienda[1], 260, 250, WHITE);
+            DrawText("15", 270, 280, 20, BLACK);
+            DrawTexture(CosasDeLaTienda[2], 310, 250, WHITE);
+            DrawText("10", 320, 280, 20, BLACK);
         }
         else {
             // Dibujar animación de aparición
@@ -5527,14 +5562,14 @@ int main()
                     ui.DrawInicial();
                     aa.draw(p);
 
-                    ///////////////////////////TIENDA/////////////////////////////////
-
+                    ///////////////////////////TIENDA/////////////////////////////
+                    
                     float deltaTime = GetFrameTime();
                     tienda.Update(deltaTime);
                     BeginDrawing();
                     ClearBackground(RAYWHITE);
                     tienda.Draw();
-                  
+                  /////////////////////////////////////////////////////////////////////
                 }
                 else {
 
