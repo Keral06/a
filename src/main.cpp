@@ -40,8 +40,8 @@ class Colision {
 public:
     Colision(Vector2 posicion) {
         BeginDrawing();
-        float widthThing = 32;
-        float HeightThing = 32;
+        float widthThing = 96;
+        float HeightThing = 64;
 
         DrawRectangle(posicion.x, posicion.y, widthThing, HeightThing, BLANK);
         Square = { posicion.x,posicion.y, widthThing, HeightThing };
@@ -1345,8 +1345,8 @@ public:
         }
         //chequea si la bala ha salido de la pantalla
 
-        if (nextX >= 32 && nextX <= playerScreenX - 32 &&
-            nextY >= 32 && nextY <= playerScreenY - 32) {
+        if (nextX >= 96 && nextX <= playerScreenX &&
+            nextY >= 64 && nextY <= playerScreenY - 32) {
 
             if (level == 1) {
 
@@ -1738,8 +1738,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 1;
-        stage = 1;
+        level = 4;
+        stage = 4;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
