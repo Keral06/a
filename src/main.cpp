@@ -378,7 +378,7 @@ public:
                 else if (level == 2) {
 
 
-                    if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
+                    if (nextX < 96 + 64 || (nextX > 188 + 64 && nextX < 288 + 64) || (nextX > 416 + 64)) {
                         /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
                         playerPos.x = nextX;
                         playerPos.y = nextY;
@@ -390,18 +390,18 @@ public:
 
 
                     }
-                    else if (nextX <= 188 || nextX >= 288) {
+                    else if (nextX <= 188 + 64 || nextX >= 288 + 64) {
 
-                        if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
+                        if (nextY > 384 + 32 || nextY < 128 || (nextY > 188 + 32 && nextY < 324 + 32)) {
 
                             playerPos.x = nextX;
                             playerPos.y = nextY;
 
 
                         }
-                        else if (nextX <= 188 && nextX >= 158) {
+                        else if (nextX <= 188 + 64 && nextX >= 158 + 64) {
 
-                            if (nextY >= 160 && nextY <= 350) {
+                            if (nextY >= 160 + 32 && nextY <= 382) {
 
                                 playerPos.x = nextX;
                                 playerPos.y = nextY;
@@ -409,9 +409,9 @@ public:
                             }
 
                         }
-                        else if (nextX >= 288 && nextX <= 320) {
+                        else if (nextX >= 288 + 64 && nextX <= 320 + 64) {
 
-                            if (nextY >= 160 && nextY <= 350) {
+                            if (nextY >= 160 + 32 && nextY <= 350 + 32) {
 
                                 playerPos.x = nextX;
                                 playerPos.y = nextY;
@@ -433,9 +433,9 @@ public:
 
                 }
                 else if (level == 3) {
-                    if (nextX > 384 || nextX < 96 || (nextX > 220 && nextX < 354)) {
+                    if (nextX > 384 + 64 || nextX < 96 + 64 || (nextX > 224 + 64 && nextX < 352 + 64)) {
 
-                        if (nextY > 384 || nextY < 96 || (nextY > 220 && nextY < 354)) {
+                        if (nextY > 384 + 32 || nextY < 96 + 32 || (nextY > 224 + 32 && nextY < 352 + 32)) {
 
                             playerPos.x = nextX;
                             playerPos.y = nextY;
@@ -447,10 +447,10 @@ public:
                         }
 
                     }
-                    else if ((nextX > 30 && nextX < 230))
+                    else if ((nextX > 32 + 64 && nextX < 224 + 64))
                     {
 
-                        if ((nextY > 30 && nextY < 230)) {
+                        if ((nextY > 32 + 32 && nextY < 224 + 32)) {
 
                             playerPos.x = nextX;
                             playerPos.y = nextY;
@@ -458,10 +458,10 @@ public:
 
                         }
                     }
-                    else if ((nextX > 260 && nextX < 448))
+                    else if ((nextX > 256 + 64 && nextX < 448 + 64))
                     {
 
-                        if ((nextY > 30 && nextY < 230)) {
+                        if ((nextY > 32 + 32 && nextY < 224 + 32)) {
 
                             playerPos.x = nextX;
                             playerPos.y = nextY;
@@ -524,7 +524,7 @@ public:
 
 
             }
-            if (level > 2) {
+            if (level > 4) {
 
 
                 playerPos.x = nextX;
@@ -1738,8 +1738,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 4;
-        stage = 4;
+        level = 3;
+        stage = 3;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
