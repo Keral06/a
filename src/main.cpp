@@ -5550,7 +5550,7 @@ public:
 
 
 
-
+class Store{
     Texture walkFrames[2];  // caminar
     Texture storemanTextures[5];
     Texture store;
