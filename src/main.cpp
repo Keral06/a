@@ -4755,11 +4755,17 @@ private:
     int currentFrame = 0;
     bool hasAppeared = false; 
 
+    const int precios[3] = { 10, 15, 10 }; // Precios de los items
+    int itemSeleccionado = -1; //  ninguno seleccionado
+    const float rangoCompra = 50.0f; 
+
+
 public:
     friend int main();
     friend coins;
     friend Player;
     friend Entity;
+    friend Colision;
     Store() {
         // Cargar texturas de caminata
         walkFrames[0] = LoadTexture("64x64/128x128_p4.png");
@@ -4809,25 +4815,40 @@ public:
             currentFrame = 0;
         }
     }
-  
-    void cosas() 
-    {
+
+
+  void Compra( Vector2 playerPos, int& playerCoins)
+  {
         if (isWalking = false) 
         {
+            itemSeleccionado = -1; 
 
+            // Posiciones de los items en la tienda
+            Vector2 itemPositions[3] = {
+                {210, 250}, // Pistola
+                {260, 250}, // Cubo
+                {310, 250}  // Munición
+            };
 
+            // Verificar proximidad con cada item
+            for (int i = 0; i < 3; i++) {
+                if (CheckCollisionCircleLine(playerPos, itemPositions[i], rangoCompra)) {
+                    itemSeleccionado = i;
+
+                    // Comprar si presiona E
+                    if (IsKeyPressed(KEY_E)) {
+                        if (playerCoins >= precios[i]) {
+                            playerCoins -= precios[i];
+                            
+                        }
+                    }
+                    break; //  un item a la vez
+                }
+            }
         }
+   }
 
-
-    }
-
-    void sound()
-    {
-        if (isWalking = true)
-        {
-
-        }
-    }
+    
 
     void Draw() {
         // Dibujar al tendero 
@@ -4837,12 +4858,23 @@ public:
 
             // dibujar la tienda cuando el tendero está quieto
             DrawTexture(store , 190, 230, WHITE);
-            DrawTexture(CosasDeLaTienda[0], 210, 250, WHITE);
-            DrawText("10", 220, 280, 20, BLACK);
-            DrawTexture(CosasDeLaTienda[1], 260, 250, WHITE);
-            DrawText("15", 270, 280, 20, BLACK);
-            DrawTexture(CosasDeLaTienda[2], 310, 250, WHITE);
-            DrawText("10", 320, 280, 20, BLACK);
+
+            //DrawTexture(CosasDeLaTienda[0], 210, 250, WHITE);
+            //DrawText("10", 220, 280, 20, BLACK);
+            //DrawTexture(CosasDeLaTienda[1], 260, 250, WHITE);
+            //DrawText("15", 270, 280, 20, BLACK);
+            //DrawTexture(CosasDeLaTienda[2], 310, 250, WHITE);
+            //DrawText("10", 320, 280, 20, BLACK);
+
+            for (int i = 0; i < 3; i++) {
+                DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
+                DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
+                
+            //if (itemSeleccionado == i) {
+                //DrawRectangleLines(210 + (i * 50), 250, 32, 32, GREEN);
+                //DrawText("[E] COMPRAR", 200 + (i * 50), 220, 15, GREEN);
+            //}
+            }
         }
         else {
             // Dibujar animación de aparición
@@ -4914,19 +4946,20 @@ int main()
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
+                   
+                }
+                else {
 
-                    ///////////////////////////TIENDA/////////////////////////////
-                    
+                    game.GameWon();
+                     ///////////////////////////TIENDA/////////////////////////////
+                   //sale el tendero cuando gana la partida
                     float deltaTime = GetFrameTime();
                     tienda.Update(deltaTime);
                     BeginDrawing();
                     ClearBackground(RAYWHITE);
                     tienda.Draw();
-                  /////////////////////////////////////////////////////////////////////
-                }
-                else {
-
-                    game.GameWon();
+                    /////////////////////////////////////////////////////////////////////
+                   
 
                 }
 
