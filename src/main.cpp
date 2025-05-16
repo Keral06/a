@@ -5556,7 +5556,7 @@ class Store{
     Texture store;
     Texture CosasDeLaTienda[5];
 
-    Vector2 position = { 255, 0 };
+    Vector2 position = { 255+65, 0 };
     float animTime = 0;
     const float animSpeed = 0.2f; // Velocidad cambio de frames
     const float walkSpeed = 100.0f; // Píxeles por segundo
@@ -5657,24 +5657,39 @@ public:
   //      }
   // }
 
-    
+    void desaparecer(float deltaTime)
+    {
+        if (!isWalking) return;
 
-    void Draw() {
+        // Animación de caminar
+        animTime += deltaTime;
+        if (animTime >= animSpeed) {
+            animTime = 0;
+            currentFrame = (currentFrame + 1) % 2; // Alterna entre 0 y 1
+        }
+
+        // Movimiento hacia arriba
+        position.y -= walkSpeed * deltaTime;
+
+        // Detenerse al llegar a 0
+        if (position.y >= 0)
+        {
+            position.y = 0;
+            isWalking = false;
+            hasAppeared = false;
+            currentFrame = 0;
+        }
+    }
+
+
+    void Draw() {   //aparicion y compra
         // Dibujar al tendero 
         if (hasAppeared) { 
             // Dibujar tendero quieto (textura de frente)
             DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
 
-            // dibujar la tienda cuando el tendero está quieto
+            // dibujar la tienda y los items cuando el tendero está quieto
             DrawTexture(store , 190, 230, WHITE);
-
-            //DrawTexture(CosasDeLaTienda[0], 210, 250, WHITE);
-            //DrawText("10", 220, 280, 20, BLACK);
-            //DrawTexture(CosasDeLaTienda[1], 260, 250, WHITE);
-            //DrawText("15", 270, 280, 20, BLACK);
-            //DrawTexture(CosasDeLaTienda[2], 310, 250, WHITE);
-            //DrawText("10", 320, 280, 20, BLACK);
-
             for (int i = 0; i < 3; i++) {
                 DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
                 DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
@@ -5689,8 +5704,16 @@ public:
             // Dibujar animación de aparición
             DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
         }
+
     }
-    bool HasAppeared() const { return hasAppeared; }
+    
+   
+    
+    
+
+
+
+
 };
 
 
@@ -5764,65 +5787,103 @@ int main()
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
-                   //sale el tendero cuando gana la partida
-                    float deltaTime = GetFrameTime();
-                    tienda.Update(deltaTime);
-                    BeginDrawing();
-                    ClearBackground(RAYWHITE);
-                    tienda.Draw();
-                    /////////////////////////////////////////////////////////////////////
+
+
+
+
+                    ////////////////////////TIENDA//////////////////////////
+                    static bool tiendaActiva = false;
+
+                    // si el numero de enemigos es 0, la tienda muestra que esta activa ((pero ns como ponerlo 
+                    tiendaActiva = true;
+
+
+
+                    // Mostrar tienda cuando esta activa
+                    if (tiendaActiva) {
+                        
+                        float deltaTime = GetFrameTime();
+                        tienda.Update(deltaTime);
+
+                        BeginDrawing();
+                        ClearBackground(RAYWHITE);
+
+                        // Dibujar la tienda
+                        tienda.Draw();
+                    }
+
+                    //alguna manera para que la tienda desaparezca
+
+
+                    if (tiendaActiva) //mostrar desaparicion de la tienda cuando pasa n tiempo 
+                    {
+
+
+
+
+
+
+                     }
+                       
+                   //////////////////////////////////////////////////////////////////////////
+
+
+
+
+                    }
+
+
+                    else {
+
+                        game.GameWon();
+
+
+
+
+                    }
+
+
+
                 }
                 else {
+                    if (!gameovertime) {
+                        GOtime = GetTime();
 
-                    game.GameWon();
-                     ///////////////////////////TIENDA/////////////////////////////
-                   
-                   
+                        gameovertime = true;
+                    }
+                    game.GameOverScreen(p);
+                    player.stopmusic();
 
+                    float newTime = GetTime();
+                    float difference = newTime - GOtime;
+                    if (difference > 3) {
+
+                        t.GameBegin = false;
+                        gameovertime = false;
+                        game.gameover = false;
+
+                    }
                 }
+
 
 
 
             }
             else {
-                if (!gameovertime) {
-                    GOtime = GetTime();
 
-                    gameovertime = true;
-                }
-                game.GameOverScreen(p);
-                player.stopmusic();
 
-                float newTime = GetTime();
-                float difference = newTime - GOtime;
-                if (difference > 3) {
 
-                    t.GameBegin = false;
-                    gameovertime = false;
-                    game.gameover = false;
-
-                }
+                t.Presentation();
             }
 
 
 
 
-        }
-        else {
 
-
-
-            t.Presentation();
         }
 
-
-
-
+        CloseAudioDevice();
+        CloseWindow();
+        return 0;
 
     }
-
-    CloseAudioDevice();
-    CloseWindow();
-    return 0;
-
-}
