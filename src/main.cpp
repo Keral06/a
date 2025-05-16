@@ -5764,12 +5764,6 @@ int main()
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
-                   
-                }
-                else {
-
-                    game.GameWon();
-                     ///////////////////////////TIENDA/////////////////////////////
                    //sale el tendero cuando gana la partida
                     float deltaTime = GetFrameTime();
                     tienda.Update(deltaTime);
@@ -5777,6 +5771,12 @@ int main()
                     ClearBackground(RAYWHITE);
                     tienda.Draw();
                     /////////////////////////////////////////////////////////////////////
+                }
+                else {
+
+                    game.GameWon();
+                     ///////////////////////////TIENDA/////////////////////////////
+                   
                    
 
                 }
