@@ -5626,36 +5626,36 @@ public:
     }
 
 
-  void Compra( Vector2 playerPos, int& playerCoins)
-  {
-        if (isWalking = false) 
-        {
-            itemSeleccionado = -1; 
+  //void Compra( Vector2 playerPos, int& playerCoins)
+  //{
+  //      if (isWalking = false) 
+  //      {
+  //          itemSeleccionado = -1; 
 
-            // Posiciones de los items en la tienda
-            Vector2 itemPositions[3] = {
-                {210, 250}, // Pistola
-                {260, 250}, // Cubo
-                {310, 250}  // Munición
-            };
+  //          // Posiciones de los items en la tienda
+  //          Vector2 itemPositions[3] = {
+  //              {210, 250}, // Pistola
+  //              {260, 250}, // Cubo
+  //              {310, 250}  // Munición
+  //          };
 
-            // Verificar proximidad con cada item
-            for (int i = 0; i < 3; i++) {
-                if (CheckCollisionCircleLine(playerPos, itemPositions[i], rangoCompra)) {
-                    itemSeleccionado = i;
+  //          // Verificar proximidad con cada item
+  //          for (int i = 0; i < 3; i++) {
+  //              if (CheckCollisionCircleLine(playerPos, itemPositions[i], rangoCompra)) {
+  //                  itemSeleccionado = i;
 
-                    // Comprar si presiona E
-                    if (IsKeyPressed(KEY_E)) {
-                        if (playerCoins >= precios[i]) {
-                            playerCoins -= precios[i];
-                            
-                        }
-                    }
-                    break; //  un item a la vez
-                }
-            }
-        }
-   }
+  //                  // Comprar si presiona E
+  //                  if (IsKeyPressed(KEY_E)) {
+  //                      if (playerCoins >= precios[i]) {
+  //                          playerCoins -= precios[i];
+  //                          
+  //                      }
+  //                  }
+  //                  break; //  un item a la vez
+  //              }
+  //          }
+  //      }
+  // }
 
     
 
