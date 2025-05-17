@@ -19,6 +19,10 @@ class PowerUpLive;
 class time;
 class Title;
 class Store;
+class coins;
+class HeavyMachineGun;
+class ScreenNuke;
+class Coffee;
 enum Direccion
 {
     ARRIBA,
@@ -93,7 +97,7 @@ class Player : public Entity {
 
 private:
     int lives;
-    int coins;
+    int money;
     Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
     Texture Abajo = LoadTexture("64x64/personaje.adelante1.png");
     Texture Abajo2 = LoadTexture("64x64/personaje.adelante3.png");
@@ -120,11 +124,17 @@ public:
     friend class Game;
     friend class Orc;
     friend class Mariposa;
+    friend class coins;
     friend class Coffee;
     friend  bool PlayerPowerUpCoffee(Player& p, Coffee& pp);
+    friend bool PlayerPowerUpHMG(Player& p, HeavyMachineGun& pp);
+    friend bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
+    friend bool PlayerPowerUpScreenMoney(Player& p, coins& pp);
+
+
 
     Player(int hp, int vel) : Entity(hp, vel, { (float)(playerScreenX + 128) / 2, (float)(playerScreenY + 64) / 2 }) {
-        this->coins = 0;
+        this->money = 0;
         this->lives = 3;
         this->dir = ARRIBA;
         dire = 1;
@@ -134,7 +144,7 @@ public:
     int dire;
     void playerAgain() {
 
-        this->coins = 0;
+        this->money = 0;
         this->lives = 3;
         this->dir = ARRIBA;
         dire = 1;
@@ -652,7 +662,7 @@ public:
     friend class Player;
     friend class Colision;
 
-    friend  bool PlayerPowerUpCoffee(Player& p, Coffee& pp);
+    friend  bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
     ScreenNuke(Vector2 position) : Colision(pos) {
         this->pos = position;
 
@@ -1600,7 +1610,7 @@ public:
     friend class Game;
     friend class Player;
     friend class Colision;
-    friend bool PlayerPowerUp(Player& p, PowerUpLive& pp);
+    friend bool PlayerPowerUpScreenMoney(Player& p, coins& pp);
     coins(Vector2 position) : Colision(pos) {
         this->pos = position;
         int aux = GetRandomValue(1, 5);
@@ -1637,12 +1647,12 @@ public:
     void UsePowerUp(Player& p) {
         if (moneda == 1) {
 
-            p.coins++;
+            p.money++;
 
         }
         else {
 
-            p.coins += 5;
+            p.money += 5;
 
         }
 
@@ -1673,14 +1683,14 @@ public:
 
 };
 
-class HeavyMachineGun {
+class HeavyMachineGun : public Colision{
 
 private:
 
     Vector2 pos;
     Texture wow = LoadTexture("items/128x128_mun.png");
 public:
-    HeavyMachineGun(Vector2 vector) {
+    HeavyMachineGun(Vector2 vector) : Colision(pos) {
 
 
         this->pos = vector;
@@ -1706,7 +1716,7 @@ public:
         DrawTexture(wow, pos.x, pos.y, WHITE);
 
     }
-
+    friend bool PlayerPowerUpHMG(Player& p, HeavyMachineGun& pp);
 
 };
 
@@ -1734,6 +1744,8 @@ private:
     int timeCafeFinal;
     int HMGTimeInicial;
     int HMGTimeFinal;
+    int cafeEnUso;
+    int HMGEnUso;
 public:
     friend int main();
     Game() {
@@ -1745,7 +1757,8 @@ public:
         tiempoiniciado = false;
     }
     //declara el nivel y stage inicial
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe) {
+    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>&SN, std::vector <HeavyMachineGun>gun)
+     {
         if (p.status) {
             ClearBackground(BLACK);
             /*BeginDrawing();*/
@@ -1828,48 +1841,65 @@ public:
                                         Vector2 ee = enemigo[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
-                                        timeOfLive = GetTime();
-                                        a = 1;
-                                        if (bagItem != 0) {
-
-                                            int ps = 0;
-                                            Lives[ps].UsePowerUp(p);
-                                            Lives.pop_back();
-
-                                        }
-                                        else {
-
-                                            bagItem = 1;
-                                            p.bag++;
-
-                                        }
+                                       
+                                       
+                                       
+                                       
+                                       
                                     }
                                     else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
-                                        timeOfLive = GetTime();
-                                        a = 1;
-                                        if (bagItem != 0) {
+                                       
+                                       
+                                        
+                                           
 
-                                            int ps = 0;
-                                            cafe[ps].UsePowerUp(p);
-                                            cafe.pop_back();
-
-                                        }
-                                        else {
-
-                                            bagItem = 1;
-                                            p.bag++;
-
-                                        }
+                                       
                                     }
                                     else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         coins live(ee);
                                         money.push_back(live);
-                                        timeOfLive = GetTime();
-                                        a = 1;
+                                        
+                                       
+
+
+                                    }
+                                    else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Coffee live(ee);
+                                        cafe.push_back(live);
+                                        
+                                      
+                                        
+
+                                           
+
+                                        
+                                    }
+                                    else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        ScreenNuke live(ee);
+                                        SN.push_back(live);
+
+
+
+
+
+
+
+                                    }
+                                    else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        HeavyMachineGun live(ee);
+                                        gun.push_back(live);
+
+
+
+
+
 
 
                                     }
@@ -1976,14 +2006,71 @@ public:
 
                                     int a = 0;
                                     if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
-                                        Vector2 ee = marip[i].GetPosition();
+                                        Vector2 ee = enemigo[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
-                                        timeOfLive = GetTime();
-                                        a = 1;
+
+
+
+
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 1 && Lives.size() == 0)
+                                    else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Coffee live(ee);
+                                        cafe.push_back(live);
+
+
+
+
+
+
+                                    }
+                                    else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        coins live(ee);
+                                        money.push_back(live);
+
+
+
+
+                                    }
+                                    else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Coffee live(ee);
+                                        cafe.push_back(live);
+
+
+
+
+
+
+
+                                    }
+                                    else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        ScreenNuke live(ee);
+                                        SN.push_back(live);
+
+
+
+
+
+
+
+                                    }
+                                    else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        HeavyMachineGun live(ee);
+                                        gun.push_back(live);
+
+
+
+
+
+
+
+                                    }
 
 
 
@@ -2084,8 +2171,66 @@ public:
                                             Vector2 ee = enemigo[i].GetPosition();
                                             PowerUpLive live(ee);
                                             Lives.push_back(live);
-                                            timeOfLive = GetTime();
-                                            a = 1;
+
+
+
+
+
+                                        }
+                                        else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
+                                            Vector2 ee = enemigo[i].GetPosition();
+                                            Coffee live(ee);
+                                            cafe.push_back(live);
+
+
+
+
+
+
+                                        }
+                                        else if (GetRandomValue(1, 10) == 3) {
+                                            Vector2 ee = enemigo[i].GetPosition();
+                                            coins live(ee);
+                                            money.push_back(live);
+
+
+
+
+                                        }
+                                        else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                            Vector2 ee = enemigo[i].GetPosition();
+                                            Coffee live(ee);
+                                            cafe.push_back(live);
+
+
+
+
+
+
+
+                                        }
+                                        else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                            Vector2 ee = enemigo[i].GetPosition();
+                                            ScreenNuke live(ee);
+                                            SN.push_back(live);
+
+
+
+
+
+
+
+                                        }
+                                        else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                            Vector2 ee = enemigo[i].GetPosition();
+                                            HeavyMachineGun live(ee);
+                                            gun.push_back(live);
+
+
+
+
+
+
 
                                         }
 
@@ -2165,17 +2310,176 @@ public:
             int i = 0;
             deadogres = dead.size();
 
+            //dibujar los power ups
+
+            int auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < Lives.size()) {
+            
+                Lives[auxiliarPowerUps].Draw();
+                auxiliarPowerUps++;
+            
+            }
+            auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < gun.size()) {
+
+                gun[auxiliarPowerUps].Draw();
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < SN.size()) {
+
+                SN[auxiliarPowerUps].Draw();
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < money.size()) {
+
+                SN[auxiliarPowerUps].Draw();
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < cafe.size()) {
+
+                cafe[auxiliarPowerUps].Draw();
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
+
+            //mirar si ha colisionado contra un power up
+
+            while (auxiliarPowerUps < Lives.size()) {
+
+                if (PlayerPowerUp(p, Lives[auxiliarPowerUps])) {
+                    if (p.bag = 1) {
+                        Lives[0].UsePowerUp(p);
+                        Lives.pop_back();
+                    
+                    }
+                    else {
+                    
+                    p.bag++;
+                    bagItem = 1;
+                    
+                    
+                    }
+                
+                }
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < gun.size()) {
+
+                if (PlayerPowerUpHMG(p, gun[auxiliarPowerUps])) {
+                    if (p.bag = 1) {
+                        gun[0].UsePowerUp(powerRate);
+                        gun.pop_back();
+
+                    }
+                    else {
+
+                        p.bag++;
+                        bagItem = 2;
+
+
+                    }
+
+                }
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < SN.size()) {
+
+                if (PlayerPowerUpScreenNuke(p, SN[auxiliarPowerUps])) {
+                    if (p.bag = 1) {
+                        SN[0].UsePowerUp(enemigo, orcs, marip);
+                        SN.pop_back();
+
+                    }
+                    else {
+
+                        p.bag++;
+                        bagItem = 3;
+
+
+                    }
+
+                }
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < money.size()) {
+
+                if (PlayerPowerUpScreenMoney(p, money[auxiliarPowerUps])) {
+                    money[auxiliarPowerUps].UsePowerUp(p);
+                    int lala = auxiliarPowerUps;
+                    while (lala < money.size()) {
+                        money[lala] = money[lala + 1];
+                    
+                    
+                    }
+                    money.pop_back();
+                }
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
+            while (auxiliarPowerUps < cafe.size()) {
+
+                if (PlayerPowerUpCoffee(p, cafe[auxiliarPowerUps])) {
+                    if (p.bag = 1) {
+                        cafe[0].UsePowerUp(p);
+                        cafe.pop_back();
+
+                    }
+                    else {
+
+                        p.bag++;
+                        bagItem = 4;
+
+
+                    }
+
+                }
+                auxiliarPowerUps++;
+
+            }
+            auxiliarPowerUps = 0;
 
 
             //actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
                 if (bagItem == 1) {
                     p.bag--;
-                    PowerUpLive auxy(p);
-                    auxy.UsePowerUp(p);
+                    Lives[0].UsePowerUp(p);
+                    Lives.pop_back();
 
 
 
+                } else if (bagItem == 2) {
+                    p.bag--;
+                    gun[0].UsePowerUp(powerRate);
+                    gun.pop_back();
+
+
+
+                }
+                else if (bagItem == 3) {
+                
+                    SN[0].UsePowerUp(enemigo, orcs, marip);
+                    SN.pop_back();
+                }
+                else if (bagItem == 4) {
+                
+                    cafe[0].UsePowerUp(p);
+                    cafe.pop_back();
+                
                 }
             }
 
@@ -2467,7 +2771,7 @@ public:
 
         gameover = true;
         p.lives = 3;
-        p.coins = 0;
+        p.money = 0;
 
     }
     //pantalla de perdiste
@@ -2512,6 +2816,45 @@ bool PlayerPowerUp(Player& p, PowerUpLive& pp) {
 
 }
 bool PlayerPowerUpCoffee(Player& p, Coffee& pp) {
+
+    bool check = CheckCollisionRecs(p.Square, pp.Square);
+    if (check == true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
+
+
+}
+bool PlayerPowerUpHMG(Player& p, HeavyMachineGun& pp) {
+
+    bool check = CheckCollisionRecs(p.Square, pp.Square);
+    if (check == true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
+
+
+}
+bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp) {
+
+    bool check = CheckCollisionRecs(p.Square, pp.Square);
+    if (check == true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
+
+
+}
+bool PlayerPowerUpScreenMoney(Player& p, coins& pp) {
 
     bool check = CheckCollisionRecs(p.Square, pp.Square);
     if (check == true) {
@@ -5352,7 +5695,7 @@ public:
             DrawText(TextFormat("%i", p.lives), 0 + 36, 71, 20, WHITE);
 
         }
-        DrawText(TextFormat("%i", p.coins), 0 + 36, 103, 20, WHITE);
+        DrawText(TextFormat("%i", p.money), 0 + 36, 103, 20, WHITE);
 
     }
 
@@ -5768,7 +6111,7 @@ int main()
     std::vector <PowerUpLive>Lives;
     std::vector<Coffee>cafe;
     std::vector <ScreenNuke>SN;
-
+    std::vector <HeavyMachineGun>gun;
 
     std::vector <Orc>orcs;
     std::vector <Mariposa>marip;
@@ -5783,7 +6126,7 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
-                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe);
+                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe,SN,gun);
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
