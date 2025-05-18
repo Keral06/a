@@ -1,3 +1,4 @@
+
 #include "raylib.h"
 #include "resource_dir.h"
 #include <vector> 
@@ -8,6 +9,7 @@ const int screenHeight = 1024 / 2 + 32;
 const int playerScreenX = 1024 / 2;
 const int playerScreenY = 1024 / 2;
 // declarar las clases que se usaran
+class Boss;
 class Colision;
 class Player;
 class Enemy;
@@ -1170,6 +1172,7 @@ public:
 
 };
 
+
 class DeadOgre {
 private:
     Texture Mon1 = LoadTexture("effects/128x128_hierba6.png");
@@ -1254,6 +1257,84 @@ public:
 
 
 };
+class Boss : public Enemy {
+private:
+    Texture Boss1 = LoadTexture("64x64/boss1.png");
+    Texture Boss2 = LoadTexture("64x64/boss2.png");
+    Texture Boss3 = LoadTexture("64x64/boss3.png");
+    Texture Boss4 = LoadTexture("64x64/boss4.png");
+    Texture bulletTex = LoadTexture("Bullet_1.png");
+    Texture Dialogo = LoadTexture("ui/dialogo.png");
+    bool isAlive;
+    int frameCounter;
+    bool moving;
+    int direction = 1;
+    float introStartTime = 0;
+    bool Intro = true;
+
+
+public:
+    Boss() : Enemy(30, 2), isAlive(true), frameCounter(0), moving(false) {
+        playerPos = { (float)(320), 448 };  // spawn near top
+        introStartTime = GetTime(); // registrar el inicio
+        Intro = true;
+    }
+
+
+
+    void Update(Player& p) {
+        if (!isAlive) return;
+
+        float now = GetTime();
+
+        // Fase de introducción de 5 segundos
+        if (Intro) {
+            if (now - introStartTime < 17.0f) {
+                moving = false; // no se mueve
+                DrawTexture(Dialogo, 310, 360, WHITE);
+                return;
+
+            }
+            else {
+                Intro = false;
+                moving = true;
+            }
+        }
+
+        // Movement: left-right zig-zag
+        moving = true;
+        playerPos.x += direction * vel;
+        if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
+    }
+
+    void Draw() {
+        if (!isAlive) return;
+
+        frameCounter++;
+        Texture current;
+
+        if (moving) {
+            current = (frameCounter / 30 % 2 == 0) ? Boss3 : Boss4;
+        }
+        else {
+            current = (frameCounter / 30 % 2 == 0) ? Boss1 : Boss2;
+        }
+
+        DrawTexture(current, playerPos.x, playerPos.y, WHITE);
+    }
+
+    bool IsAlive() const { return isAlive; }
+
+    //void TakeDamage(int amount) {
+    //    hp -= amount;
+    //    if (hp <= 0) isAlive = false;
+    //}
+
+    //Rectangle GetHitbox() const {
+    //    return { playerPos.x, playerPos.y, 64, 64 }; // Adjust size if needed
+    //}
+
+};
 
 class Shoot : public Colision {
 
@@ -1275,6 +1356,24 @@ public:
 
     }
     //chequea si la bala colisiona con el enemigo
+
+    Shoot(Boss p) : Colision(p.GetPosition()) {
+        if (!IsSoundPlaying(shooter)) {
+            PlaySound(shooter); // Play the sound only if it�s not already playing
+        }
+        playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (16) };
+
+        // Set direction based on arrow keys instead of player direction
+        dir = ARRIBA;
+
+    }
+
+    //declara las direcciones y teclas asignadas a disparar
+    friend class Game;
+    // Add method to update bullet position
+    
+ 
+
 
     Shoot(Player p) : Colision(p.GetPosition()) {
         if (!IsSoundPlaying(shooter)) {
@@ -1456,6 +1555,10 @@ public:
 
 
 };
+
+
+
+
 
 class level {
 protected:
@@ -1746,12 +1849,14 @@ private:
     int HMGTimeFinal;
     int cafeEnUso;
     int HMGEnUso;
+    Boss boss;
+    bool bossFight = false;
 public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 3;
-        stage = 3;
+        level = 5;
+        stage = 5;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -1804,7 +1909,7 @@ public:
 
 
 
-            if (level > 3) {
+            if (level > 3 && level != 5) {
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -1972,7 +2077,17 @@ public:
 
 
             }
-            if (level > 6) { //mariposa
+
+            if (level == 5 && !bossFight) {
+                bossFight = true;
+            }
+            else if (level > 5 && bossFight) {
+                bossFight = false;
+            }
+            else if (level < 5 && bossFight) {
+                bossFight = false;
+            }
+            if (level > 6 && level != 5) { //mariposa
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -2134,7 +2249,7 @@ public:
                 }
 
 
-                if (level > 0) { //ogre
+                if (level > 0 && level != 5) { //ogre
                     int i = 0;
                     if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -2642,11 +2757,21 @@ public:
 
 
             }
+            if (bossFight && boss.IsAlive()) {
+                boss.Update(p);  
+                boss.Draw();
+
+
+            }
+
+
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
             EndDrawing();
         }
+
+
         // si el jugador muere o el tiempo se acaba, actualiza el juego, ya sea pasando de nivel o perdiendo la partida
         else {
 
