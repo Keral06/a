@@ -1275,8 +1275,8 @@ private:
 
 public:
     Boss() : Enemy(30, 2), isAlive(true), frameCounter(0), moving(false) {
-        playerPos = { (float)(320), 448 };  // spawn near top
-        introStartTime = GetTime(); // registrar el inicio
+        playerPos = { (float)(320), 448 };  
+        introStartTime = GetTime(); 
         Intro = true;
     }
 
@@ -1287,9 +1287,9 @@ public:
 
         float now = GetTime();
 
-        // Fase de introducción de 5 segundos
+        
         if (Intro) {
-            if (now - introStartTime < 17.0f) {
+            if (now - introStartTime < 17.0f ) { //cambiar mas tarde, solo fase prueba//
                 moving = false; // no se mueve
                 DrawTexture(Dialogo, 310, 360, WHITE);
                 return;
@@ -1301,7 +1301,7 @@ public:
             }
         }
 
-        // Movement: left-right zig-zag
+        
         moving = true;
         playerPos.x += direction * vel;
         if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
