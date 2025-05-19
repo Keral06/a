@@ -624,6 +624,7 @@ class PowerUpLive : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Vector2 pos;
+    float appearTime;
 public:
     friend class Game;
     friend class Player;
@@ -633,7 +634,7 @@ public:
         this->pos = position;
 
         DrawTexture(vida, pos.x, pos.y, WHITE);
-
+        appearTime = GetTime();
 
     }
     //dibuja el item de vida +
@@ -667,6 +668,7 @@ class ScreenNuke : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
     Vector2 pos;
+    float appearTime;
 public:
     friend class Game;
     friend class Player;
@@ -677,7 +679,7 @@ public:
         this->pos = position;
 
         DrawTexture(vida, pos.x, pos.y, WHITE);
-
+        appearTime = GetTime();
 
     }
     //dibuja el item de vida +
@@ -733,6 +735,7 @@ class Coffee : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_taza.png");
     Vector2 pos;
+    float appearTime;
 public:
     friend class Game;
     friend class Player;
@@ -743,7 +746,7 @@ public:
         this->pos = position;
 
         DrawTexture(vida, pos.x, pos.y, WHITE);
-
+        appearTime = GetTime();
 
     }
     //dibuja el item de vida +
@@ -1769,6 +1772,7 @@ private:
     Texture moneda5 = LoadTexture("items/128x128_moneda_s.png");
     Vector2 pos;
     int moneda = 0;
+    float appearTime;
 public:
 
 
@@ -1794,7 +1798,7 @@ public:
 
         }
         
-
+        appearTime = GetTime();
 
     }
     //dibuja el item de monedas
@@ -1855,10 +1859,12 @@ private:
 
     Vector2 pos;
     Texture wow = LoadTexture("items/128x128_mun.png");
+    float appearTime;
 public:
+    friend class Game;
     HeavyMachineGun(Vector2 vector) : Colision(pos) {
 
-
+        appearTime = GetTime();
         this->pos = vector;
     }
     void UsePowerUp(float& powerRate) {
@@ -1894,6 +1900,10 @@ private:
     int stage;
     bool tiempoFake = false;
     Texture bulletTex = LoadTexture("Bullet_1.png");
+    Texture vida = LoadTexture("items/128x128_cabeza.png");
+    Texture cafee = LoadTexture("items/128x128_taza.png");
+    Texture pistola = LoadTexture("items/128x128_mun.png");
+    Texture destructor = LoadTexture("items/128x128_tumbacraneo.png");
     std::vector<DeadOgre>dead;
     int deadogres;
     bool tiempoiniciado;
@@ -1914,6 +1924,9 @@ private:
     int HMGEnUso;
     Boss boss;
     bool bossFight = false;
+    bool tiendaActiva = false;
+   
+    
 public:
     friend int main();
     Game() {
@@ -1970,7 +1983,17 @@ public:
 
             int bulletSize = bullets.size();
 
+            //la tienda aparece en todos los niveles menos en el primero 
+            if (level > 1 && enemigo.size() == 0)
+            {
+                tiendaActiva = true;
 
+            }
+            else 
+            {
+                tiendaActiva = false;
+            }
+            
 
             if (level > 3 && level != 5) {
                 int i = 0;
@@ -2140,6 +2163,8 @@ public:
 
 
             }
+
+
 
             if (level == 5 && !bossFight) {
                 bossFight = true;
@@ -2490,16 +2515,22 @@ public:
 
             int auxiliarPowerUps = 0;
             while (auxiliarPowerUps < Lives.size()) {
-            
                 Lives[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
+                float helperDrawer = GetTime();
+                if (Lives[auxiliarPowerUps].appearTime-helperDrawer==10) {
+                    Lives.pop_back();
+                }
             
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < gun.size()) {
-
                 gun[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
+                float helperDrawer = GetTime();
+                if (gun[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                    gun.pop_back();
+                }
 
             }
             auxiliarPowerUps = 0;
@@ -2507,21 +2538,35 @@ public:
 
                 SN[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
-
+                float helperDrawer = GetTime();
+                if (SN[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                    SN.pop_back();
+                }
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < money.size()) {
 
                 SN[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
-
+                float helperDrawer = GetTime();
+                if (money[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                    int zz = auxiliarPowerUps;
+                    while (zz < money.size()-1) {
+                        money[zz] = money[zz + 1];
+                    
+                    }
+                    money.pop_back();
+                }
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < cafe.size()) {
 
                 cafe[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
-
+                float helperDrawer = GetTime();
+                if (cafe[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                    cafe.pop_back();
+                }
             }
             auxiliarPowerUps = 0;
 
@@ -2554,7 +2599,8 @@ public:
                     if (p.bag = 1) {
                         gun[0].UsePowerUp(powerRate);
                         gun.pop_back();
-
+                        HMGEnUso = 1;
+                        HMGTimeInicial = GetTime();
                     }
                     else {
 
@@ -2566,6 +2612,17 @@ public:
 
                 }
                 auxiliarPowerUps++;
+
+            }
+            if (HMGEnUso = 1) {
+                HMGTimeFinal = GetTime();
+                if (HMGTimeFinal - HMGTimeInicial > 12) {
+                    HeavyMachineGun Aux(p.playerPos);
+                    Aux.StopUsing(powerRate);
+                    HMGEnUso = 0;
+                
+                
+                }
 
             }
             auxiliarPowerUps = 0;
@@ -2612,7 +2669,8 @@ public:
                     if (p.bag = 1) {
                         cafe[0].UsePowerUp(p);
                         cafe.pop_back();
-
+                        cafeEnUso = 1;
+                        timeCafeInicial = GetTime();
                     }
                     else {
 
@@ -2624,6 +2682,17 @@ public:
 
                 }
                 auxiliarPowerUps++;
+
+            }
+            if (cafeEnUso = 1) {
+                timeCafeFinal = GetTime();
+                if (timeCafeInicial - timeCafeFinal > 16) {
+                    Coffee Aux(p.playerPos);
+                    Aux.StopUsing(p);
+
+
+
+                }
 
             }
             auxiliarPowerUps = 0;
@@ -2640,21 +2709,36 @@ public:
 
                 } else if (bagItem == 2) {
                     p.bag--;
+                    if (HMGEnUso == 1) {
+                        HMGTimeInicial = GetTime();
+                    
+                    }
+                    else {
                     gun[0].UsePowerUp(powerRate);
                     gun.pop_back();
-
+                    
+                    
+                    }
+                    
 
 
                 }
                 else if (bagItem == 3) {
-                
+                    p.bag--;
                     SN[0].UsePowerUp(enemigo, orcs, marip);
                     SN.pop_back();
                 }
                 else if (bagItem == 4) {
-                
+                    p.bag--;
+                    if (cafeEnUso == 1) {
+                        timeCafeInicial = GetTime();
+                    
+                    }
+                    else {
                     cafe[0].UsePowerUp(p);
                     cafe.pop_back();
+                    
+                    }
                 
                 }
             }
@@ -2782,6 +2866,25 @@ public:
 
 
                 }
+                while (0 < Lives.size()) {
+                
+                    Lives.pop_back();
+                }
+                while (0 < SN.size()) {
+
+                    SN.pop_back();
+                }
+                while (0 < gun.size()) {
+
+                    gun.pop_back();
+                }while (0 < cafe.size()) {
+
+                    cafe.pop_back();
+                }
+                while (0 < money.size()) {
+
+                    money.pop_back();
+                }
                 bulletSize = 0;
                 x = 0;
                 if (Lives.size() > 0) {
@@ -2824,7 +2927,30 @@ public:
 
 
             }
-
+            //14,12
+          /*  Texture vida = LoadTexture("items/128x128_cabeza.png");
+            Texture cafee = LoadTexture("items/128x128_taza.png");
+            Texture pistola = LoadTexture("items/128x128_mun.png");
+            Texture destructor = LoadTexture("items/128x128_tumbacraneo.png"); life gun sn cafe*/
+            if (p.bag == 1) {
+                if (bagItem == 1) {
+                    DrawTexture(vida, 14, 12, WHITE);
+                
+                }
+                else if (bagItem == 2) {
+                
+                    DrawTexture(pistola, 14, 12, WHITE);
+                }
+                else if (bagItem == 3) {
+                    DrawTexture(destructor, 14, 12, WHITE);
+                
+                }
+                else if (bagItem == 4) {
+                    DrawTexture(cafee, 14, 12, WHITE);
+                
+                }
+            
+            }
 
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
@@ -2847,7 +2973,21 @@ public:
                 tiempoFake = true;
 
             }
+            while (0 < Lives.size()) {
 
+                Lives.pop_back();
+            }
+            while (0 < SN.size()) {
+
+                SN.pop_back();
+            }
+            while (0 < gun.size()) {
+
+                gun.pop_back();
+            }while (0 < cafe.size()) {
+
+                cafe.pop_back();
+            }
             while (i < dead.size()) {
 
 
@@ -5993,97 +6133,11 @@ public:
 };
 
 
-//class Store{
-//private:
-//    // Texturas para la animación de caminar
-//    Texture walkFrames[2];
-//
-//    // Texturas del tendero
-//    Texture storemanTextures[5]; // [aparición1, aparición2, frente, izquierda, derecha]
-//
-//    // Textura de la tienda
-//    Texture store;
-//
-//    Vector2 position = { 255, 0 };
-//    float animTime = 0;
-//    const float animSpeed = 0.2f;
-//    const float walkSpeed = 100.0f;
-//    bool isWalking = true;
-//    int currentFrame = 0;
-//    bool hasAppeared = false; // Controla si terminó la animación de aparición
-//
-//public:
-//    friend int main();
-//    Store() {
-//        // Cargar texturas de caminata
-//        walkFrames[0] = LoadTexture("64x64/128x128_p4.png");
-//        walkFrames[1] = LoadTexture("64x64/128x128_p4-1.png");
-//
-//        // Cargar todas las texturas del tendero
-//        storemanTextures[0] = LoadTexture("64x64/128x128_p4.png");
-//        storemanTextures[1] = LoadTexture("64x64/128x128_p4-1.png");
-//        storemanTextures[2] = LoadTexture("64x64/128x128_p4-2.png");
-//        storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
-//        storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
-//
-//        store = LoadTexture("tienda_red.png");
-//    }
-//
-//    ~Store() {
-//        // Liberar texturas
-//        for (int i = 0; i < 2; i++) UnloadTexture(walkFrames[i]);
-//        for (int i = 0; i < 5; i++) UnloadTexture(storemanTextures[i]);
-//        UnloadTexture(store);
-//    }
-//
-//    void Update(float deltaTime) {
-//        if (!isWalking) return;
-//
-//        // Animación de caminar
-//        animTime += deltaTime;
-//        if (animTime >= animSpeed) {
-//            animTime = 0;
-//            currentFrame = (currentFrame + 1) % 2;
-//        }
-//
-//        // Movimiento hacia abajo
-//        position.y += walkSpeed * deltaTime;
-//
-//        // Detenerse al llegar al centro
-//        if (position.y >= 200) //GetScreenHeight() / 2 - walkFrames[0].height / 2) 
-//        {
-//            position.y = 200;//GetScreenHeight() / 2 - walkFrames[0].height / 2;
-//            isWalking = false;
-//            hasAppeared = true;
-//        }
-//    }
-//
-//    void Draw() {
-//        // Dibujar al tendero 
-//        if (hasAppeared) { //aparece,camina, y se queda quieto, aparece la tienda
-//            // Dibujar tendero quieto (textura de frente)
-//            DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
-//
-//            // dibujar la tienda cuando el tendero está quieto
-//            DrawTexture(store , 190, 230, WHITE);
-//        }
-//        else {
-//            // Dibujar animación de aparición
-//            DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
-//        }
-//    }
-//
-//    bool HasAppeared() const { return hasAppeared; }
-//};
-
-
-
-
 class Store{
     Texture walkFrames[2];  // caminar
     Texture storemanTextures[5];
     Texture store;
-    Texture CosasDeLaTienda[5];
+    Texture CosasDeLaTienda[7];
 
     Vector2 position = { 255+65, 0 };
     float animTime = 0;
@@ -6104,6 +6158,7 @@ public:
     friend Player;
     friend Entity;
     friend Colision;
+    friend Game;
     Store() {
         // Cargar texturas de caminata
         walkFrames[0] = LoadTexture("64x64/128x128_p4.png");
@@ -6123,7 +6178,9 @@ public:
         CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
         CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
         CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
-
+        CosasDeLaTienda[3] = LoadTexture("tienda/128x128_pistola2.png");
+        CosasDeLaTienda[4] = LoadTexture("tienda/128x128_cubo2.png");
+        CosasDeLaTienda[5] = LoadTexture("tienda/128x128_mun.png");
       
 
     }
@@ -6131,70 +6188,45 @@ public:
   
     
     
-    void Update(float deltaTime) {
+    void aparecer(float deltaTime) {
+ 
+
         if (!isWalking) return;
 
         // Animación de caminar
         animTime += deltaTime;
         if (animTime >= animSpeed) {
             animTime = 0;
-            currentFrame = (currentFrame + 1) % 2; // Alterna entre 0 y 1
+            currentFrame = (currentFrame + 1) % 2;
         }
 
         // Movimiento hacia abajo
         position.y += walkSpeed * deltaTime;
 
         // Detenerse al llegar a pos 200
-        if (position.y >= 200)  
+        if (position.y >= 200)
         {
             position.y = 200;
             isWalking = false;
             hasAppeared = true;
             currentFrame = 0;
         }
+        
     }
 
+   
 
-  //void Compra( Vector2 playerPos, int& playerCoins)
-  //{
-  //      if (isWalking = false) 
-  //      {
-  //          itemSeleccionado = -1; 
-
-  //          // Posiciones de los items en la tienda
-  //          Vector2 itemPositions[3] = {
-  //              {210, 250}, // Pistola
-  //              {260, 250}, // Cubo
-  //              {310, 250}  // Munición
-  //          };
-
-  //          // Verificar proximidad con cada item
-  //          for (int i = 0; i < 3; i++) {
-  //              if (CheckCollisionCircleLine(playerPos, itemPositions[i], rangoCompra)) {
-  //                  itemSeleccionado = i;
-
-  //                  // Comprar si presiona E
-  //                  if (IsKeyPressed(KEY_E)) {
-  //                      if (playerCoins >= precios[i]) {
-  //                          playerCoins -= precios[i];
-  //                          
-  //                      }
-  //                  }
-  //                  break; //  un item a la vez
-  //              }
-  //          }
-  //      }
-  // }
 
     void desaparecer(float deltaTime)
     {
+        
         if (!isWalking) return;
 
         // Animación de caminar
         animTime += deltaTime;
         if (animTime >= animSpeed) {
             animTime = 0;
-            currentFrame = (currentFrame + 1) % 2; // Alterna entre 0 y 1
+            currentFrame = (currentFrame + 1) % 2; 
         }
 
         // Movimiento hacia arriba
@@ -6211,6 +6243,9 @@ public:
     }
 
 
+
+
+
     void Draw() {   //aparicion y compra
         // Dibujar al tendero 
         if (hasAppeared) { 
@@ -6223,17 +6258,14 @@ public:
                 DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
                 DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
                 
-            //if (itemSeleccionado == i) {
-                //DrawRectangleLines(210 + (i * 50), 250, 32, 32, GREEN);
-                //DrawText("[E] COMPRAR", 200 + (i * 50), 220, 15, GREEN);
-            //}
+            
             }
         }
-        else {
+        else 
+        {
             // Dibujar animación de aparición
             DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
         }
-
     }
     
    
@@ -6275,11 +6307,9 @@ int main()
 
 
 
-    /*Store tienda;*/
+   
 
     Store tienda;
-
-
     Background desierto;
     time ui;
     UI aa;
@@ -6304,6 +6334,7 @@ int main()
     Title t;
     bool gameovertime = false;
     float GOtime = 0;
+    bool tiendaActiva = false;
     while (!WindowShouldClose()) {
 
         if (t.GameBegin) {
@@ -6312,27 +6343,16 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
-                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe,SN,gun);
+                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun);
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
 
 
-
-
-                    ////////////////////////TIENDA//////////////////////////
-                    static bool tiendaActiva = false;
-
-                    // si el numero de enemigos es 0, la tienda muestra que esta activa ((pero ns como ponerlo 
-                    tiendaActiva = true;
-
-
-
-                    // Mostrar tienda cuando esta activa
-                    if (tiendaActiva) {
-                        
+                    if (tiendaActiva) 
+                    {
                         float deltaTime = GetFrameTime();
-                        tienda.Update(deltaTime);
+                        tienda.aparecer(deltaTime);
 
                         BeginDrawing();
                         ClearBackground(RAYWHITE);
@@ -6340,27 +6360,7 @@ int main()
                         // Dibujar la tienda
                         tienda.Draw();
                     }
-
-                    //alguna manera para que la tienda desaparezca
-
-
-                    if (tiendaActiva) //mostrar desaparicion de la tienda cuando pasa n tiempo 
-                    {
-
-
-
-
-
-
-                     }
-                       
-                   //////////////////////////////////////////////////////////////////////////
-
-
-
-
-                    }
-
+                }
 
                     else {
 
