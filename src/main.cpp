@@ -1424,11 +1424,11 @@ public:
     }
     //chequea si la bala colisiona con el enemigo
 
-    Shoot(Boss p) : Colision(p.GetPosition()) {
+    Shoot(Boss b) : Colision(b.GetPosition()) {
         if (!IsSoundPlaying(shooter)) {
             PlaySound(shooter); // Play the sound only if it�s not already playing
         }
-        playerPos = { p.GetPosition().x + 32 / 2, p.GetPosition().y + (16) };
+        playerPos = { b.GetPosition().x + 32 / 2, b.GetPosition().y + (16) };
 
         // Set direction based on arrow keys instead of player direction
         dir = ARRIBA;
@@ -1489,7 +1489,6 @@ public:
         switch (dir) {
         case ARRIBA:
             nextY -= 5.0f;
-
             break;
         case ABAJO:
             nextY += 5.0f;
@@ -1994,7 +1993,7 @@ public:
         tiempoiniciado = false;
     }
     //declara el nivel y stage inicial
-    void GameStart(Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>&SN, std::vector <HeavyMachineGun>gun)
+    void GameStart(Player& p,Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>&SN, std::vector <HeavyMachineGun>gun)
      {
         if (p.status) {
             ClearBackground(BLACK);
@@ -2026,6 +2025,19 @@ public:
                     bullets.push_back(Shoot(p));
                     shootTimer = powerRate; // Shoot every 0.2 seconds while holding key
                    
+                }
+                shootTimer -= GetFrameTime();
+
+
+            }
+            int a = GetTime();
+            if (level == 5 && a > 17.0f ) {
+                // Add rate limiting for bullets
+                static float shootTimer = powerRate;
+                if (shootTimer <= 0) {
+                    bullets.push_back(Shoot(b));
+                    shootTimer = powerRate; // Shoot every 0.2 seconds while holding key
+
                 }
                 shootTimer -= GetFrameTime();
 
@@ -6393,7 +6405,7 @@ int main()
     float HelpMeTime = 10;
     std::vector<Ogre>enemigo;
     int bulletaux;
-
+    Boss b;
 
 
    
@@ -6432,7 +6444,7 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
-                    game.GameStart(p, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun);
+                    game.GameStart(p, b, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun);
                     desierto.LevelDraw(game);
                     ui.DrawInicial();
                     aa.draw(p);
