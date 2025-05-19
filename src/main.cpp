@@ -46,8 +46,8 @@ class Colision {
 public:
     Colision(Vector2 posicion) {
         BeginDrawing();
-        float widthThing = 96;
-        float HeightThing = 64;
+        float widthThing = 96 - 64;
+        float HeightThing = 64 - 32;
 
         DrawRectangle(posicion.x, posicion.y, widthThing, HeightThing, BLANK);
         Square = { posicion.x,posicion.y, widthThing, HeightThing };
@@ -134,8 +134,7 @@ public:
     friend bool PlayerPowerUpScreenMoney(Player& p, coins& pp);
 
 
-
-    Player(int hp, int vel) : Entity(hp, vel, { (float)(playerScreenX + 128) / 2, (float)(playerScreenY + 64) / 2 }) {
+    Player(int hp, int vel) : Entity(hp, vel, { (float)(playerScreenX+ 128) / 2, (float)(playerScreenY + 64) / 2 }) {
         this->money = 0;
         this->lives = 3;
         this->dir = ARRIBA;
@@ -144,6 +143,7 @@ public:
         bag = 0;
     } //declara los valores iniciales del jugador
     int dire;
+
     void playerAgain() {
 
         this->money = 0;
@@ -284,10 +284,18 @@ public:
 
     }
     //dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
-    void ResetPlayer() {
+    void ResetPlayer(int level) {
 
-        playerPos = { (float)(playerScreenX + 64) / 2, (float)(playerScreenY + 32) / 2 };
+        
         status = true;
+        if (level == 5) {
+            playerPos = { 320, 224 };
+            status = true;
+        }
+        else {
+        
+            playerPos = { (float)(playerScreenX + 64) / 2, (float)(playerScreenY + 32) / 2 };
+        }
 
     }
     //resetea al jugador cuando muere
@@ -817,7 +825,7 @@ public:
             nextY -= vel;  // Changed from += to -=
         }
 
-        if (nextX >= 96 && nextX <= playerScreenX &&
+        if (nextX >= 96 && nextX <= playerScreenX - 64 &&
             nextY >= 64 && nextY <= playerScreenY - 32) {
 
             if (level == 1) {
@@ -829,7 +837,7 @@ public:
             else if (level == 2) {
 
 
-                if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
+                if (nextX < 96 + 64 || (nextX > 188 + 64 && nextX < 288 + 64) || (nextX > 416 + 64)) {
                     /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
                     playerPos.x = nextX;
                     playerPos.y = nextY;
@@ -841,18 +849,18 @@ public:
 
 
                 }
-                else if (nextX <= 188 || nextX >= 288) {
+                else if (nextX <= 188 + 64 || nextX >= 288 + 64) {
 
-                    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
+                    if (nextY > 384 + 32 || nextY < 128 || (nextY > 188 + 32 && nextY < 324 + 32)) {
 
                         playerPos.x = nextX;
                         playerPos.y = nextY;
 
 
                     }
-                    else if (nextX <= 188 && nextX >= 158) {
+                    else if (nextX <= 188 + 64 && nextX >= 158 + 64) {
 
-                        if (nextY >= 160 && nextY <= 350) {
+                        if (nextY >= 160 + 32 && nextY <= 382) {
 
                             playerPos.x = nextX;
                             playerPos.y = nextY;
@@ -860,9 +868,9 @@ public:
                         }
 
                     }
-                    else if (nextX >= 288 && nextX <= 320) {
+                    else if (nextX >= 288 + 64 && nextX <= 320 + 64) {
 
-                        if (nextY >= 160 && nextY <= 350) {
+                        if (nextY >= 160 + 32 && nextY <= 350 + 32) {
 
                             playerPos.x = nextX;
                             playerPos.y = nextY;
@@ -883,12 +891,67 @@ public:
 
 
             }
+            else if (level == 3) {
+                if (nextX > 384 + 64 || nextX < 96 + 64 || (nextX > 224 + 64 && nextX < 352 + 64)) {
+
+                    if (nextY > 384 + 32 || nextY < 96 + 32 || (nextY > 224 + 32 && nextY < 352 + 32)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                    else {
+
+                    }
+
+                }
+                else if ((nextX > 32 + 64 && nextX < 224 + 64))
+                {
+
+                    if ((nextY > 32 + 32 && nextY < 224 + 32)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                }
+                else if ((nextX > 256 + 64 && nextX < 448 + 64))
+                {
+
+                    if ((nextY > 32 + 32 && nextY < 224 + 32)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                }
+
+
+
+
+            }
+            else {
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+
 
         }
+        if (level >= 4) {
 
 
+            playerPos.x = nextX;
+            playerPos.y = nextY;
+
+
+
+        }
         ColisionPlayer(playerPos);
     }
+
 
 
     //declara el movimiento del enemigo y la direccion en la que se mueve dependiendo de la posicion del jugador
@@ -1290,7 +1353,7 @@ public:
         
         if (Intro) {
             if (now - introStartTime < 17.0f ) { //cambiar mas tarde, solo fase prueba//
-                moving = false; // no se mueve
+                moving = false; 
                 DrawTexture(Dialogo, 310, 360, WHITE);
                 return;
 
@@ -1855,8 +1918,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 5;
-        stage = 5;
+        level = 4;
+        stage = 4;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -2081,12 +2144,10 @@ public:
             if (level == 5 && !bossFight) {
                 bossFight = true;
             }
-            else if (level > 5 && bossFight) {
+            else if (level > 5 && !bossFight || level < 5 && !bossFight) {
                 bossFight = false;
             }
-            else if (level < 5 && bossFight) {
-                bossFight = false;
-            }
+
             if (level > 6 && level != 5) { //mariposa
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
@@ -2814,7 +2875,7 @@ public:
             }
             if (p.status == true) {
                 Tiempo.NewTime();
-                p.ResetPlayer();
+                p.ResetPlayer(level);
                 tiempoFake = false;
             }
 
@@ -2872,7 +2933,7 @@ public:
         float esperar = GetTime();
         float auxiliar = 0;
 
-        p.ResetPlayer();
+        p.ResetPlayer(level);
         if (this->level == 11) {
 
             wonGame = true;
