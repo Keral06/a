@@ -1519,136 +1519,138 @@ public:
         default:
             break;
         }
+        playerPos.x = nextX;
+        playerPos.y = nextY;
         //chequea si la bala ha salido de la pantalla
 
-        if (nextX >= 96 && nextX <= playerScreenX &&
-            nextY >= 64 && nextY <= playerScreenY - 32) {
+        //if (nextX >= 96 && nextX <= playerScreenX &&
+        //    nextY >= 64 && nextY <= playerScreenY - 32) {
 
-            if (level == 1) {
-
-
-                playerPos.x = nextX;
-                playerPos.y = nextY;
-            }
-            else if (level == 2) {
+        //    if (level == 1) {
 
 
-                if (nextX < 96 + 64 || (nextX > 188 + 64 && nextX < 288 + 64) || (nextX > 416 + 64)) {
-                    /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
-                    playerPos.x = nextX;
-                    playerPos.y = nextY;
-                    /*}
-                    else {
-
-                    }*/
+        //        playerPos.x = nextX;
+        //        playerPos.y = nextY;
+        //    }
+        //    else if (level == 2) {
 
 
+        //        if (nextX < 96 + 64 || (nextX > 188 + 64 && nextX < 288 + 64) || (nextX > 416 + 64)) {
+        //            /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
+        //            playerPos.x = nextX;
+        //            playerPos.y = nextY;
+        //            /*}
+        //            else {
 
-                }
-                else if (nextX <= 188 + 64 || nextX >= 288 + 64) {
-
-                    if (nextY > 384 + 32 || nextY < 128 || (nextY > 188 + 32 && nextY < 324 + 32)) {
-
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
-
-
-                    }
-                    else if (nextX <= 188 + 64 && nextX >= 158 + 64) {
-
-                        if (nextY >= 160 + 32 && nextY <= 382) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-                        }
-                        else {
-
-                            eliminate = true;
-
-                        }
-
-                    }
-                    else if (nextX >= 288 + 64 && nextX <= 320 + 64) {
-
-                        if (nextY >= 160 + 32 && nextY <= 350 + 32) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-                        }
-                        else {
-
-                            eliminate = true;
-
-                        }
-
-                    }
-
-
-                }
-                else {
+        //            }*/
 
 
 
-                }
+        //        }
+        //        else if (nextX <= 188 + 64 || nextX >= 288 + 64) {
+
+        //            if (nextY > 384 + 32 || nextY < 128 || (nextY > 188 + 32 && nextY < 324 + 32)) {
+
+        //                playerPos.x = nextX;
+        //                playerPos.y = nextY;
+
+
+        //            }
+        //            else if (nextX <= 188 + 64 && nextX >= 158 + 64) {
+
+        //                if (nextY >= 160 + 32 && nextY <= 382) {
+
+        //                    playerPos.x = nextX;
+        //                    playerPos.y = nextY;
+
+        //                }
+        //                else {
+
+        //                    eliminate = true;
+
+        //                }
+
+        //            }
+        //            else if (nextX >= 288 + 64 && nextX <= 320 + 64) {
+
+        //                if (nextY >= 160 + 32 && nextY <= 350 + 32) {
+
+        //                    playerPos.x = nextX;
+        //                    playerPos.y = nextY;
+
+        //                }
+        //                else {
+
+        //                    eliminate = true;
+
+        //                }
+
+        //            }
+
+
+        //        }
+        //        else {
+
+
+
+        //        }
 
 
 
 
-            }
-            else if (level == 3) {
-                if (nextX > 384 + 64 || nextX < 96 + 64 || (nextX > 224 + 64 && nextX < 352 + 64)) {
+        //    }
+        //    else if (level == 3) {
+        //        if (nextX > 384 + 64 || nextX < 96 + 64 || (nextX > 224 + 64 && nextX < 352 + 64)) {
 
-                    if (nextY > 384 + 32 || nextY < 96 + 32 || (nextY > 224 + 32 && nextY < 352 + 32)) {
+        //            if (nextY > 384 + 32 || nextY < 96 + 32 || (nextY > 224 + 32 && nextY < 352 + 32)) {
 
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
-
-
-                    }
-                    else {
-
-                        eliminate = true;
-
-                    }
-
-                }
-                else if ((nextX > 32 + 64 && nextX < 224 + 64))
-                {
-
-                    if ((nextY > 32 + 32 && nextY < 224 + 32)) {
-
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
+        //                playerPos.x = nextX;
+        //                playerPos.y = nextY;
 
 
-                    }
-                    else {
+        //            }
+        //            else {
 
-                        eliminate = true;
-                    }
-                }
-                else if ((nextX > 256 + 64 && nextX < 448 + 64))
-                {
+        //                eliminate = true;
 
-                    if ((nextY > 32 + 32 && nextY < 224 + 32)) {
+        //            }
 
-                        playerPos.x = nextX;
-                        playerPos.y = nextY;
+        //        }
+        //        else if ((nextX > 32 + 64 && nextX < 224 + 64))
+        //        {
 
+        //            if ((nextY > 32 + 32 && nextY < 224 + 32)) {
 
-                    }
-                    else {
-
-                        eliminate = true;
-                    }
-                }
+        //                playerPos.x = nextX;
+        //                playerPos.y = nextY;
 
 
-            }
+        //            }
+        //            else {
 
-        }
+        //                eliminate = true;
+        //            }
+        //        }
+        //        else if ((nextX > 256 + 64 && nextX < 448 + 64))
+        //        {
+
+        //            if ((nextY > 32 + 32 && nextY < 224 + 32)) {
+
+        //                playerPos.x = nextX;
+        //                playerPos.y = nextY;
+
+
+        //            }
+        //            else {
+
+        //                eliminate = true;
+        //            }
+        //        }
+
+
+        //    }
+
+        //}
 
 
         ColisionBullet(playerPos);
@@ -1969,13 +1971,13 @@ private:
     float timeOfLive = 0;
     int bagItem = 0;
     int bagItemAux = 0;
-    float powerRate = 0.4;
+    float powerRate = 0.2;
     int timeCafeInicial;
     int timeCafeFinal;
     int HMGTimeInicial;
     int HMGTimeFinal;
-    int cafeEnUso;
-    int HMGEnUso;
+    int cafeEnUso=0;
+    int HMGEnUso=0;
     Boss boss;
     bool bossFight = false;
     bool tiendaActiva = false;
@@ -2019,7 +2021,7 @@ public:
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
                 IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
                 // Add rate limiting for bullets
-                static float shootTimer = 0.0f;
+                static float shootTimer = powerRate;
                 if (shootTimer <= 0) {
                     bullets.push_back(Shoot(p));
                     shootTimer = powerRate; // Shoot every 0.2 seconds while holding key
@@ -2029,12 +2031,35 @@ public:
 
 
             }
-            int pepe = 0;
-            while (pepe < bullets.size()) {
-                bullets[pepe].UpdatePosition(this->level);
-                bullets[pepe].Draw();
-            
-                pepe++;
+           int i = 0;
+            // dibuja el ogro 
+            while (i < bullets.size()) {
+
+                bullets[i].UpdatePosition(this->level);
+                bullets[i].Draw();
+
+                if (bullets[i].eliminate == true) {
+
+                   
+                    int p = i;
+                    if (bullets.size() == 1) {
+
+                        bullets.pop_back();
+
+                    }
+                    else if (bullets.size() > 1) {
+                        while (p < bullets.size() - 1) {
+                            bullets[p] = bullets[p + 1];
+                            p++;
+                        }
+
+                        bullets.pop_back();
+
+                    }
+                    
+
+                }
+                i++;
             }
 
 
@@ -2569,7 +2594,7 @@ public:
 
 
             }
-            int i = 0;
+             i = 0;
             deadogres = dead.size();
 
             //dibujar los power ups
@@ -2657,7 +2682,7 @@ public:
             while (auxiliarPowerUps < gun.size()) {
 
                 if (PlayerPowerUpHMG(p, gun[auxiliarPowerUps])) {
-                    if (p.bag = 1) {
+                    if (p.bag == 1) {
                         gun[0].UsePowerUp(powerRate);
                         gun.pop_back();
                         HMGEnUso = 1;
@@ -2675,7 +2700,7 @@ public:
                 auxiliarPowerUps++;
 
             }
-            if (HMGEnUso = 1) {
+            if (HMGEnUso == 1) {
                 HMGTimeFinal = GetTime();
                 if (HMGTimeFinal - HMGTimeInicial > 12) {
                     HeavyMachineGun Aux(p.playerPos);
@@ -2727,7 +2752,7 @@ public:
             while (auxiliarPowerUps < cafe.size()) {
 
                 if (PlayerPowerUpCoffee(p, cafe[auxiliarPowerUps])) {
-                    if (p.bag = 1) {
+                    if (p.bag == 1) {
                         cafe[0].UsePowerUp(p);
                         cafe.pop_back();
                         cafeEnUso = 1;
