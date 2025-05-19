@@ -190,12 +190,12 @@ public:
             {
                 if (dire <= 50) {
 
-                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+                    DrawTexture(Diagonal23, GetPosition().x, GetPosition().y, WHITE);
 
                 }
                 else {
 
-                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+                    DrawTexture(Diagonal22, GetPosition().x, GetPosition().y, WHITE);
 
                 }
             }
@@ -203,12 +203,12 @@ public:
             {
                 if (dire <= 50) {
 
-                    DrawTexture(Atras1, GetPosition().x, GetPosition().y, WHITE);
+                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
 
                 }
                 else {
 
-                    DrawTexture(Atras2, GetPosition().x, GetPosition().y, WHITE);
+                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
 
                 }
             }
@@ -692,7 +692,7 @@ public:
 
 
 
-    void UsePowerUp(std::vector<Ogre>& enemigo, std::vector <Orc>orcs, std::vector <Mariposa>marip) {
+    void UsePowerUp(std::vector<Ogre>enemigo, std::vector <Orc>orcs, std::vector <Mariposa>marip) {
 
         int i = 0;
 
@@ -1987,8 +1987,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 4;
-        stage = 4;
+        level = 5;
+        stage = 5;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
