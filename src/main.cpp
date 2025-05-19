@@ -6248,6 +6248,8 @@ public:
 
     void Draw() {   //aparicion y compra
         // Dibujar al tendero 
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
         if (hasAppeared) { 
             // Dibujar tendero quieto (textura de frente)
             DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
@@ -6353,11 +6355,6 @@ int main()
                     {
                         float deltaTime = GetFrameTime();
                         tienda.aparecer(deltaTime);
-
-                        BeginDrawing();
-                        ClearBackground(RAYWHITE);
-
-                        // Dibujar la tienda
                         tienda.Draw();
                     }
                 }
