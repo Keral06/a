@@ -1408,6 +1408,7 @@ private:
     Vector2 playerPos;
     Sound shooter = LoadSound("sound effects/prairie king bullet.ogg");
     bool eliminate = false;
+    Texture bulletTex = LoadTexture("Bullet_1.png");
 
 public:
     friend class Enemy;
@@ -1660,6 +1661,13 @@ public:
         DrawRectangle(posicion.x, posicion.y, 3, 3, BLANK);
         Square.x = posicion.x;
         Square.y = posicion.y;
+
+
+    }
+    void Draw() {
+        
+            DrawTexture(bulletTex, playerPos.x, playerPos.y, WHITE);
+
 
 
     }
@@ -1945,7 +1953,7 @@ private:
     bool wonGame = false;
     int stage;
     bool tiempoFake = false;
-    Texture bulletTex = LoadTexture("Bullet_1.png");
+    
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Texture cafee = LoadTexture("items/128x128_taza.png");
     Texture pistola = LoadTexture("items/128x128_mun.png");
@@ -1961,7 +1969,7 @@ private:
     float timeOfLive = 0;
     int bagItem = 0;
     int bagItemAux = 0;
-    float powerRate = 0.04;
+    float powerRate = 0.4;
     int timeCafeInicial;
     int timeCafeFinal;
     int HMGTimeInicial;
@@ -2015,11 +2023,18 @@ public:
                 if (shootTimer <= 0) {
                     bullets.push_back(Shoot(p));
                     shootTimer = powerRate; // Shoot every 0.2 seconds while holding key
-                    shootTimer = 0.4f; // Shoot every 0.2 seconds while holding key
+                   
                 }
                 shootTimer -= GetFrameTime();
 
 
+            }
+            int pepe = 0;
+            while (pepe < bullets.size()) {
+                bullets[pepe].UpdatePosition(this->level);
+                bullets[pepe].Draw();
+            
+                pepe++;
             }
 
 
@@ -6294,6 +6309,8 @@ public:
 
     void Draw() {   //aparicion y compra
         // Dibujar al tendero 
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
         if (hasAppeared) { 
             // Dibujar tendero quieto (textura de frente)
             DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
@@ -6399,11 +6416,6 @@ int main()
                     {
                         float deltaTime = GetFrameTime();
                         tienda.aparecer(deltaTime);
-
-                        BeginDrawing();
-                        ClearBackground(RAYWHITE);
-
-                        // Dibujar la tienda
                         tienda.Draw();
                     }
                 }
