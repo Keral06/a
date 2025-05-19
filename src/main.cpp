@@ -616,6 +616,7 @@ class PowerUpLive : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Vector2 pos;
+    float appearTime;
 public:
     friend class Game;
     friend class Player;
@@ -625,7 +626,7 @@ public:
         this->pos = position;
 
         DrawTexture(vida, pos.x, pos.y, WHITE);
-
+        appearTime = GetTime();
 
     }
     //dibuja el item de vida +
@@ -659,6 +660,7 @@ class ScreenNuke : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
     Vector2 pos;
+    float appearTime;
 public:
     friend class Game;
     friend class Player;
@@ -669,7 +671,7 @@ public:
         this->pos = position;
 
         DrawTexture(vida, pos.x, pos.y, WHITE);
-
+        appearTime = GetTime();
 
     }
     //dibuja el item de vida +
@@ -725,6 +727,7 @@ class Coffee : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_taza.png");
     Vector2 pos;
+    float appearTime;
 public:
     friend class Game;
     friend class Player;
@@ -735,7 +738,7 @@ public:
         this->pos = position;
 
         DrawTexture(vida, pos.x, pos.y, WHITE);
-
+        appearTime = GetTime();
 
     }
     //dibuja el item de vida +
@@ -1706,6 +1709,7 @@ private:
     Texture moneda5 = LoadTexture("items/128x128_moneda_s.png");
     Vector2 pos;
     int moneda = 0;
+    float appearTime;
 public:
 
 
@@ -1731,7 +1735,7 @@ public:
 
         }
         
-
+        appearTime = GetTime();
 
     }
     //dibuja el item de monedas
@@ -1792,10 +1796,12 @@ private:
 
     Vector2 pos;
     Texture wow = LoadTexture("items/128x128_mun.png");
+    float appearTime;
 public:
+    friend class Game;
     HeavyMachineGun(Vector2 vector) : Colision(pos) {
 
-
+        appearTime = GetTime();
         this->pos = vector;
     }
     void UsePowerUp(float& powerRate) {
@@ -1831,6 +1837,10 @@ private:
     int stage;
     bool tiempoFake = false;
     Texture bulletTex = LoadTexture("Bullet_1.png");
+    Texture vida = LoadTexture("items/128x128_cabeza.png");
+    Texture cafee = LoadTexture("items/128x128_taza.png");
+    Texture pistola = LoadTexture("items/128x128_mun.png");
+    Texture destructor = LoadTexture("items/128x128_tumbacraneo.png");
     std::vector<DeadOgre>dead;
     int deadogres;
     bool tiempoiniciado;
@@ -2429,16 +2439,22 @@ public:
 
             int auxiliarPowerUps = 0;
             while (auxiliarPowerUps < Lives.size()) {
-            
                 Lives[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
+                float helperDrawer = GetTime();
+                if (Lives[auxiliarPowerUps].appearTime-helperDrawer==10) {
+                    Lives.pop_back();
+                }
             
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < gun.size()) {
-
                 gun[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
+                float helperDrawer = GetTime();
+                if (gun[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                    gun.pop_back();
+                }
 
             }
             auxiliarPowerUps = 0;
@@ -2446,21 +2462,35 @@ public:
 
                 SN[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
-
+                float helperDrawer = GetTime();
+                if (SN[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                    SN.pop_back();
+                }
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < money.size()) {
 
                 SN[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
-
+                float helperDrawer = GetTime();
+                if (money[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                    int zz = auxiliarPowerUps;
+                    while (zz < money.size()-1) {
+                        money[zz] = money[zz + 1];
+                    
+                    }
+                    money.pop_back();
+                }
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < cafe.size()) {
 
                 cafe[auxiliarPowerUps].Draw();
                 auxiliarPowerUps++;
-
+                float helperDrawer = GetTime();
+                if (cafe[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                    cafe.pop_back();
+                }
             }
             auxiliarPowerUps = 0;
 
@@ -2493,7 +2523,8 @@ public:
                     if (p.bag = 1) {
                         gun[0].UsePowerUp(powerRate);
                         gun.pop_back();
-
+                        HMGEnUso = 1;
+                        HMGTimeInicial = GetTime();
                     }
                     else {
 
@@ -2505,6 +2536,17 @@ public:
 
                 }
                 auxiliarPowerUps++;
+
+            }
+            if (HMGEnUso = 1) {
+                HMGTimeFinal = GetTime();
+                if (HMGTimeFinal - HMGTimeInicial > 12) {
+                    HeavyMachineGun Aux(p.playerPos);
+                    Aux.StopUsing(powerRate);
+                    HMGEnUso = 0;
+                
+                
+                }
 
             }
             auxiliarPowerUps = 0;
@@ -2551,7 +2593,8 @@ public:
                     if (p.bag = 1) {
                         cafe[0].UsePowerUp(p);
                         cafe.pop_back();
-
+                        cafeEnUso = 1;
+                        timeCafeInicial = GetTime();
                     }
                     else {
 
@@ -2563,6 +2606,17 @@ public:
 
                 }
                 auxiliarPowerUps++;
+
+            }
+            if (cafeEnUso = 1) {
+                timeCafeFinal = GetTime();
+                if (timeCafeInicial - timeCafeFinal > 16) {
+                    Coffee Aux(p.playerPos);
+                    Aux.StopUsing(p);
+
+
+
+                }
 
             }
             auxiliarPowerUps = 0;
@@ -2579,21 +2633,36 @@ public:
 
                 } else if (bagItem == 2) {
                     p.bag--;
+                    if (HMGEnUso == 1) {
+                        HMGTimeInicial = GetTime();
+                    
+                    }
+                    else {
                     gun[0].UsePowerUp(powerRate);
                     gun.pop_back();
-
+                    
+                    
+                    }
+                    
 
 
                 }
                 else if (bagItem == 3) {
-                
+                    p.bag--;
                     SN[0].UsePowerUp(enemigo, orcs, marip);
                     SN.pop_back();
                 }
                 else if (bagItem == 4) {
-                
+                    p.bag--;
+                    if (cafeEnUso == 1) {
+                        timeCafeInicial = GetTime();
+                    
+                    }
+                    else {
                     cafe[0].UsePowerUp(p);
                     cafe.pop_back();
+                    
+                    }
                 
                 }
             }
@@ -2721,6 +2790,25 @@ public:
 
 
                 }
+                while (0 < Lives.size()) {
+                
+                    Lives.pop_back();
+                }
+                while (0 < SN.size()) {
+
+                    SN.pop_back();
+                }
+                while (0 < gun.size()) {
+
+                    gun.pop_back();
+                }while (0 < cafe.size()) {
+
+                    cafe.pop_back();
+                }
+                while (0 < money.size()) {
+
+                    money.pop_back();
+                }
                 bulletSize = 0;
                 x = 0;
                 if (Lives.size() > 0) {
@@ -2763,7 +2851,30 @@ public:
 
 
             }
-
+            //14,12
+          /*  Texture vida = LoadTexture("items/128x128_cabeza.png");
+            Texture cafee = LoadTexture("items/128x128_taza.png");
+            Texture pistola = LoadTexture("items/128x128_mun.png");
+            Texture destructor = LoadTexture("items/128x128_tumbacraneo.png"); life gun sn cafe*/
+            if (p.bag == 1) {
+                if (bagItem == 1) {
+                    DrawTexture(vida, 14, 12, WHITE);
+                
+                }
+                else if (bagItem == 2) {
+                
+                    DrawTexture(pistola, 14, 12, WHITE);
+                }
+                else if (bagItem == 3) {
+                    DrawTexture(destructor, 14, 12, WHITE);
+                
+                }
+                else if (bagItem == 4) {
+                    DrawTexture(cafee, 14, 12, WHITE);
+                
+                }
+            
+            }
 
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
@@ -2786,7 +2897,21 @@ public:
                 tiempoFake = true;
 
             }
+            while (0 < Lives.size()) {
 
+                Lives.pop_back();
+            }
+            while (0 < SN.size()) {
+
+                SN.pop_back();
+            }
+            while (0 < gun.size()) {
+
+                gun.pop_back();
+            }while (0 < cafe.size()) {
+
+                cafe.pop_back();
+            }
             while (i < dead.size()) {
 
 
