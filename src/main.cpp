@@ -2115,7 +2115,7 @@ public:
 
                                     int a = 0;
                                     if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = orcs[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
                                        
@@ -2125,7 +2125,7 @@ public:
                                        
                                     }
                                     else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = orcs[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
                                        
@@ -2136,7 +2136,7 @@ public:
                                        
                                     }
                                     else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = orcs[i].GetPosition();
                                         coins live(ee);
                                         money.push_back(live);
                                         
@@ -2145,7 +2145,7 @@ public:
 
                                     }
                                     else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = orcs[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
                                         
@@ -2157,7 +2157,7 @@ public:
                                         
                                     }
                                     else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = orcs[i].GetPosition();
                                         ScreenNuke live(ee);
                                         SN.push_back(live);
 
@@ -2169,7 +2169,7 @@ public:
 
                                     }
                                     else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = orcs[i].GetPosition();
                                         HeavyMachineGun live(ee);
                                         gun.push_back(live);
 
@@ -2293,7 +2293,7 @@ public:
 
                                     int a = 0;
                                     if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = marip[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
 
@@ -2303,7 +2303,7 @@ public:
 
                                     }
                                     else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = marip[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
 
@@ -2314,7 +2314,7 @@ public:
 
                                     }
                                     else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = marip[i].GetPosition();
                                         coins live(ee);
                                         money.push_back(live);
 
@@ -2323,7 +2323,7 @@ public:
 
                                     }
                                     else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = marip[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
 
@@ -2335,7 +2335,7 @@ public:
 
                                     }
                                     else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = marip[i].GetPosition();
                                         ScreenNuke live(ee);
                                         SN.push_back(live);
 
@@ -2347,7 +2347,7 @@ public:
 
                                     }
                                     else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
-                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Vector2 ee = marip[i].GetPosition();
                                         HeavyMachineGun live(ee);
                                         gun.push_back(live);
 
@@ -2421,85 +2421,79 @@ public:
                 }
 
 
-                if (level > 0 && level != 5) { //ogre
-                    int i = 0;
-                    if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
-
-                        Ogre auxiliar;
-                        enemigo.push_back(auxiliar);
-
-
-                    }
-                    if (enemigo.size() > 0) {
-
-
-                        int j = 0;
-                        int aux = 0;
-                        while (i < enemigo.size()) {
-
-                            while (j < bullets.size()) {
-                                if (i >= enemigo.size()) {
-
-
-                                }
-                                else {
-
-                                    if (bullets[j].ColisionBullet(enemigo[i]) == true) {
-
-                                        DeadOgre auxiliari(enemigo[i].GetPosition());
-                                        dead.push_back(auxiliari);
-                                        float timehelp = GetTime();
-                                        auxTime.push_back(timehelp);
-                                        deadogres++;
-
-
-                                        int a = 0;
-                                        if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
-                                            Vector2 ee = enemigo[i].GetPosition();
-                                            PowerUpLive live(ee);
-                                            Lives.push_back(live);
+               
 
 
 
 
+            }
+            if (level != 5) { //ogre
+                int i = 0;
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
-                                        }
-                                        else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
-                                            Vector2 ee = enemigo[i].GetPosition();
-                                            Coffee live(ee);
-                                            cafe.push_back(live);
+                    Ogre auxiliar;
+                    enemigo.push_back(auxiliar);
+
+
+                }
+                if (enemigo.size() > 0) {
+
+
+                    int j = 0;
+                    int aux = 0;
+                    while (i < enemigo.size()) {
+
+                        while (j < bullets.size()) {
+                            if (i >= enemigo.size()) {
+
+
+                            }
+                            else {
+
+                                if (bullets[j].ColisionBullet(enemigo[i]) == true) {
+
+                                    DeadOgre auxiliari(enemigo[i].GetPosition());
+                                    dead.push_back(auxiliari);
+                                    float timehelp = GetTime();
+                                    auxTime.push_back(timehelp);
+                                    deadogres++;
+
+
+                                    int a = 0;
+                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        PowerUpLive live(ee);
+                                        Lives.push_back(live);
 
 
 
 
 
-
-                                        }
-                                        else if (GetRandomValue(1, 10) == 3) {
-                                            Vector2 ee = enemigo[i].GetPosition();
-                                            coins live(ee);
-                                            money.push_back(live);
-
-
-
-
-                                        }
-                                        else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
-                                            Vector2 ee = enemigo[i].GetPosition();
-                                            Coffee live(ee);
-                                            cafe.push_back(live);
+                                    }
+                                    else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Coffee live(ee);
+                                        cafe.push_back(live);
 
 
 
 
 
 
+                                    }
+                                    else if (GetRandomValue(1, 10) == 3) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        coins live(ee);
+                                        money.push_back(live);
 
-                                        }
-                                        else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
-                                            Vector2 ee = enemigo[i].GetPosition();
-                                            ScreenNuke live(ee);
-                                            SN.push_back(live);
+
+
+
+                                    }
+                                    else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        Coffee live(ee);
+                                        cafe.push_back(live);
 
 
 
@@ -2507,11 +2501,11 @@ public:
 
 
 
-                                        }
-                                        else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
-                                            Vector2 ee = enemigo[i].GetPosition();
-                                            HeavyMachineGun live(ee);
-                                            gun.push_back(live);
+                                    }
+                                    else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        ScreenNuke live(ee);
+                                        SN.push_back(live);
 
 
 
@@ -2519,76 +2513,83 @@ public:
 
 
 
-                                        }
+                                    }
+                                    else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                        Vector2 ee = enemigo[i].GetPosition();
+                                        HeavyMachineGun live(ee);
+                                        gun.push_back(live);
 
 
 
 
-                                        if (enemigo.size() == 1) {
-                                            enemigo[i].Death();
-                                            enemigo.pop_back();
-
-                                        }
-
-                                        else if (enemigo.size() > 1) {
-
-                                            aux = i;
-                                            enemigo[i].Death();;
-                                            while (aux < enemigo.size() - 1) {
-
-                                                enemigo[aux] = enemigo[aux + 1];
-                                                aux++;
-
-                                            }
-                                            enemigo.pop_back();
 
 
-                                        }
-
-                                        bulletSize = bullets.size();
-                                        aux = j;
-                                        if (bullets.size() == 1) {
-
-                                            bullets.pop_back();
-                                            bulletSize--;
-                                        }
-                                        else if (bullets.size() > 1) {
-                                            while (aux < bullets.size() - 1) {
-                                                bullets[aux] = bullets[aux + 1];
-                                                aux++;
-                                            }
-
-                                            bullets.pop_back();
-
-                                        }
-                                        bulletSize = bullets.size();
 
                                     }
 
 
+
+
+                                    if (enemigo.size() == 1) {
+                                        enemigo[i].Death();
+                                        enemigo.pop_back();
+
+                                    }
+
+                                    else if (enemigo.size() > 1) {
+
+                                        aux = i;
+                                        enemigo[i].Death();;
+                                        while (aux < enemigo.size() - 1) {
+
+                                            enemigo[aux] = enemigo[aux + 1];
+                                            aux++;
+
+                                        }
+                                        enemigo.pop_back();
+
+
+                                    }
+
+                                    bulletSize = bullets.size();
+                                    aux = j;
+                                    if (bullets.size() == 1) {
+
+                                        bullets.pop_back();
+                                        bulletSize--;
+                                    }
+                                    else if (bullets.size() > 1) {
+                                        while (aux < bullets.size() - 1) {
+                                            bullets[aux] = bullets[aux + 1];
+                                            aux++;
+                                        }
+
+                                        bullets.pop_back();
+
+                                    }
+                                    bulletSize = bullets.size();
+
                                 }
-                                // chequea si la bala colisiona con el ogro
-                                if (enemigo.size() == 0) { j = bulletSize; }
 
-                                j++;
+
                             }
+                            // chequea si la bala colisiona con el ogro
+                            if (enemigo.size() == 0) { j = bulletSize; }
 
-                            j = 0;
-                            i++;
-
-
+                            j++;
                         }
+
+                        j = 0;
+                        i++;
 
 
                     }
 
 
-
-
-
-
-
                 }
+
+
+
 
 
 
@@ -2602,38 +2603,37 @@ public:
             int auxiliarPowerUps = 0;
             while (auxiliarPowerUps < Lives.size()) {
                 Lives[auxiliarPowerUps].Draw();
-                auxiliarPowerUps++;
                 float helperDrawer = GetTime();
                 if (Lives[auxiliarPowerUps].appearTime-helperDrawer==10) {
                     Lives.pop_back();
                 }
+                auxiliarPowerUps++;
             
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < gun.size()) {
                 gun[auxiliarPowerUps].Draw();
-                auxiliarPowerUps++;
                 float helperDrawer = GetTime();
                 if (gun[auxiliarPowerUps].appearTime - helperDrawer == 10) {
                     gun.pop_back();
                 }
 
+                auxiliarPowerUps++;
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < SN.size()) {
 
                 SN[auxiliarPowerUps].Draw();
-                auxiliarPowerUps++;
                 float helperDrawer = GetTime();
                 if (SN[auxiliarPowerUps].appearTime - helperDrawer == 10) {
                     SN.pop_back();
                 }
+                auxiliarPowerUps++;
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < money.size()) {
 
-                SN[auxiliarPowerUps].Draw();
-                auxiliarPowerUps++;
+                money[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
                 if (money[auxiliarPowerUps].appearTime - helperDrawer == 10) {
                     int zz = auxiliarPowerUps;
@@ -2643,16 +2643,17 @@ public:
                     }
                     money.pop_back();
                 }
+                auxiliarPowerUps++;
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < cafe.size()) {
 
                 cafe[auxiliarPowerUps].Draw();
-                auxiliarPowerUps++;
                 float helperDrawer = GetTime();
                 if (cafe[auxiliarPowerUps].appearTime - helperDrawer == 10) {
                     cafe.pop_back();
                 }
+                auxiliarPowerUps++;
             }
             auxiliarPowerUps = 0;
 
