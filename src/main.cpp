@@ -1532,7 +1532,7 @@ public:
             else if (level == 2) {
 
 
-                if (nextX < 96 || (nextX > 188 && nextX < 288) || (nextX > 416)) {
+                if (nextX < 96 + 64 || (nextX > 188 + 64 && nextX < 288 + 64) || (nextX > 416 + 64)) {
                     /*if (nextY < 128 || (nextY > 160 && nextY < 256) || (nextY > 384)) {*/
                     playerPos.x = nextX;
                     playerPos.y = nextY;
@@ -1544,32 +1544,18 @@ public:
 
 
                 }
-                else if (nextX <= 188 || nextX >= 288) {
+                else if (nextX <= 188 + 64 || nextX >= 288 + 64) {
 
-                    if (nextY > 384 || nextY < 96 || (nextY > 188 && nextY < 324)) {
+                    if (nextY > 384 + 32 || nextY < 128 || (nextY > 188 + 32 && nextY < 324 + 32)) {
 
                         playerPos.x = nextX;
                         playerPos.y = nextY;
 
 
                     }
-                    else if (nextX <= 188 && nextX >= 158) {
+                    else if (nextX <= 188 + 64 && nextX >= 158 + 64) {
 
-                        if (nextY >= 160 && nextY <= 350) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-                        }
-                        else {
-
-                            eliminate = true;
-                        }
-
-                    }
-                    else if (nextX >= 288 && nextX <= 320) {
-
-                        if (nextY >= 160 && nextY <= 350) {
+                        if (nextY >= 160 + 32 && nextY <= 382) {
 
                             playerPos.x = nextX;
                             playerPos.y = nextY;
@@ -1578,19 +1564,31 @@ public:
                         else {
 
                             eliminate = true;
+
                         }
 
                     }
-                    else {
+                    else if (nextX >= 288 + 64 && nextX <= 320 + 64) {
 
-                        eliminate = true;
+                        if (nextY >= 160 + 32 && nextY <= 350 + 32) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+                        }
+                        else {
+
+                            eliminate = true;
+
+                        }
+
                     }
 
 
                 }
                 else {
 
-                    eliminate = true;
+
 
                 }
 
@@ -1598,12 +1596,60 @@ public:
 
 
             }
+            else if (level == 3) {
+                if (nextX > 384 + 64 || nextX < 96 + 64 || (nextX > 224 + 64 && nextX < 352 + 64)) {
+
+                    if (nextY > 384 + 32 || nextY < 96 + 32 || (nextY > 224 + 32 && nextY < 352 + 32)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                    else {
+
+                        eliminate = true;
+
+                    }
+
+                }
+                else if ((nextX > 32 + 64 && nextX < 224 + 64))
+                {
+
+                    if ((nextY > 32 + 32 && nextY < 224 + 32)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                    else {
+
+                        eliminate = true;
+                    }
+                }
+                else if ((nextX > 256 + 64 && nextX < 448 + 64))
+                {
+
+                    if ((nextY > 32 + 32 && nextY < 224 + 32)) {
+
+                        playerPos.x = nextX;
+                        playerPos.y = nextY;
+
+
+                    }
+                    else {
+
+                        eliminate = true;
+                    }
+                }
+
+
+            }
 
         }
-        else {
 
-            eliminate = true;
-        }
+
         ColisionBullet(playerPos);
         // Check si la bala colisiona con algo del escenario
 
