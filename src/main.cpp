@@ -2081,8 +2081,8 @@ public:
 
             int bulletSize = bullets.size();
 
-            //la tienda aparece en todos los niveles menos en el primero 
-            if (level > 1 && enemigo.size() == 0)
+            //la tienda aparece solo en el level 3
+            if (level ==3 && enemigo.size() == 0)
             {
                 tiendaActiva = true;
 
@@ -6313,7 +6313,7 @@ public:
         
     }
 
-   
+
 
 
     void desaparecer(float deltaTime)
