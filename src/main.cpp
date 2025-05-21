@@ -425,7 +425,7 @@ public:
 
                                 playerPos.x = nextX;
                                 playerPos.y = nextY;
-
+                                
                             }
 
                         }
@@ -453,9 +453,9 @@ public:
 
                 }
                 else if (level == 3) {
-                    if (nextX > 384 + 64 || nextX < 96 + 64 || (nextX > 224 + 64 && nextX < 352 + 64)) {
+                    if (nextX > 384 + 32   || nextX < 96   || (nextX > 224  && nextX < 352 + 64  )) {
 
-                        if (nextY > 384 + 32 || nextY < 96 + 32 || (nextY > 224 + 32 && nextY < 352 + 32)) {
+                        if (nextY > 384 || nextY < 96  || (nextY > 224 - 32  && nextY < 352 + 32 )) {
 
                             playerPos.x = nextX;
                             playerPos.y = nextY;
@@ -467,7 +467,18 @@ public:
                         }
 
                     }
-                    else if ((nextX > 32 + 64 && nextX < 224 + 64))
+                   else if ((nextX > 32 + 32 && nextX < 224 - 32))
+                   {
+
+                        if ((nextY > 32 + 32 && nextY < 224 + 64)) {
+
+                            playerPos.x = nextX;
+                            playerPos.y = nextY;
+
+
+                        }
+                   }
+                    /*else if ((nextX > 256 + 64 && nextX < 448 + 64))
                     {
 
                         if ((nextY > 32 + 32 && nextY < 224 + 32)) {
@@ -477,18 +488,7 @@ public:
 
 
                         }
-                    }
-                    else if ((nextX > 256 + 64 && nextX < 448 + 64))
-                    {
-
-                        if ((nextY > 32 + 32 && nextY < 224 + 32)) {
-
-                            playerPos.x = nextX;
-                            playerPos.y = nextY;
-
-
-                        }
-                    }
+                    }*/
 
 
 
@@ -1986,8 +1986,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 5;
-        stage = 5;
+        level = 3;
+        stage = 3;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
