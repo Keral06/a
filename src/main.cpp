@@ -3063,7 +3063,7 @@ public:
                 }
             
             }
-
+            Tiempo.TiempoActual();
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
