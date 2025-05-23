@@ -1817,7 +1817,7 @@ public:
         if (tiempoTranscurrido > tiempoFinal) {
             return true;
         }
-        else { false; }
+        else { return false; }
 
     }
 
@@ -1999,7 +1999,7 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 5;
+        level = 1;
         stage = 5;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
@@ -2809,6 +2809,7 @@ public:
             }
             auxiliarPowerUps = 0;
 
+           
 
             //actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
@@ -2913,6 +2914,16 @@ public:
             }
             i = 0;
             bulletSize = bullets.size();
+
+            while (i < dead.size()) {
+            
+                dead[i].Draw();
+                i++;
+            
+            }
+
+            i = 0;
+            
             while (i < bulletSize) {
 
                 if (0 > bullets[i].GetPosition().x || GetScreenWidth() < bullets[i].GetPosition().x || GetScreenHeight() < bullets[i].GetPosition().y || 0 > bullets[i].GetPosition().y) {
@@ -3004,13 +3015,13 @@ public:
                     Lives.pop_back();
 
                 }
-                /* while (x < deadogres) {
+                 while (0 < dead.size()) {
 
                      dead.pop_back();
                      x++;
 
                  }
-                 deadogres = 0;*/
+                 deadogres = 0;
 
                 if (p.lives < 0) {
 
@@ -3021,10 +3032,10 @@ public:
 
 
                     int clean = 0;
-                    while (clean < dead.size()) {
+                    while (0 < dead.size()) {
 
                         dead.pop_back();
-                        clean++;
+                        ;
 
                     }
 
@@ -3063,7 +3074,7 @@ public:
                 }
             
             }
-            Tiempo.TiempoActual();
+            
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
             }
@@ -3102,7 +3113,7 @@ public:
             }
             while (i < dead.size()) {
 
-
+                dead[i].DeathAnim();
                 dead[i].Draw();
                 if (dead[i].Delete() == true) {
 
@@ -3121,7 +3132,7 @@ public:
 
             }
             i = 0;
-            p.DeathAnim();
+            
             if (p.status == true && p.lives < 0) {
                 GameOver(p);
             }
