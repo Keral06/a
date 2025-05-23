@@ -2,7 +2,6 @@
 #include "raylib.h"
 #include "resource_dir.h"
 #include <vector> 
-
 /*declarar las medidas de la pantalla jugable y de la pantalla en general*/
 const int screenWidth = 1024 / 2 + 32 * 2;
 const int screenHeight = 1024 / 2 + 32;
@@ -1338,7 +1337,6 @@ private:
     float introStartTime = 0;
     bool Intro = true;
 
-
 public:
     Boss() : Enemy(30, 2), isAlive(true), frameCounter(0), moving(false) {
         playerPos = { (float)(320), 448 };  
@@ -1361,16 +1359,31 @@ public:
                 return;
 
             }
+
             else {
                 Intro = false;
                 moving = true;
             }
         }
+        else if (moving) {
+            int contador = GetTime();
+            if (contador % 7 == 0) {
+                Intro = true;
+                moving = false;
+                _sleep(4);
+                return;
+            }
+            else {
+                Intro = false;
+                moving = true;
+                playerPos.x += direction * vel;
+                if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
+                return;
+            }
+            
+        }
 
-        
-        moving = true;
-        playerPos.x += direction * vel;
-        if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
+
     }
 
     void Draw() {
@@ -1986,8 +1999,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 3;
-        stage = 3;
+        level = 5;
+        stage = 5;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
