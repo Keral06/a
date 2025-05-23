@@ -1841,7 +1841,7 @@ private:
     Vector2 pos;
     int moneda = 0;
     float appearTime;
-public:
+
 
 
 public:
@@ -6265,7 +6265,7 @@ class Store{
     Vector2 position = { 255+65, 0 };
     float animTime = 0;
     const float animSpeed = 0.2f; // Velocidad cambio de frames
-    const float walkSpeed = 100.0f; // Píxeles por segundo
+    const float walkSpeed = 100.0f; 
     bool isWalking = true;
     int currentFrame = 0;
     bool hasAppeared = false; 
@@ -6365,7 +6365,28 @@ public:
         }
     }
 
+    void Compra(Vector2 playerPos, int& playerCoins)
+    {
+        if (isWalking == false)  // 
+        {
+            itemSeleccionado = -1;
 
+            // Posiciones de los items en la tienda
+            Vector2 itemPositions[3] = {
+                {210, 250}, // Pistola
+                {260, 250}, // Cubo
+                {310, 250}  // Munición
+            };
+
+            // Verificar proximidad con cada item
+            for (int i = 0; i < 3; i++) {
+                if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
+                    itemSeleccionado = i;
+                    break; // Un item a la vez
+                }
+            }
+        }
+    }
 
 
 
