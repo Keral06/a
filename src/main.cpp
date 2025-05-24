@@ -2005,6 +2005,7 @@ private:
     Boss boss;
     bool bossFight = false;
     bool tiendaActiva = false;
+    bool ChangingLevel = false;
    
     
 public:
@@ -2020,7 +2021,7 @@ public:
     //declara el nivel y stage inicial
     void GameStart(Player& p,Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>&SN, std::vector <HeavyMachineGun>gun)
      {
-        if (p.status) {
+        if (p.status && (!ChangingLevel ||(enemigo.size()!=0 || marip.size() !=0|| orcs.size()!=0))) {
             ClearBackground(BLACK);
             /*BeginDrawing();*/
             BeginDrawing();
@@ -2497,7 +2498,8 @@ public:
 
 
                                     int a = 0;
-                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                    int Random = GetRandomValue(1,10);
+                                    if (Random == 1&& Lives.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
@@ -2507,7 +2509,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
+                                    else if (Random == 2 && cafe.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
@@ -2518,7 +2520,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 3) {
+                                    else if (Random == 3) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         coins live(ee);
                                         money.push_back(live);
@@ -2527,7 +2529,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                    else if (Random == 4 && cafe.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
@@ -2539,7 +2541,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                    else if (Random == 5 && SN.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         ScreenNuke live(ee);
                                         SN.push_back(live);
@@ -2551,7 +2553,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                    else if (Random == 5 && gun.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         HeavyMachineGun live(ee);
                                         gun.push_back(live);
@@ -2646,7 +2648,7 @@ public:
             while (auxiliarPowerUps < Lives.size()) {
                 Lives[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (Lives[auxiliarPowerUps].appearTime-helperDrawer>10) {
+                if (helperDrawer- Lives[auxiliarPowerUps].appearTime >10) {
                     Lives.pop_back();
                 }
                 auxiliarPowerUps++;
@@ -2656,7 +2658,7 @@ public:
             while (auxiliarPowerUps < gun.size()) {
                 gun[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (gun[auxiliarPowerUps].appearTime - helperDrawer > 10) {
+                if (helperDrawer - gun[auxiliarPowerUps].appearTime > 10) {
                     gun.pop_back();
                 }
 
@@ -2667,7 +2669,7 @@ public:
 
                 SN[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (SN[auxiliarPowerUps].appearTime - helperDrawer > 10) {
+                if (helperDrawer- SN[auxiliarPowerUps].appearTime > 10) {
                     SN.pop_back();
                 }
                 auxiliarPowerUps++;
@@ -2677,11 +2679,11 @@ public:
 
                 money[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (money[auxiliarPowerUps].appearTime - helperDrawer > 10) {
+                if ( helperDrawer - money[auxiliarPowerUps].appearTime > 10) {
                     int zz = auxiliarPowerUps;
                     while (zz < money.size()-1) {
                         money[zz] = money[zz + 1];
-                    
+                        zz++;
                     }
                     money.pop_back();
                 }
@@ -2692,7 +2694,7 @@ public:
 
                 cafe[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (cafe[auxiliarPowerUps].appearTime - helperDrawer > 10) {
+                if (helperDrawer - cafe[auxiliarPowerUps].appearTime > 10) {
                     cafe.pop_back();
                 }
                 auxiliarPowerUps++;
@@ -2783,7 +2785,7 @@ public:
                     }
                     else {
                     
-                    while (lala < money.size()) {
+                    while (lala < money.size()-1) {
                         money[lala] = money[lala + 1];
                         lala++;
                     
@@ -3079,22 +3081,34 @@ public:
             }
             
             if (Tiempo.tiempo() == true && p.status == true) {
-                punteroDraw++;
-                if (punteroDraw % 120 == 0) {
-                
-                DrawTexture(puntero, 384, 480, WHITE);
-                
-                
+                ChangingLevel = true;
+                while (0 < Lives.size()) {
+
+                    Lives.pop_back();
                 }
-                if (p.playerPos.y > 475) {
+                while (0 < SN.size()) {
 
-                    if (p.playerPos.x > 288 && p.playerPos.x < 384) {
+                    SN.pop_back();
+                }
+                while (0 < gun.size()) {
 
+                    gun.pop_back();
+                }while (0 < cafe.size()) {
 
-                        ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+                    cafe.pop_back();
+                }while (0 < money.size()) {
+                    money.pop_back();
 
-                    }
+                }
+                while (0 < enemigo.size()) {
 
+                    enemigo.pop_back();
+                }
+                while (0 < orcs.size()) {
+                    orcs.pop_back();
+
+                }while (0 < marip.size()) {
+                    marip.pop_back();
                 }
             }
             EndDrawing();
@@ -3102,7 +3116,7 @@ public:
 
 
         // si el jugador muere o el tiempo se acaba, actualiza el juego, ya sea pasando de nivel o perdiendo la partida
-        else {
+        else if (!p.status) {
 
             ClearBackground(BLACK);
             /*BeginDrawing();*/
@@ -3129,6 +3143,19 @@ public:
             }while (0 < cafe.size()) {
 
                 cafe.pop_back();
+            }while (0 < money.size()) {
+                money.pop_back();
+            
+            }
+            while (0 < enemigo.size()) {
+            
+                enemigo.pop_back();
+            }
+            while (0 < orcs.size()) {
+                orcs.pop_back();
+            
+            }while (0 < marip.size()) {
+                marip.pop_back();
             }
             while (i < dead.size()) {
 
@@ -3170,6 +3197,37 @@ public:
             EndDrawing();
 
 
+        }
+
+        if (ChangingLevel) {
+            ClearBackground(BLACK);
+            BeginDrawing();
+            p.Movement(level);
+            p.Draw();
+            punteroDraw++;
+            int i = 0;
+            while (i < dead.size()) {
+            
+            
+            }
+            if (punteroDraw % 120 != 0) {
+
+                DrawTexture(puntero, 384, 480, WHITE);
+
+
+            }
+            if (p.playerPos.y > 475) {
+
+                if (p.playerPos.x > 288 && p.playerPos.x < 384) {
+
+
+                    ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+                    ChangingLevel = false;
+
+                }
+
+            }
+        
         }
         //reinicia los valores si el jugador pierde una vida
 
