@@ -115,7 +115,7 @@ private:
     Texture Humo5 = LoadTexture("muerte4.png");
     Sound death = LoadSound("song/cowboy_dead.wav");
     bool status;
-    int bag;
+    int bag=0;
     float deathStartTime = 0;
 
 public:
@@ -572,19 +572,19 @@ public:
         float currentTime = GetTime();
         float elapsed = currentTime - deathStartTime;
 
-        if (elapsed < 0.1) {
+        if (elapsed < 0.2) {
             DrawTexture(Humo1, GetPosition().x, GetPosition().y, WHITE);
         }
-        else if (elapsed < 0.2) {
+        else if (elapsed < 0.3) {
             DrawTexture(Humo2, GetPosition().x, GetPosition().y, WHITE);
         }
-        else if (elapsed < 0.3) {
+        else if (elapsed < 0.4) {
             DrawTexture(Humo3, GetPosition().x, GetPosition().y, WHITE);
         }
-        else if (elapsed < 0.4) {
+        else if (elapsed < 0.5) {
             DrawTexture(Humo4, GetPosition().x, GetPosition().y, WHITE);
         }
-        else if (elapsed < 0.5) {
+        else if (elapsed < 0.6) {
             DrawTexture(Humo5, GetPosition().x, GetPosition().y, WHITE);
         }
         if (elapsed > 2) {
@@ -605,12 +605,12 @@ public:
 
         if (!IsSoundPlaying(death)) {
             PlaySound(death); // Play the sound only if it�s not already playing
-        }
         lives--;
 
         deathStartTime = GetTime();
+        }
 
-
+       
     }
     //resetea al jugador despues de morir
 
@@ -694,7 +694,7 @@ public:
 
 
 
-    void UsePowerUp(std::vector<Ogre>enemigo, std::vector <Orc>orcs, std::vector <Mariposa>marip) {
+    void UsePowerUp(std::vector<Ogre>&enemigo, std::vector <Orc>&orcs, std::vector <Mariposa>&marip) {
 
         int i = 0;
 
@@ -754,7 +754,7 @@ public:
     //dibuja el item de vida +
     Coffee(Player p) : Colision(pos) {
 
-        p.vel += 2;
+        
 
     }
     //suma la vida al jugador despues de recoger el item
@@ -763,12 +763,12 @@ public:
 
     void UsePowerUp(Player& p) {
 
-        p.vel += 2;
+        p.vel += 0.2;
 
     }
     void StopUsing(Player p) {
 
-        p.vel -= 2;
+        p.vel -= 0.2;
 
 
     }
@@ -1659,6 +1659,7 @@ public:
 
         playerPos.x = nextX;
         playerPos.y = nextY;
+
         ColisionBullet(playerPos);
     }
 
@@ -1903,6 +1904,7 @@ public:
 
 
         }
+        ColisionPlayer(pos);
     }
     //dibuja la textura y una colision alrededor para saber cuando el jugador recoge la moneda
 
@@ -1955,11 +1957,13 @@ public:
 class Game {
 private:
 
+    int punteroDraw;
+
     int level;
     bool wonGame = false;
     int stage;
     bool tiempoFake = false;
-    
+    Texture puntero = LoadTexture("64x64/128x128_puntero.png");
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Texture cafee = LoadTexture("items/128x128_taza.png");
     Texture pistola = LoadTexture("items/128x128_mun.png");
@@ -2614,14 +2618,19 @@ public:
             }
              i = 0;
             deadogres = dead.size();
+            while (i < dead.size()) {
 
+                dead[i].Draw();
+                i++;
+
+            }
             //dibujar los power ups
 
             int auxiliarPowerUps = 0;
             while (auxiliarPowerUps < Lives.size()) {
                 Lives[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (Lives[auxiliarPowerUps].appearTime-helperDrawer==10) {
+                if (Lives[auxiliarPowerUps].appearTime-helperDrawer>10) {
                     Lives.pop_back();
                 }
                 auxiliarPowerUps++;
@@ -2631,7 +2640,7 @@ public:
             while (auxiliarPowerUps < gun.size()) {
                 gun[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (gun[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                if (gun[auxiliarPowerUps].appearTime - helperDrawer > 10) {
                     gun.pop_back();
                 }
 
@@ -2642,7 +2651,7 @@ public:
 
                 SN[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (SN[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                if (SN[auxiliarPowerUps].appearTime - helperDrawer > 10) {
                     SN.pop_back();
                 }
                 auxiliarPowerUps++;
@@ -2652,7 +2661,7 @@ public:
 
                 money[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (money[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                if (money[auxiliarPowerUps].appearTime - helperDrawer > 10) {
                     int zz = auxiliarPowerUps;
                     while (zz < money.size()-1) {
                         money[zz] = money[zz + 1];
@@ -2667,7 +2676,7 @@ public:
 
                 cafe[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (cafe[auxiliarPowerUps].appearTime - helperDrawer == 10) {
+                if (cafe[auxiliarPowerUps].appearTime - helperDrawer > 10) {
                     cafe.pop_back();
                 }
                 auxiliarPowerUps++;
@@ -2679,18 +2688,11 @@ public:
             while (auxiliarPowerUps < Lives.size()) {
 
                 if (PlayerPowerUp(p, Lives[auxiliarPowerUps])) {
-                    if (p.bag = 1) {
+                   
                         Lives[0].UsePowerUp(p);
                         Lives.pop_back();
                     
-                    }
-                    else {
-                    
-                    p.bag++;
-                    bagItem = 1;
-                    
-                    
-                    }
+                   
                 
                 }
                 auxiliarPowerUps++;
@@ -2710,6 +2712,7 @@ public:
 
                         p.bag++;
                         bagItem = 2;
+                        gun.pop_back();
 
 
                     }
@@ -2733,7 +2736,7 @@ public:
             while (auxiliarPowerUps < SN.size()) {
 
                 if (PlayerPowerUpScreenNuke(p, SN[auxiliarPowerUps])) {
-                    if (p.bag = 1) {
+                    if (p.bag == 1) {
                         SN[0].UsePowerUp(enemigo, orcs, marip);
                         SN.pop_back();
 
@@ -2742,6 +2745,7 @@ public:
 
                         p.bag++;
                         bagItem = 3;
+                        SN.pop_back();
 
 
                     }
@@ -2756,9 +2760,18 @@ public:
                 if (PlayerPowerUpScreenMoney(p, money[auxiliarPowerUps])) {
                     money[auxiliarPowerUps].UsePowerUp(p);
                     int lala = auxiliarPowerUps;
+                    if (money.size() == 1) {
+
+                        
+
+                    }
+                    else {
+                    
                     while (lala < money.size()) {
                         money[lala] = money[lala + 1];
+                        lala++;
                     
+                    }
                     
                     }
                     money.pop_back();
@@ -2773,14 +2786,14 @@ public:
                     if (p.bag == 1) {
                         cafe[0].UsePowerUp(p);
                         cafe.pop_back();
-                        cafeEnUso = 1;
+                      
                         timeCafeInicial = GetTime();
                     }
                     else {
 
                         p.bag++;
                         bagItem = 4;
-
+                        cafe.pop_back();
 
                     }
 
@@ -2788,9 +2801,9 @@ public:
                 auxiliarPowerUps++;
 
             }
-            if (cafeEnUso = 1) {
+            if (cafeEnUso == 1) {
                 timeCafeFinal = GetTime();
-                if (timeCafeInicial - timeCafeFinal > 16) {
+                if ( timeCafeFinal - timeCafeInicial > 16) {
                     Coffee Aux(p.playerPos);
                     Aux.StopUsing(p);
 
@@ -2805,22 +2818,16 @@ public:
 
             //actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
-                if (bagItem == 1) {
-                    p.bag--;
-                    Lives[0].UsePowerUp(p);
-                    Lives.pop_back();
-
-
-
-                } else if (bagItem == 2) {
-                    p.bag--;
+                 if (bagItem == 2) {
+                    
                     if (HMGEnUso == 1) {
                         HMGTimeInicial = GetTime();
                     
                     }
                     else {
-                    gun[0].UsePowerUp(powerRate);
-                    gun.pop_back();
+                        HeavyMachineGun Aux(p.playerPos);
+                        Aux.UsePowerUp(this->powerRate);
+                        HMGEnUso = 1;
                     
                     
                     }
@@ -2829,23 +2836,25 @@ public:
 
                 }
                 else if (bagItem == 3) {
-                    p.bag--;
-                    SN[0].UsePowerUp(enemigo, orcs, marip);
-                    SN.pop_back();
+                   
+                     ScreenNuke Aux(p);
+                     Aux.UsePowerUp(enemigo, orcs, marip);
                 }
                 else if (bagItem == 4) {
-                    p.bag--;
+                    
                     if (cafeEnUso == 1) {
                         timeCafeInicial = GetTime();
                     
                     }
                     else {
-                    cafe[0].UsePowerUp(p);
-                    cafe.pop_back();
+                        Coffee Aux(p.playerPos);
+                        Aux.UsePowerUp(p);
+                        cafeEnUso = 1;
                     
                     }
                 
                 }
+                p.bag = 0;
             }
 
 
@@ -2907,12 +2916,7 @@ public:
             i = 0;
             bulletSize = bullets.size();
 
-            while (i < dead.size()) {
             
-                dead[i].Draw();
-                i++;
-            
-            }
 
             i = 0;
             
@@ -3007,12 +3011,7 @@ public:
                     Lives.pop_back();
 
                 }
-                 while (0 < dead.size()) {
-
-                     dead.pop_back();
-                     x++;
-
-                 }
+                 
                  deadogres = 0;
 
                 if (p.lives < 0) {
@@ -3027,7 +3026,7 @@ public:
                     while (0 < dead.size()) {
 
                         dead.pop_back();
-                        ;
+                       
 
                     }
 
@@ -3042,13 +3041,9 @@ public:
 
 
             }
-            //14,12
-          /*  Texture vida = LoadTexture("items/128x128_cabeza.png");
-            Texture cafee = LoadTexture("items/128x128_taza.png");
-            Texture pistola = LoadTexture("items/128x128_mun.png");
-            Texture destructor = LoadTexture("items/128x128_tumbacraneo.png"); life gun sn cafe*/
+            
             if (p.bag == 1) {
-                if (bagItem == 1) {
+               if (bagItem == 1) {
                     DrawTexture(vida, 14, 12, WHITE);
                 
                 }
@@ -3068,7 +3063,23 @@ public:
             }
             
             if (Tiempo.tiempo() == true && p.status == true) {
-                ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+                punteroDraw++;
+                if (punteroDraw % 120 == 0) {
+                
+                DrawTexture(puntero, 384, 480, WHITE);
+                
+                
+                }
+                if (p.playerPos.y > 475) {
+
+                    if (p.playerPos.x > 288 && p.playerPos.x < 384) {
+
+
+                        ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+
+                    }
+
+                }
             }
             EndDrawing();
         }
@@ -3122,6 +3133,11 @@ public:
 
 
 
+            }
+            if (p.lives >= 0) {
+            
+                p.DeathAnim();
+            
             }
             i = 0;
             
@@ -6481,9 +6497,9 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
+                    ui.DrawInicial();
                     game.GameStart(p, b, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun);
                     desierto.LevelDraw(game);
-                    ui.DrawInicial();
                     aa.draw(p);
 
 
