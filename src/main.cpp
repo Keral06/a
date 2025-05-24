@@ -6505,7 +6505,7 @@ public:
 
     void Compra(Vector2 playerPos, int& playerCoins)
     {
-        if (isWalking == false)  // 
+        if (isWalking == false)  
         {
             itemSeleccionado = -1;
 
