@@ -3800,7 +3800,7 @@ public:
 
         }
 
-        if (ChangingLevel) {
+        else if (ChangingLevel) {
             ClearBackground(BLACK);
             BeginDrawing();
             p.Movement(level);
