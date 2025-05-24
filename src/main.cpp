@@ -683,6 +683,164 @@ public:
                 DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
                 DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
                 DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+            }
+            else if (level == 8) {
+                Rectangle lado1 = { 64, 192, 120, 32 };
+                Rectangle lado2 = { 224, 192, 88, 32 };
+                Rectangle lado3 = { 352, 192, 88, 32 };
+                Rectangle lado4 = { 480, 192, 88, 32 };
+                Rectangle lado5 = { 64, 352, 120, 32 };
+                Rectangle lado6 = { 224, 352, 88, 32 };
+                Rectangle lado7 = { 352, 352, 88, 32 };
+                Rectangle lado8 = { 480, 352, 88, 32 };
+                Rectangle lado9 = { 64, 32, 32, 512 };
+                Rectangle lado10 = { 64, 32, 512, 32 };
+                Rectangle lado11 = { 544, 32, 32, 512 };
+                Rectangle lado12 = { 64, 512, 512, 32 };
+
+                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+                if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado3) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado4) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado5) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado6) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado7) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado8) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado12)) {
+
+
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                }
+                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
+                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
+                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
+                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
+                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+                }
+
+            else if (level == 9) {
+                Rectangle lado1 = { 192, 160, 64, 64 };
+                Rectangle lado2 = { 192, 352, 64, 32 };
+                Rectangle lado3 = { 192, 416, 64, 32 };
+                Rectangle lado4 = { 384, 160, 32, 64 };
+                Rectangle lado5 = { 448, 160, 32, 64 };
+                Rectangle lado6 = { 384, 352, 32, 32 };
+                Rectangle lado7 = { 448, 352, 32, 32 };
+                Rectangle lado8 = { 384, 416, 32, 32 };
+                Rectangle lado9 = { 64, 32, 32, 512 };
+                Rectangle lado10 = { 64, 32, 512, 32 };
+                Rectangle lado11 = { 544, 32, 32, 512 };
+                Rectangle lado12 = { 64, 512, 512, 32 };
+                Rectangle lado13 = { 448, 416, 32, 32 };
+
+                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+                if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado3) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado4) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado5) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado6) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado7) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado8) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado12) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado13)) {
+
+
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                }
+                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
+                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
+                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
+                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
+                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+                }
+
+            else if (level == 10) {
+                Rectangle lado1 = { 64, 64, 224, 32 };
+                Rectangle lado2 = { 384, 64, 192, 32 };
+                Rectangle lado3 = { 64, 480, 224, 32 };
+                Rectangle lado4 = { 384, 480, 192, 64 };
+                Rectangle lado5 = { 320, 224, 32, 12 };
+                Rectangle lado6 = { 256, 288, 32, 32 };
+                Rectangle lado7 = { 384, 288, 32, 32 };
+                Rectangle lado8 = { 320, 320, 32, 32 };
+                Rectangle lado9 = { 64, 32, 32, 512 };
+                Rectangle lado10 = { 64, 32, 512, 32 };
+                Rectangle lado11 = { 544, 32, 32, 512 };
+                Rectangle lado12 = { 64, 512, 512, 32 };
+
+                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+                if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado3) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado4) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado5) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado6) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado7) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado8) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado12)) {
+
+
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                }
+                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
+                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
+                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
+                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
+                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+                }
+            else if (level == 11) {
+                Rectangle lado1 = { 64, 64, 512, 32 };
+                Rectangle lado2 = { 64, 480, 512, 32 };
+                Rectangle lado9 = { 64, 32, 32, 512 };
+                Rectangle lado10 = { 64, 32, 512, 32 };
+                Rectangle lado11 = { 544, 32, 32, 512 };
+                Rectangle lado12 = { 64, 512, 512, 32 };
+
+                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+                if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado12)) {
+
+
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                }
+                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
                 }
             ColisionPlayer(playerPos);
         }
@@ -923,6 +1081,7 @@ public:
     friend class Game;
     Enemy(int hp, int vel) : Entity(hp, vel, { 0,0 }) {
         int posicion = pos();
+
         if (posicion == 1) {
             playerPos = { ((float)(playerScreenX + 128) / 2),32 };
         }
@@ -939,6 +1098,7 @@ public:
 
         }
     }
+
     //declara la posicion inicial del enemigo y sus atributos (velocidad, vida)
     friend class Colision;
     void MovementEnemy(Player p, int level) {
@@ -958,7 +1118,7 @@ public:
         else {
             nextY -= vel;  // Changed from += to -=
         }
-
+        
 
         if (level == 1) {
             Rectangle lado1 = { 64, 32, 32, 512 };
@@ -1271,6 +1431,194 @@ public:
             DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
             DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
             }
+        else if (level == 8) {
+            Rectangle lado1 = { 64, 192, 120, 32 };
+            Rectangle lado2 = { 224, 192, 88, 32 };
+            Rectangle lado3 = { 352, 192, 88, 32 };
+            Rectangle lado4 = { 480, 192, 88, 32 };
+            Rectangle lado5 = { 64, 352, 120, 32 };
+            Rectangle lado6 = { 224, 352, 88, 32 };
+            Rectangle lado7 = { 352, 352, 88, 32 };
+            Rectangle lado8 = { 480, 352, 88, 32 }; 
+            Rectangle lado9 = { 64, 32, 32, 224 };
+            Rectangle lado10 = { 64, 32, 224, 32 };
+            Rectangle lado11 = { 544, 32, 32, 224 };
+            Rectangle lado12 = { 64, 512, 224, 32 };
+            Rectangle lado17 = { 384, 32, 192, 32 };
+            Rectangle lado18 = { 64, 352, 32, 192 };
+            Rectangle lado19 = { 384, 512, 192, 32 };
+            Rectangle lado20 = { 544, 352, 32, 192 };
+
+            Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+            if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                !CheckCollisionRecs(nextPlayerPos, lado3) &&
+                !CheckCollisionRecs(nextPlayerPos, lado4) &&
+                !CheckCollisionRecs(nextPlayerPos, lado5) &&
+                !CheckCollisionRecs(nextPlayerPos, lado6) &&
+                !CheckCollisionRecs(nextPlayerPos, lado7) &&
+                !CheckCollisionRecs(nextPlayerPos, lado8) &&
+                !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                !CheckCollisionRecs(nextPlayerPos, lado12) &&
+                !CheckCollisionRecs(nextPlayerPos, lado17) &&
+                !CheckCollisionRecs(nextPlayerPos, lado18) &&
+                !CheckCollisionRecs(nextPlayerPos, lado19) &&
+                !CheckCollisionRecs(nextPlayerPos, lado20)) {
+
+
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
+            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
+            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
+            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
+            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+                }
+        else if (level == 9) {
+            Rectangle lado1 = { 192, 160, 64, 64 };
+            Rectangle lado2 = { 192, 352, 64, 32 };
+            Rectangle lado3 = { 192, 416, 64, 32 };
+            Rectangle lado4 = { 384, 160, 32, 64 };
+            Rectangle lado5 = { 448, 160, 32, 64 };
+            Rectangle lado6 = { 384, 352, 32, 32 };
+            Rectangle lado7 = { 448, 352, 32, 32 };
+            Rectangle lado8 = { 384, 416, 32, 32 };
+            Rectangle lado9 = { 64, 32, 32, 224 };
+            Rectangle lado10 = { 64, 32, 224, 32 };
+            Rectangle lado11 = { 544, 32, 32, 224 };
+            Rectangle lado12 = { 64, 512, 224, 32 };
+            Rectangle lado13 = { 448, 416, 32, 32 };
+            Rectangle lado17 = { 384, 32, 192, 32 };
+            Rectangle lado18 = { 64, 352, 32, 192 };
+            Rectangle lado19 = { 384, 512, 192, 32 };
+            Rectangle lado20 = { 544, 352, 32, 192 };
+
+            Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+            if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                !CheckCollisionRecs(nextPlayerPos, lado3) &&
+                !CheckCollisionRecs(nextPlayerPos, lado4) &&
+                !CheckCollisionRecs(nextPlayerPos, lado5) &&
+                !CheckCollisionRecs(nextPlayerPos, lado6) &&
+                !CheckCollisionRecs(nextPlayerPos, lado7) &&
+                !CheckCollisionRecs(nextPlayerPos, lado8) &&
+                !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                !CheckCollisionRecs(nextPlayerPos, lado12) &&
+                !CheckCollisionRecs(nextPlayerPos, lado13) &&
+                !CheckCollisionRecs(nextPlayerPos, lado17) &&
+                !CheckCollisionRecs(nextPlayerPos, lado18) &&
+                !CheckCollisionRecs(nextPlayerPos, lado19) &&
+                !CheckCollisionRecs(nextPlayerPos, lado20)) {
+
+
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
+            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
+            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
+            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
+            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+                }
+        else if (level == 10) {
+            Rectangle lado1 = { 64, 64, 224, 32 };
+            Rectangle lado2 = { 384, 64, 192, 32 };
+            Rectangle lado3 = { 64, 480, 224, 32 };
+            Rectangle lado4 = { 384, 480, 192, 64 };
+            Rectangle lado5 = { 320, 224, 32, 12 };
+            Rectangle lado6 = { 256, 288, 32, 32 };
+            Rectangle lado7 = { 384, 288, 32, 32 };
+            Rectangle lado8 = { 320, 320, 32, 32 };
+            Rectangle lado9 = { 64, 32, 32, 224 };
+            Rectangle lado10 = { 64, 32, 224, 32 };
+            Rectangle lado11 = { 544, 32, 32, 224 };
+            Rectangle lado12 = { 64, 512, 224, 32 };
+            Rectangle lado17 = { 384, 32, 192, 32 };
+            Rectangle lado18 = { 64, 352, 32, 192 };
+            Rectangle lado19 = { 384, 512, 192, 32 };
+            Rectangle lado20 = { 544, 352, 32, 192 };
+
+            Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+            if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                !CheckCollisionRecs(nextPlayerPos, lado3) &&
+                !CheckCollisionRecs(nextPlayerPos, lado4) &&
+                !CheckCollisionRecs(nextPlayerPos, lado5) &&
+                !CheckCollisionRecs(nextPlayerPos, lado6) &&
+                !CheckCollisionRecs(nextPlayerPos, lado7) &&
+                !CheckCollisionRecs(nextPlayerPos, lado8) &&
+                !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                !CheckCollisionRecs(nextPlayerPos, lado12) &&
+                !CheckCollisionRecs(nextPlayerPos, lado17) &&
+                !CheckCollisionRecs(nextPlayerPos, lado18) &&
+                !CheckCollisionRecs(nextPlayerPos, lado19) &&
+                !CheckCollisionRecs(nextPlayerPos, lado20)) {
+
+
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
+            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
+            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
+            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
+            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+                }
+        else if (level == 11) {
+            Rectangle lado1 = { 64, 64, 512, 32 };
+            Rectangle lado2 = { 64, 480, 512, 32 };
+            Rectangle lado9 = { 64, 32, 32, 224 };
+            Rectangle lado10 = { 64, 32, 224, 32 };
+            Rectangle lado11 = { 544, 32, 32, 224 };
+            Rectangle lado12 = { 64, 512, 224, 32 };
+            Rectangle lado17 = { 384, 32, 192, 32 };
+            Rectangle lado18 = { 64, 352, 32, 192 };
+            Rectangle lado19 = { 384, 512, 192, 32 };
+            Rectangle lado20 = { 544, 352, 32, 192 };
+
+            Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+            if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                !CheckCollisionRecs(nextPlayerPos, lado12) &&
+                !CheckCollisionRecs(nextPlayerPos, lado17) &&
+                !CheckCollisionRecs(nextPlayerPos, lado18) &&
+                !CheckCollisionRecs(nextPlayerPos, lado19) &&
+                !CheckCollisionRecs(nextPlayerPos, lado20)) {
+
+
+                playerPos.x = nextX;
+                playerPos.y = nextY;
+            }
+            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+                }
 
 
         
@@ -2237,8 +2585,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 7;
-        stage = 7;
+        level = 11;
+        stage = 11;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
