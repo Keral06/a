@@ -1070,6 +1070,7 @@ public:
 
 
 };
+int currentLevel;  
 
 
 class Enemy : public Entity {
@@ -1079,25 +1080,33 @@ public:
     friend class coins;
     friend class UI;
     friend class Game;
-    Enemy(int hp, int vel) : Entity(hp, vel, { 0,0 }) {
-        int posicion = pos();
-
-        if (posicion == 1) {
-            playerPos = { ((float)(playerScreenX + 128) / 2),32 };
-        }
-        else if (posicion == 2) {
-            playerPos = { 64, ((float)(playerScreenY + 64) / 2) };
-
-        }
-        else if (posicion == 3) {
-
-            playerPos = { ((float)(playerScreenX + 128) / 2), (float)playerScreenY };
+    Enemy(int hp, int vel) : Entity(hp, vel, { 0, 0 }) {
+        if (currentLevel == 11) {
+            int posicion = GetRandomValue(1, 2);  // Only two spawn points
+            if (posicion == 1) {
+                playerPos = { 64, ((float)(playerScreenY + 64) / 2) };
+            }
+            else {
+                playerPos = { (float)(playerScreenX + 32), ((float)(playerScreenY + 64) / 2) };
+            }
         }
         else {
-            playerPos = { (float)(playerScreenX + 32), ((float)(playerScreenY + 64) / 2) };
-
+            int posicion = pos();
+            if (posicion == 1) {
+                playerPos = { ((float)(playerScreenX + 128) / 2), 32 };
+            }
+            else if (posicion == 2) {
+                playerPos = { 64, ((float)(playerScreenY + 64) / 2) };
+            }
+            else if (posicion == 3) {
+                playerPos = { ((float)(playerScreenX + 128) / 2), (float)playerScreenY };
+            }
+            else {
+                playerPos = { (float)(playerScreenX + 32), ((float)(playerScreenY + 64) / 2) };
+            }
         }
     }
+
 
     //declara la posicion inicial del enemigo y sus atributos (velocidad, vida)
     friend class Colision;
@@ -2613,6 +2622,10 @@ public:
             }
             //empieza el tiempo, lo dibuja y lo va actualizando
 
+            if (level == 11) {
+                currentLevel = 11;
+               
+            }
 
 
              // Handle bullet creation with arrow keys
@@ -2870,7 +2883,7 @@ public:
                 bossFight = false;
             }
 
-            if (level > 6 && level != 5) { //mariposa
+            if (level > 6 ) { //mariposa
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -2887,6 +2900,21 @@ public:
                     while (i < marip.size()) {
 
                         while (j < bullets.size()) {
+                            if (i >= marip.size()) break;
+
+                            if (bullets[j].ColisionBullet(marip[i])) {
+                                DeadOgre deadMarip(marip[i].GetPosition());
+                                dead.push_back(deadMarip);
+                                auxTime.push_back(GetTime());
+                                deadogres++;
+
+                                marip[i].Death();
+
+                                marip.erase(marip.begin() + i);
+                                bullets.erase(bullets.begin() + j);
+                                bulletSize = bullets.size();
+                                continue; // skip increment i, we just erased it
+                            }
                             if (i >= marip.size()) {
 
 
