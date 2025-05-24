@@ -1837,7 +1837,7 @@ public:
             playerPos.x = nextX;
             playerPos.y = nextY;
         
-
+            ColisionPlayer(playerPos);
 
     }
     void Death() {
@@ -2585,7 +2585,7 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 11;
+        level = 1;
         stage = 11;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
