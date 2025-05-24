@@ -697,19 +697,19 @@ public:
         float currentTime = GetTime();
         float elapsed = currentTime - deathStartTime;
 
-        if (elapsed < 0.1) {
+        if (elapsed < 0.2) {
             DrawTexture(Humo1, GetPosition().x, GetPosition().y, WHITE);
         }
-        else if (elapsed < 0.2) {
+        else if (elapsed < 0.3) {
             DrawTexture(Humo2, GetPosition().x, GetPosition().y, WHITE);
         }
-        else if (elapsed < 0.3) {
+        else if (elapsed < 0.4) {
             DrawTexture(Humo3, GetPosition().x, GetPosition().y, WHITE);
         }
-        else if (elapsed < 0.4) {
+        else if (elapsed < 0.5) {
             DrawTexture(Humo4, GetPosition().x, GetPosition().y, WHITE);
         }
-        else if (elapsed < 0.5) {
+        else if (elapsed < 0.6) {
             DrawTexture(Humo5, GetPosition().x, GetPosition().y, WHITE);
         }
         if (elapsed > 2) {
@@ -730,12 +730,12 @@ public:
 
         if (!IsSoundPlaying(death)) {
             PlaySound(death); // Play the sound only if it�s not already playing
-        }
         lives--;
 
         deathStartTime = GetTime();
+        }
 
-
+       
     }
     //resetea al jugador despues de morir
 
@@ -819,7 +819,7 @@ public:
 
 
 
-    void UsePowerUp(std::vector<Ogre>enemigo, std::vector <Orc>orcs, std::vector <Mariposa>marip) {
+    void UsePowerUp(std::vector<Ogre>&enemigo, std::vector <Orc>&orcs, std::vector <Mariposa>&marip) {
 
         int i = 0;
 
@@ -2101,11 +2101,13 @@ public:
 class Game {
 private:
 
+    int punteroDraw;
+
     int level;
     bool wonGame = false;
     int stage;
     bool tiempoFake = false;
-    
+    Texture puntero = LoadTexture("64x64/128x128_puntero.png");
     Texture vida = LoadTexture("items/128x128_cabeza.png");
     Texture cafee = LoadTexture("items/128x128_taza.png");
     Texture pistola = LoadTexture("items/128x128_mun.png");
@@ -2760,7 +2762,12 @@ public:
             }
              i = 0;
             deadogres = dead.size();
+            while (i < dead.size()) {
 
+                dead[i].Draw();
+                i++;
+
+            }
             //dibujar los power ups
 
             int auxiliarPowerUps = 0;
@@ -2919,7 +2926,7 @@ public:
                     if (p.bag == 1) {
                         cafe[0].UsePowerUp(p);
                         cafe.pop_back();
-                        cafeEnUso = 1;
+                      
                         timeCafeInicial = GetTime();
                     }
                     else {
@@ -3053,12 +3060,7 @@ public:
             i = 0;
             bulletSize = bullets.size();
 
-            while (i < dead.size()) {
             
-                dead[i].Draw();
-                i++;
-            
-            }
 
             i = 0;
             
@@ -3153,12 +3155,7 @@ public:
                     Lives.pop_back();
 
                 }
-                 while (0 < dead.size()) {
-
-                     dead.pop_back();
-                     x++;
-
-                 }
+                 
                  deadogres = 0;
 
                 if (p.lives < 0) {
@@ -3173,7 +3170,7 @@ public:
                     while (0 < dead.size()) {
 
                         dead.pop_back();
-                        ;
+                       
 
                     }
 
@@ -3194,7 +3191,7 @@ public:
             Texture pistola = LoadTexture("items/128x128_mun.png");
             Texture destructor = LoadTexture("items/128x128_tumbacraneo.png"); life gun sn cafe*/
             if (p.bag == 1) {
-                if (bagItem == 1) {
+               if (bagItem == 1) {
                     DrawTexture(vida, 14, 12, WHITE);
                 
                 }
@@ -3214,7 +3211,23 @@ public:
             }
             
             if (Tiempo.tiempo() == true && p.status == true) {
-                ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+                punteroDraw++;
+                if (punteroDraw % 120 == 0) {
+                
+                DrawTexture(puntero, 384, 480, WHITE);
+                
+                
+                }
+                if (p.playerPos.y > 475) {
+
+                    if (p.playerPos.x > 288 && p.playerPos.x < 384) {
+
+
+                        ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+
+                    }
+
+                }
             }
             EndDrawing();
         }
@@ -3268,6 +3281,11 @@ public:
 
 
 
+            }
+            if (p.lives >= 0) {
+            
+                p.DeathAnim();
+            
             }
             i = 0;
             
@@ -6627,9 +6645,9 @@ int main()
                 if (!game.wonGame) {
 
                     player.OverworldPlayer();
+                    ui.DrawInicial();
                     game.GameStart(p, b, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun);
                     desierto.LevelDraw(game);
-                    ui.DrawInicial();
                     aa.draw(p);
 
 
