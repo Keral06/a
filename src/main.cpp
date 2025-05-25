@@ -1784,9 +1784,13 @@ public:
 
 
 
+<<<<<<< HEAD
+=======
+    }
     //declara al enemigo
     void SetPosition(Vector2 pos) {
         playerPos = pos;
+>>>>>>> d5a034e17a2bdf977a39f575b2734e2ae4cc3e88
     }
     //declara al enemigo
     void MovementMariposa(Player p) {
@@ -2947,9 +2951,12 @@ public:
                 bossFight = false;
             }
 
+<<<<<<< HEAD
             if (level > 6 && !SNInUse) { //mariposa
                 int i = 0;
+=======
             if (level > 6 && level != 5) {
+>>>>>>> d5a034e17a2bdf977a39f575b2734e2ae4cc3e88
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
                     Mariposa auxiliar;
 
