@@ -24,6 +24,7 @@ class coins;
 class HeavyMachineGun;
 class ScreenNuke;
 class Coffee;
+class Mariposa;
 enum Direccion
 {
     ARRIBA,
@@ -952,74 +953,7 @@ public:
 
 
 };
-class ScreenNuke : public Colision {
 
-private:
-    Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
-    Vector2 pos;
-    float appearTime;
-public:
-    friend class Game;
-    friend class Player;
-    friend class Colision;
-
-    friend  bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
-    ScreenNuke(Vector2 position) : Colision(pos) {
-        this->pos = position;
-
-        DrawTexture(vida, pos.x, pos.y, WHITE);
-        appearTime = GetTime();
-
-    }
-    //dibuja el item de vida +
-    ScreenNuke(Player p) : Colision(pos) {
-
-
-
-    }
-    //suma la vida al jugador despues de recoger el item
-
-
-
-    void UsePowerUp(std::vector<Ogre>&enemigo, std::vector <Orc>&orcs, std::vector <Mariposa>&marip) {
-
-        int i = 0;
-
-        while (enemigo.size() != 0) {
-
-            enemigo.pop_back();
-
-
-        }
-        while (orcs.size() != 0) {
-
-            orcs.pop_back();
-
-
-        }
-        while (marip.size() != 0) {
-
-            marip.pop_back();
-
-        }
-
-    }
-
-    //suma la vida
-    void Draw() {
-
-
-        DrawTexture(vida, pos.x, pos.y, WHITE);
-        ColisionPlayer(pos);
-    }
-    //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
-
-
-
-
-
-
-};
 class Coffee : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_taza.png");
@@ -1080,6 +1014,17 @@ public:
     friend class coins;
     friend class UI;
     friend class Game;
+    friend class ScreenNuke;
+    float SNstart_time;
+    Texture humoo1 = LoadTexture("items/128x128_piedra1.png");
+    Texture humoo2 = LoadTexture("items/128x128_piedra2.png");
+    Texture humoo3 = LoadTexture("items/128x128_piedra3.png");
+    Texture humoo4 = LoadTexture("items/128x128_piedra4.png");
+    Texture humoo5 = LoadTexture("items/128x128_piedra5.png");
+    bool isSNfinished = false;
+    bool didItStart = false;
+    
+    
     Enemy(int hp, int vel) : Entity(hp, vel, { 0, 0 }) {
         if (currentLevel == 11) {
             int posicion = GetRandomValue(1, 2);  // Only two spawn points
@@ -1107,7 +1052,33 @@ public:
         }
     }
 
+    void SNAnim() {
+        float currentTime = GetTime();
+        float elapsed = currentTime - SNstart_time;
 
+        if (elapsed < 0.1) {
+            DrawTexture(humoo1, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.2) {
+            DrawTexture(humoo2, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.3) {
+            DrawTexture(humoo3, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.4) {
+            DrawTexture(humoo4, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.5) {
+            DrawTexture(humoo5, playerPos.x, playerPos.y, WHITE);
+        }
+        
+        else {
+            // Animation finished
+            isSNfinished = true;
+            // Optionally trigger a respawn or game over screen here
+        }
+    
+    }
     //declara la posicion inicial del enemigo y sus atributos (velocidad, vida)
     friend class Colision;
     void MovementEnemy(Player p, int level) {
@@ -1807,37 +1778,14 @@ private:
 public:
     friend class PowerUpLive;
     friend class Game;
-    /*Mariposa() : Enemy(3, 1) {
+    Mariposa() : Enemy(3, 1) {
 
 
 
 
 
-    }*/
-    //declara al enemigo
-    Mariposa(int hp, int vel) : Enemy(3, 1) {
-        this->hp = hp;
-        this->vel = vel;
-
-        int border = GetRandomValue(1, 4);  // 1=Top, 2=Bottom, 3=Left, 4=Right
-
-        switch (border) {
-        case 1: // Top
-            playerPos = { (float)GetRandomValue(64, 544), 32 };
-            break;
-        case 2: // Bottom
-            playerPos = { (float)GetRandomValue(64, 544), 544 };
-            break;
-        case 3: // Left
-            playerPos = { 64, (float)GetRandomValue(32, 544) };
-            break;
-        case 4: // Right
-            playerPos = { 544, (float)GetRandomValue(32, 544) };
-            break;
-        }
     }
-
-
+    //declara al enemigo
     void MovementMariposa(Player p) {
 
 
@@ -1869,7 +1817,7 @@ public:
             playerPos.x = nextX;
             playerPos.y = nextY;
         
-
+            ColisionPlayer(playerPos);
 
     }
     void Death() {
@@ -1937,7 +1885,96 @@ public:
 
 };
 
+class ScreenNuke : public Colision {
 
+private:
+    Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
+    Vector2 pos;
+    float appearTime;
+    bool finished = false;
+    bool started = false;
+public:
+    friend class Game;
+    friend class Player;
+    friend class Colision;
+
+    friend  bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
+    ScreenNuke(Vector2 position) : Colision(pos) {
+        this->pos = position;
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        appearTime = GetTime();
+
+    }
+    //dibuja el item de vida +
+    ScreenNuke(Player p) : Colision(pos) {
+
+
+
+    }
+    //suma la vida al jugador despues de recoger el item
+
+
+
+    void UsePowerUp(std::vector<Ogre>& enemigo, std::vector <Orc>& orcs, std::vector <Mariposa>& marip) {
+
+        int i = 0;
+
+        while (enemigo.size() > i) {
+
+            enemigo[i].SNAnim();
+            if (enemigo[i].isSNfinished) {
+
+                enemigo.pop_back();
+
+            }
+
+            i++;
+        }
+        i = 0;
+        while (orcs.size() > i) {
+
+            orcs[i].SNAnim();
+            if (orcs[i].isSNfinished) {
+
+                orcs.pop_back();
+
+            }
+
+            i++;
+        }
+        while (marip.size() > i) {
+
+            marip[i].SNAnim();
+            if (marip[i].isSNfinished) {
+
+                marip.pop_back();
+
+            }
+
+            i++;
+        }
+        if (marip.size() == 0 && enemigo.size() == 0 && orcs.size() == 0) {
+            finished = true;
+            started = false;
+        }
+    }
+
+    //suma la vida
+    void Draw() {
+
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+    //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
+
+
+
+
+
+
+};
 class DeadOgre {
 private:
     Texture Mon1 = LoadTexture("effects/128x128_hierba6.png");
@@ -2611,13 +2648,14 @@ private:
     bool bossFight = false;
     bool tiendaActiva = false;
     bool ChangingLevel = false;
+    bool SNInUse = false;
    
     
 public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 11;
+        level = 1;
         stage = 11;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
@@ -2728,7 +2766,7 @@ public:
             }
             
 
-            if (level > 3 && level != 5) {
+            if (level > 3 && level != 5 && !SNInUse) {
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -2908,7 +2946,7 @@ public:
                 bossFight = false;
             }
 
-            if (level > 6 ) { //mariposa
+            if (level > 6 && !SNInUse) { //mariposa
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -2925,7 +2963,21 @@ public:
                     while (i < marip.size()) {
 
                         while (j < bullets.size()) {
-                            
+                            if (i >= marip.size()) break;
+
+                            if (bullets[j].ColisionBullet(marip[i])) {
+                                DeadOgre deadMarip(marip[i].GetPosition());
+                                dead.push_back(deadMarip);
+                                auxTime.push_back(GetTime());
+                                deadogres++;
+
+                                marip[i].Death();
+
+                                marip.erase(marip.begin() + i);
+                                bullets.erase(bullets.begin() + j);
+                                bulletSize = bullets.size();
+                                continue; // skip increment i, we just erased it
+                            }
                             if (i >= marip.size()) {
 
 
@@ -3077,7 +3129,7 @@ public:
 
 
             }
-            if (level != 5) { //ogre
+            if (level != 5 &&  !SNInUse) { //ogre
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -3367,9 +3419,8 @@ public:
 
                 if (PlayerPowerUpScreenNuke(p, SN[auxiliarPowerUps])) {
                     if (p.bag == 1) {
-                        SN[0].UsePowerUp(enemigo, orcs, marip);
-                        SN.pop_back();
-
+                        SN[0].started = true;
+                        SNInUse = true;
                     }
                     else {
 
@@ -3381,8 +3432,6 @@ public:
                     }
 
                 }
-<<<<<<< HEAD
-<<<<<<< HEAD
             if (SN[0].started && !SN[0].finished) {
                 SN[0].UsePowerUp(enemigo, orcs, marip);
             
@@ -3392,10 +3441,6 @@ public:
                     SNInUse = false;
                 }
             }
-=======
->>>>>>> 5e56936b0ddcbac91915f0347d8efec2986027b3
-=======
->>>>>>> 5e56936b0ddcbac91915f0347d8efec2986027b3
                 auxiliarPowerUps++;
 
             }
@@ -3481,9 +3526,9 @@ public:
 
                 }
                 else if (bagItem == 3) {
-                   
-                     ScreenNuke Aux(p);
-                     Aux.UsePowerUp(enemigo, orcs, marip);
+                     SN[0].started = true;
+                     SNInUse = true;
+
                 }
                 else if (bagItem == 4) {
                     
@@ -3826,7 +3871,7 @@ public:
 
         }
 
-        if (ChangingLevel) {
+        else if (ChangingLevel) {
             ClearBackground(BLACK);
             BeginDrawing();
             p.Movement(level);
@@ -6969,7 +7014,7 @@ class Store{
     Texture walkFrames[2];  // caminar
     Texture storemanTextures[5];
     Texture store;
-    Texture CosasDeLaTienda[7];
+    Texture CosasDeLaTienda[3];
 
     Vector2 position = { 255+65, 0 };
     float animTime = 0;
@@ -6979,11 +7024,15 @@ class Store{
     int currentFrame = 0;
     bool hasAppeared = false; 
 
+    float tiempoTiendaAbierta = 0.0f;
+    const float tiempoMaximoTienda = 20.0f; // 30 segundos abierta
+    bool estaCerrando = false;
+
     const int precios[3] = { 10, 15, 10 }; // Precios de los items
     int itemSeleccionado = -1; //  ninguno seleccionado
     const float rangoCompra = 50.0f; 
 
-
+    Sound caminar;
 public:
     friend int main();
     friend coins;
@@ -7010,11 +7059,9 @@ public:
         CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
         CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
         CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
-        CosasDeLaTienda[3] = LoadTexture("tienda/128x128_pistola2.png");
-        CosasDeLaTienda[4] = LoadTexture("tienda/128x128_cubo2.png");
-        CosasDeLaTienda[5] = LoadTexture("tienda/128x128_mun.png");
-      
-
+    
+        //sonido de caminar 
+        caminar = LoadSound("sound effects/prairie king walk.ogg");
     }
 
   
@@ -7034,6 +7081,7 @@ public:
 
         // Movimiento hacia abajo
         position.y += walkSpeed * deltaTime;
+        PlaySound(caminar);
 
         // Detenerse al llegar a pos 200
         if (position.y >= 200)
@@ -7049,54 +7097,83 @@ public:
 
 
 
-    void desaparecer(float deltaTime)
-    {
+    void desaparecer(float deltaTime) {
         
-        if (!isWalking) return;
-
-        // Animación de caminar
         animTime += deltaTime;
         if (animTime >= animSpeed) {
             animTime = 0;
-            currentFrame = (currentFrame + 1) % 2; 
+            currentFrame = (currentFrame + 1) % 2;
         }
 
-        // Movimiento hacia arriba
+        // movvimiento hacia arriba
         position.y -= walkSpeed * deltaTime;
+        PlaySound(caminar);
 
-        // Detenerse al llegar a 0
-        if (position.y >= 0)
-        {
+        // CUANDO EL STOREMAN llega al borde superior de la pantalla
+        if (position.y <= 0) {
             position.y = 0;
             isWalking = false;
             hasAppeared = false;
+            estaCerrando = false;
+            tiempoTiendaAbierta = 0.0f; 
             currentFrame = 0;
         }
     }
 
-    void Compra(Vector2 playerPos, int& playerCoins)
-    {
-        if (isWalking == false)  
-        {
-            itemSeleccionado = -1;
+    void Compra(Vector2 playerPos, int& playerCoins) {
+        if (isWalking || !hasAppeared) return;  //cuando el storeman esta quieto y visible
 
-            // Posiciones de los items en la tienda
-            Vector2 itemPositions[3] = {
-                {210, 250}, // Pistola
-                {260, 250}, // Cubo
-                {310, 250}  // Munición
-            };
+        itemSeleccionado = -1; // Resetear seleccion
 
-            // Verificar proximidad con cada item
-            for (int i = 0; i < 3; i++) {
-                if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
-                    itemSeleccionado = i;
-                    break; // Un item a la vez
+        // Posiciones de los items en la tienda
+        Vector2 itemPositions[3] = {
+            {210, 250}, // Pistola
+            {260, 250}, // Cubo
+            {310, 250}  // Munición
+        };
+
+        // Verificar proximidad con cada item
+        for (int i = 0; i < 3; i++) {
+            if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
+                itemSeleccionado = i;
+
+                //SI PRESIONA LA TECLA K por ejemplo 
+                if (IsKeyPressed(KEY_K)) {
+                    if (playerCoins >= precios[i]) {   
+                        playerCoins -= precios[i];
+
+
+                        // Añadir el item al inventario 
+
+                       
+                    }
+                    else {
+                        //monedas insuficientes
+                        DrawText("No tienes suficientes monedas", position.x, position.y - 30, 20, RED);
+                        
+                    }
                 }
+                break;
             }
         }
     }
 
+    void Update(float deltaTime) {
+        if (!hasAppeared && !estaCerrando) {
+            aparecer(deltaTime); // Entrada
+        }
+        else if (hasAppeared && !estaCerrando) {
+            // Lógica mientras la tienda está abierta
+            tiempoTiendaAbierta += deltaTime;
+            if (tiempoTiendaAbierta >= tiempoMaximoTienda) {
+                estaCerrando = true;
+                isWalking = true;
+            }
+        }
+        else if (estaCerrando) {
+            desaparecer(deltaTime); // Salida
+        }
+    }
 
 
     void Draw() {   //aparicion y compra
@@ -7112,9 +7189,8 @@ public:
             for (int i = 0; i < 3; i++) {
                 DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
                 DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
-                
-            
             }
+
         }
         else 
         {
@@ -7189,7 +7265,7 @@ int main()
     Title t;
     bool gameovertime = false;
     float GOtime = 0;
-    bool tiendaActiva = false;
+    
     while (!WindowShouldClose()) {
 
         if (t.GameBegin) {
@@ -7204,10 +7280,11 @@ int main()
                     aa.draw(p);
 
 
-                    if (tiendaActiva) 
+                    if (game.tiendaActiva) //si el nivel que estamos es el 3 y no hay ningun enemigo sale el tendero y la tienda
                     {
                         float deltaTime = GetFrameTime();
-                        tienda.aparecer(deltaTime);
+                        tienda.Update(deltaTime);
+                        tienda.Compra(p.GetPosition(), p.money); //funcion para seleccionr un objeto 
                         tienda.Draw();
                     }
                 }
