@@ -3382,6 +3382,7 @@ public:
 
                 }
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (SN[0].started && !SN[0].finished) {
                 SN[0].UsePowerUp(enemigo, orcs, marip);
             
@@ -3391,6 +3392,8 @@ public:
                     SNInUse = false;
                 }
             }
+=======
+>>>>>>> 5e56936b0ddcbac91915f0347d8efec2986027b3
 =======
 >>>>>>> 5e56936b0ddcbac91915f0347d8efec2986027b3
                 auxiliarPowerUps++;
