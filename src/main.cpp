@@ -2648,6 +2648,7 @@ private:
     bool bossFight = false;
     bool tiendaActiva = false;
     bool ChangingLevel = false;
+    bool SNInUse = false;
    
     
 public:
@@ -2765,7 +2766,7 @@ public:
             }
             
 
-            if (level > 3 && level != 5) {
+            if (level > 3 && level != 5 && !SNInUse) {
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -2943,7 +2944,7 @@ public:
                 bossFight = false;
             }
 
-            if (level > 6 ) { //mariposa
+            if (level > 6 && !SNInUse) { //mariposa
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -3126,7 +3127,7 @@ public:
 
 
             }
-            if (level != 5) { //ogre
+            if (level != 5 &&  !SNInUse) { //ogre
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -3417,7 +3418,7 @@ public:
                 if (PlayerPowerUpScreenNuke(p, SN[auxiliarPowerUps])) {
                     if (p.bag == 1) {
                         SN[0].started = true;
-                      
+                        SNInUse = true;
                     }
                     else {
 
@@ -3438,6 +3439,7 @@ public:
             }if (SN.size() >= 0) {
                 if (SN[0].finished) {
                     SN.pop_back();
+                    SNInUse = false;
                 }
             }
             auxiliarPowerUps = 0;
@@ -3523,7 +3525,7 @@ public:
                 }
                 else if (bagItem == 3) {
                      SN[0].started = true;
-
+                     SNInUse = true;
 
                 }
                 else if (bagItem == 4) {
