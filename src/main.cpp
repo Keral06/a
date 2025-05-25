@@ -2933,9 +2933,9 @@ public:
             }
 
 
-            if (level > 3 && level != 5) {
+            if (level > 3 && level != 5 && !SNInUse) {
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
 
                     Orc auxiliar;
                     orcs.push_back(auxiliar);
@@ -3004,7 +3004,7 @@ public:
 
 
                                         }
-                                        else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                        else if (GetRandomValue(1, 10) == 6 && gun.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             HeavyMachineGun live(ee);
                                             gun.push_back(live);
@@ -3091,8 +3091,8 @@ public:
                 bossFight = false;
             }
 
-            if (level > 6 && level != 5) {
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
+            if (level > 6 && level != 5  && !SNInUse) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
                     Mariposa auxiliar;
 
                     // Random border spawn position
@@ -3190,7 +3190,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                    else if (GetRandomValue(1, 10) == 6 && gun.size() == 0) {
                                         Vector2 ee = marip[i].GetPosition();
                                         HeavyMachineGun live(ee);
                                         gun.push_back(live);
@@ -3271,9 +3271,9 @@ public:
 
 
             }
-            if (level != 5) { //ogre
+            if (level != 5  && !SNInUse) { //ogre
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
 
                     Ogre auxiliar;
                     enemigo.push_back(auxiliar);
@@ -3359,7 +3359,7 @@ public:
 
 
                                     }
-                                    else if (Random == 5 && gun.size() == 0) {
+                                    else if (Random == 6 && gun.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         HeavyMachineGun live(ee);
                                         gun.push_back(live);
@@ -3899,34 +3899,7 @@ public:
 
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangingLevel = true;
-                while (0 < Lives.size()) {
-
-                    Lives.pop_back();
-                }
-                while (0 < SN.size()) {
-
-                    SN.pop_back();
-                }
-                while (0 < gun.size()) {
-
-                    gun.pop_back();
-                }while (0 < cafe.size()) {
-
-                    cafe.pop_back();
-                }while (0 < money.size()) {
-                    money.pop_back();
-
-                }
-                while (0 < enemigo.size()) {
-
-                    enemigo.pop_back();
-                }
-                while (0 < orcs.size()) {
-                    orcs.pop_back();
-
-                }while (0 < marip.size()) {
-                    marip.pop_back();
-                }
+                
             }
             EndDrawing();
         }
