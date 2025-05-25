@@ -4016,17 +4016,14 @@ public:
 
         }
 
-        if (ChangingLevel && !tiendaActiva) {
+        if (ChangingLevel && !tiendaActiva &&(enemigo.size()+orcs.size()+marip.size()==0)) {
             ClearBackground(BLACK);
             BeginDrawing();
             p.Movement(level);
             p.Draw();
             punteroDraw++;
             int i = 0;
-            while (i < dead.size()) {
-
-
-            }
+            
             if (punteroDraw % 120 != 0) {
 
                 DrawTexture(puntero, 384, 480, WHITE);
