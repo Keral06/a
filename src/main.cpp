@@ -2066,7 +2066,11 @@ public:
     friend class Game;
     friend class Player;
     friend class Colision;
+    bool inInventry = false;
     bool started = false;
+    bool firstTryenemy = true;
+    bool firstTryorcs = true;
+    bool firsttrymarip = true;
     bool finished = false;
     friend  bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
     ScreenNuke(Vector2 position) : Colision(pos) {
@@ -2083,7 +2087,11 @@ public:
 
     }
     //suma la vida al jugador despues de recoger el item
+    ScreenNuke() : Colision(pos) {
 
+
+
+    }
 
 
     void UsePowerUp(std::vector<Ogre>& enemigo, std::vector <Orc>& orcs, std::vector <Mariposa>& marip) {
@@ -2091,7 +2099,14 @@ public:
         int i = 0;
 
         while (enemigo.size() > i) {
-
+            if (firstTryenemy) {
+            
+                while (i < enemigo.size()) {
+                    enemigo[i].SNstart_time = GetTime();
+                    i++;
+                }
+                i = 0;
+            }
             enemigo[i].SNAnim();
             if (enemigo[i].isSNfinished) {
 
@@ -2103,7 +2118,14 @@ public:
         }
         i = 0;
         while (orcs.size() > i) {
+            if (firstTryorcs) {
 
+                while (i < orcs.size()) {
+                    orcs[i].SNstart_time = GetTime();
+                    i++;
+                }
+                i = 0;
+            }
             orcs[i].SNAnim();
             if (orcs[i].isSNfinished) {
 
@@ -2114,7 +2136,14 @@ public:
             i++;
         }
         while (marip.size() > i) {
+            if (firsttrymarip) {
 
+                while (i < marip.size()) {
+                    marip[i].SNstart_time = GetTime();
+                    i++;
+                }
+                i = 0;
+            }
             marip[i].SNAnim();
             if (marip[i].isSNfinished) {
 
@@ -2816,6 +2845,8 @@ private:
     bool bossFight = false;
     bool tiendaActiva = false;
     bool ChangingLevel = false;
+    Vector2 He;
+    ScreenNuke gameNuke;
 
 
 public:
@@ -2827,6 +2858,8 @@ public:
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
+       
+       ScreenNuke gameNuke();
     }
     //declara el nivel y stage inicial
     void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>gun, Store& tienda)
@@ -3472,13 +3505,18 @@ public:
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < SN.size()) {
-
+                if (!SN[auxiliarPowerUps].inInventry) {
+                
+                
+                
                 SN[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
                 if (helperDrawer - SN[auxiliarPowerUps].appearTime > 10) {
+                   
                     SN.pop_back();
                 }
                 auxiliarPowerUps++;
+                }
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < money.size()) {
@@ -3561,32 +3599,36 @@ public:
 
                 if (PlayerPowerUpScreenNuke(p, SN[auxiliarPowerUps])) {
                     if (p.bag == 1) {
-                        SN[0].started = true;
-
+                        SN.pop_back();
+                        gameNuke.started = true;
+                        gameNuke.finished = false;
                         SNInUse = true;
                     }
                     else {
 
                         p.bag++;
                         bagItem = 3;
-                        SN.pop_back();
+                        
 
 
                     }
 
                 }
 
-                if (SN[0].started && !SN[0].finished) {
-                    SN[0].UsePowerUp(enemigo, orcs, marip);
-
-                }if (SN.size() >= 0) {
-                    if (SN[0].finished) {
-                        SN.pop_back();
-                        SNInUse = false;
-                    }
-                }
+               
+                
                 auxiliarPowerUps++;
 
+            }
+            if (gameNuke.started && !gameNuke.finished && SNInUse) {
+                gameNuke.UsePowerUp(enemigo, orcs, marip);
+                p.bag = 0;
+                bagItem = 0;
+
+            }
+            if (gameNuke.finished) {
+
+                SNInUse = false;
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < money.size()) {
@@ -3671,7 +3713,7 @@ public:
                 }
                 else if (bagItem == 3) {
 
-                    SN[0].started = true;
+                    gameNuke.started = true;
 
                     SNInUse = true;
                 }
