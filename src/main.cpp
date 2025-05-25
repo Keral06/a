@@ -2237,7 +2237,7 @@ private:
     Texture Death5 = LoadTexture("effects/128x128_hierba5.png");
     Texture Death6 = LoadTexture("effects/128x128_hierba6.png");
     float deathStartTime = 0;
-    const float kDeadLifetime = 3.0f;
+     float kDeadLifetime = 3.0f;
     bool isFinished = false;
 public:
 
@@ -2265,7 +2265,7 @@ public:
         float currentTime = GetTime();
         float elapsed = currentTime - deathStartTime;
 
-        if (elapsed > 3.0f) {
+        if (elapsed > 10.0f) {
             return true;
         }
         return false;
@@ -2304,7 +2304,7 @@ public:
     }
     //animacion de muerte del ogro
 
-
+    friend class Game;
 };
 class Boss : public Enemy {
 private:
@@ -2314,20 +2314,58 @@ private:
     Texture Boss4 = LoadTexture("64x64/boss4.png");
     Texture bulletTex = LoadTexture("Bullet_1.png");
     Texture Dialogo = LoadTexture("ui/dialogo.png");
+    Texture Death1 = LoadTexture("effects/128x128_piedra1.png");
+    Texture Death2 = LoadTexture("effects/128x128_piedra2.png");
+    Texture Death3 = LoadTexture("effects/128x128_piedra3.png");
+    Texture Death4 = LoadTexture("effects/128x128_piedra4.png");
+    Texture Death5 = LoadTexture("effects/128x128_piedra5.png");
     bool isAlive;
     int frameCounter;
     bool moving;
     int direction = 1;
     float introStartTime = 0;
     bool Intro = true;
+    float deathStartTime;
+    bool status;
+    bool deathAnimationFinished = false;
 
 public:
-    Boss() : Enemy(30, 2), isAlive(true), frameCounter(0), moving(false) {
+    Boss() : Enemy(2, 2), isAlive(true), frameCounter(0), moving(false) {
         playerPos = { (float)(320), 448 };
         introStartTime = GetTime();
         Intro = true;
+        
     }
 
+    void Death() {
+        if (!IsSoundPlaying(Die)) {
+            PlaySound(Die);
+        }
+        deathStartTime = GetTime();
+        status = false;
+        isAlive = false;
+    }
+
+    void DrawDeathAnim() {
+        float currentTime = GetTime();
+        float elapsed = currentTime - deathStartTime;
+
+        if (elapsed < 4)
+            DrawTexture(Death1, playerPos.x, playerPos.y, WHITE);
+        else if (elapsed < 8)
+            DrawTexture(Death2, playerPos.x, playerPos.y, WHITE);
+        else if (elapsed < 12)
+            DrawTexture(Death3, playerPos.x, playerPos.y, WHITE);
+        else if (elapsed < 16)
+            DrawTexture(Death4, playerPos.x, playerPos.y, WHITE);
+        else if (elapsed < 20)
+            DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
+        else {
+            DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
+            deathAnimationFinished = true;
+            // Optionally trigger level end or game win here
+        }
+    }
 
 
     void Update(Player& p) {
@@ -2371,7 +2409,7 @@ public:
     }
 
     void Draw() {
-        if (!isAlive) return;
+        
 
         frameCounter++;
         Texture current;
@@ -2384,7 +2422,17 @@ public:
         }
 
         DrawTexture(current, playerPos.x, playerPos.y, WHITE);
+        if (!isAlive && !deathAnimationFinished) {
+            DrawDeathAnim();
+            return;
+        }
+
+        if (!isAlive && deathAnimationFinished) {
+
+            return;
+        }
     }
+
 
     bool IsAlive() const { return isAlive; }
 
@@ -2406,11 +2454,13 @@ private:
     Sound shooter = LoadSound("sound effects/prairie king bullet.ogg");
     bool eliminate = false;
     Texture bulletTex = LoadTexture("Bullet_1.png");
+    bool isEnemyBullet;
 
 public:
     friend class Enemy;
     Direccion dir;
     Vector2 GetPosition() const { return this->playerPos; }
+
     bool ColisionBullet(const Enemy& s) {
 
         return CheckCollisionRecs(this->Square, s.Square);
@@ -2426,6 +2476,7 @@ public:
 
         // Set direction based on arrow keys instead of player direction
         dir = ARRIBA;
+        isEnemyBullet = true;
 
     }
 
@@ -2470,6 +2521,7 @@ public:
         else {
             dir = p.GetDir(); // Fallback to player direction if no arrow key pressed
         }
+        isEnemyBullet = false;
     }
     //declara las direcciones y teclas asignadas a disparar
     friend class Game;
@@ -2675,6 +2727,7 @@ public:
         this->Square = { playerPos.x, playerPos.y, 3, 3 };
         ColisionBullet(playerPos);
     }
+
 
     void ColisionBullet(Vector2 posicion) {
 
@@ -3018,8 +3071,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 1;
-        stage = 10;        /*  BeginDrawing();*/
+        level = 5;
+        stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
        
@@ -3072,24 +3125,47 @@ public:
 
             }
             int a = GetTime();
-            if (level == 5 && a > 17.0f) {
+            if (level == 5 && a > 17.0f && boss.IsAlive()) {
                 static float shootTimer = powerRate;
 
                 if (shootTimer <= 0) {
-                    bullets.push_back(Shoot(boss)); // Pass the boss instance here
+                    bullets.push_back(Shoot(boss));
                     shootTimer = powerRate;
                 }
 
                 shootTimer -= GetFrameTime();
             }
+
             int i = 0;
             // dibuja el ogro 
             while (i < bullets.size()) {
 
-                bullets[i].UpdatePosition(this->level);
+                bullets[i].UpdatePosition(level);
                 bullets[i].Draw();
+                Rectangle bulletRect = { bullets[i].GetPosition().x, bullets[i].GetPosition().y, 3, 3 };
+                Rectangle playerHitbox = { p.GetPosition().x, p.GetPosition().y, 32, 32 };
+                Rectangle BossHitbox = { p.GetPosition().x, p.GetPosition().y, 32, 32 };
 
-                if (bullets[i].eliminate == true) {
+                if (bullets[i].isEnemyBullet && CheckCollisionRecs(bulletRect, playerHitbox) && p.status) {
+                    p.status = false;
+                    bullets[i].eliminate = true;
+                }
+                if (!bullets[i].isEnemyBullet &&
+                    CheckCollisionRecs(bulletRect, { boss.GetPosition().x, boss.GetPosition().y, 64, 64 })) {
+
+                    boss.hp--;
+                    bullets[i].eliminate = true;
+
+                    if (boss.hp <= 0 && boss.IsAlive()) {
+                        
+                        boss.Death();  
+                        
+                    }
+                }
+
+                
+
+                /*if (bullets[i].eliminate == true) {
 
 
                     int p = i;
@@ -3109,12 +3185,43 @@ public:
                     }
 
 
+                }*/
+                if (bullets[i].eliminate) {
+                    bullets.erase(bullets.begin() + i); 
                 }
-                i++;
+                else {
+                    i++;  
+                }
+                
+
+                
             }
 
 
-
+            i = 0;
+            while (i < dead.size()) {
+            
+                if (dead[i].Delete()) {
+                
+                    if (dead.size() == 1) {
+                    
+                        dead.pop_back();
+                    
+                    }
+                    else {
+                       int j = i;
+                       while (j < dead.size() - 1) {
+                       
+                           dead[j] = dead[j + 1];
+                           j++;
+                       }
+                    
+                    }
+                
+                
+                }
+                i++;
+            }
 
 
 
@@ -3154,7 +3261,7 @@ public:
 
                             }
                             else {
-
+                                
                                 if (bullets[j].ColisionBullet(orcs[i]) == true) {
                                     orcs[i].hp--;
                                     if (orcs[i].hp < 0) {
@@ -4142,7 +4249,7 @@ public:
 
             }
            
-
+           
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangingLevel = true;
                 
