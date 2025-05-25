@@ -954,72 +954,6 @@ public:
 
 };
 
-private:
-    Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
-    Vector2 pos;
-    float appearTime;
-public:
-    friend class Game;
-    friend class Player;
-    friend class Colision;
-
-    friend  bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
-    ScreenNuke(Vector2 position) : Colision(pos) {
-        this->pos = position;
-
-        DrawTexture(vida, pos.x, pos.y, WHITE);
-        appearTime = GetTime();
-
-    }
-    //dibuja el item de vida +
-    ScreenNuke(Player p) : Colision(pos) {
-
-
-
-    }
-    //suma la vida al jugador despues de recoger el item
-
-
-
-    void UsePowerUp(std::vector<Ogre>& enemigo, std::vector <Orc>& orcs, std::vector <Mariposa>& marip) {
-
-        int i = 0;
-
-        while (enemigo.size() != 0) {
-
-            enemigo.pop_back();
-
-
-        }
-        while (orcs.size() != 0) {
-
-            orcs.pop_back();
-
-
-        }
-        while (marip.size() != 0) {
-
-            marip.pop_back();
-
-        }
-
-    }
-
-    //suma la vida
-    void Draw() {
-
-
-        DrawTexture(vida, pos.x, pos.y, WHITE);
-        ColisionPlayer(pos);
-    }
-    //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
-
-
-
-
-
-
-};
 class Coffee : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_taza.png");
@@ -1242,10 +1176,20 @@ public:
 class Enemy : public Entity {
 public:
     friend class Shoot;
+    Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
+    Texture humoo1 = LoadTexture("items/128x128_piedra1.png");
+    Texture humoo2 = LoadTexture("items/128x128_piedra2.png");
+
+    Texture humoo3 = LoadTexture("items/128x128_piedra3.png");
+
+    Texture humoo4 = LoadTexture("items/128x128_piedra4.png");
+    bool isSNfinished = false;
+    Texture humoo5 = LoadTexture("items/128x128_piedra.png");
     friend int main();
     friend class coins;
     friend class UI;
     friend class Game;
+    int SNstart_time;
     Enemy(int hp, int vel) : Entity(hp, vel, { 0, 0 }) {
         if (currentLevel == 11) {
             int posicion = GetRandomValue(1, 2);  // Only two spawn points
@@ -1272,7 +1216,33 @@ public:
             }
         }
     }
+    void SNAnim() {
+        float currentTime = GetTime();
+        float elapsed = currentTime - SNstart_time;
 
+        if (elapsed < 0.1) {
+            DrawTexture(humoo1, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.2) {
+            DrawTexture(humoo2, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.3) {
+            DrawTexture(humoo3, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.4) {
+            DrawTexture(humoo4, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.5) {
+            DrawTexture(humoo5, playerPos.x, playerPos.y, WHITE);
+        }
+
+        else {
+            // Animation finished
+            isSNfinished = true;
+            // Optionally trigger a respawn or game over screen here
+        }
+
+    }
 
     //declara la posicion inicial del enemigo y sus atributos (velocidad, vida)
     friend class Colision;
@@ -2016,9 +1986,8 @@ public:
 
         playerPos.x = nextX;
         playerPos.y = nextY;
-        ColisionPlayer(playerPos);
-        
 
+        ColisionPlayer(playerPos);
 
     }
     void Death() {
@@ -2363,10 +2332,7 @@ public:
     Vector2 GetPosition() const { return this->playerPos; }
     bool ColisionBullet(Enemy s) {
 
-        bool Check = CheckCollisionRecs(this->Square, s.Square);
-
-        return Check;
-
+        return CheckCollisionRecs(this->Square, s.Square);
 
     }
     //chequea si la bala colisiona con el enemigo
@@ -2820,6 +2786,7 @@ private:
 
     int level;
     bool wonGame = false;
+    bool SNInUse = false;
     int stage;
     bool tiempoFake = false;
     Texture puntero = LoadTexture("64x64/128x128_puntero.png");
@@ -2862,7 +2829,7 @@ public:
         tiempoiniciado = false;
     }
     //declara el nivel y stage inicial
-    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>gun, Store &tienda)
+    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>gun, Store& tienda)
     {
         if (p.status && (!ChangingLevel || (enemigo.size() + marip.size() + orcs.size() != 0)) && !tiendaActiva) {
             ClearBackground(BLACK);
@@ -2992,7 +2959,7 @@ public:
                                 if (bullets[j].ColisionBullet(orcs[i]) == true) {
                                     orcs[i].hp--;
                                     if (orcs[i].hp < 0) {
-                                    
+
                                         DeadOgre auxiliari(orcs[i].GetPosition());
                                         dead.push_back(auxiliari);
                                         float timehelp = GetTime();
@@ -3066,9 +3033,9 @@ public:
 
 
                                         }
-                                    
+
                                     }
-                                   
+
 
                                     bulletSize = bullets.size();
                                     aux = j;
@@ -3152,7 +3119,6 @@ public:
                     while (i < marip.size()) {
 
                         while (j < bullets.size()) {
-
 
                             if (i >= marip.size()) {
 
@@ -3595,9 +3561,9 @@ public:
 
                 if (PlayerPowerUpScreenNuke(p, SN[auxiliarPowerUps])) {
                     if (p.bag == 1) {
-                        SN[0].UsePowerUp(enemigo, orcs, marip);
-                        SN.pop_back();
+                        SN[0].started = true;
 
+                        SNInUse = true;
                     }
                     else {
 
@@ -3611,14 +3577,15 @@ public:
                 }
 
                 if (SN[0].started && !SN[0].finished) {
-                SN[0].UsePowerUp(enemigo, orcs, marip);
-            
-            }if (SN.size() >= 0) {
-                if (SN[0].finished) {
-                    SN.pop_back();
-                    SNInUse = false;
+                    SN[0].UsePowerUp(enemigo, orcs, marip);
+
+                }if (SN.size() >= 0) {
+                    if (SN[0].finished) {
+                        SN.pop_back();
+                        SNInUse = false;
+                    }
                 }
-            }
+                auxiliarPowerUps++;
 
             }
             auxiliarPowerUps = 0;
@@ -3704,8 +3671,9 @@ public:
                 }
                 else if (bagItem == 3) {
 
-                    ScreenNuke Aux(p);
-                    Aux.UsePowerUp(enemigo, orcs, marip);
+                    SN[0].started = true;
+
+                    SNInUse = true;
                 }
                 else if (bagItem == 4) {
 
