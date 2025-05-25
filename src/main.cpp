@@ -2227,7 +2227,7 @@ private:
     Texture Death5 = LoadTexture("effects/128x128_hierba5.png");
     Texture Death6 = LoadTexture("effects/128x128_hierba6.png");
     float deathStartTime = 0;
-    const float kDeadLifetime = 3.0f;
+     float kDeadLifetime = 3.0f;
     bool isFinished = false;
 public:
 
@@ -2255,7 +2255,7 @@ public:
         float currentTime = GetTime();
         float elapsed = currentTime - deathStartTime;
 
-        if (elapsed > 3.0f) {
+        if (elapsed > 10.0f) {
             return true;
         }
         return false;
@@ -2294,7 +2294,7 @@ public:
     }
     //animacion de muerte del ogro
 
-
+    friend class Game;
 };
 class Boss : public Enemy {
 private:
@@ -3104,7 +3104,30 @@ public:
             }
 
 
-
+            i = 0;
+            while (i < dead.size()) {
+            
+                if (dead[i].Delete()) {
+                
+                    if (dead.size() == 1) {
+                    
+                        dead.pop_back();
+                    
+                    }
+                    else {
+                       int j = i;
+                       while (j < dead.size() - 1) {
+                       
+                           dead[j] = dead[j + 1];
+                           j++;
+                       }
+                    
+                    }
+                
+                
+                }
+                i++;
+            }
 
 
 
@@ -4132,7 +4155,7 @@ public:
 
             }
            
-
+           
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangingLevel = true;
                 
