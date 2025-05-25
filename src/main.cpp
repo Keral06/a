@@ -230,13 +230,13 @@ public:
             {
                 if (dire <= 50) {
 
-                    DrawTexture(Diagonal12, GetPosition().x, GetPosition().y, WHITE);
+                    DrawTexture(Diagonal22, GetPosition().x, GetPosition().y, WHITE);
 
 
                 }
                 else {
 
-                    DrawTexture(Diagonal13, GetPosition().x, GetPosition().y, WHITE);
+                    DrawTexture(Diagonal23, GetPosition().x, GetPosition().y, WHITE);
 
                 }
             }
@@ -1177,14 +1177,14 @@ class Enemy : public Entity {
 public:
     friend class Shoot;
     Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
-    Texture humoo1 = LoadTexture("effects/128x128_hierba1.png");
-    Texture humoo2 = LoadTexture("effects/128x128_hierba2.png");
+    Texture humoo1 = LoadTexture("effects/128x128_piedra11.png");
+    Texture humoo2 = LoadTexture("effects/128x128_piedra2.png");
 
-    Texture humoo3 = LoadTexture("effects/128x128_hierba3.png");
+    Texture humoo3 = LoadTexture("effects/128x128_piedra3.png");
 
-    Texture humoo4 = LoadTexture("effects/128x128_hierba4.png");
+    Texture humoo4 = LoadTexture("effects/128x128_piedra4.png");
     bool isSNfinished = false;
-    Texture humoo5 = LoadTexture("effects/128x128_hierba5.png");
+    Texture humoo5 = LoadTexture("effects/128x128_piedra5.png");
     friend int main();
     friend class coins;
     friend class UI;
@@ -2093,18 +2093,33 @@ public:
         int i = 0;
 
         while (enemigo.size() > i) {
+            int h = i;
             if (firstTryenemy) {
             
                 while (i < enemigo.size()) {
                     enemigo[i].SNstart_time = GetTime();
                     i++;
                 }
-                i = 0;
+                i = h;
+                firstTryenemy = false;
             }
             enemigo[i].SNAnim();
             if (enemigo[i].isSNfinished) {
+                int j = i;
+                if (enemigo.size() == 1) {
 
-                enemigo.pop_back();
+                    enemigo.pop_back();
+                    
+                }
+                else if (enemigo.size() > 1) {
+                    while (j < enemigo.size() - 1) {
+                        enemigo[j] = enemigo[j + 1];
+                        j++;
+                    }
+
+                    enemigo.pop_back();
+
+                }
 
             }
 
@@ -2119,11 +2134,26 @@ public:
                     i++;
                 }
                 i = 0;
+                firstTryorcs = false;
             }
             orcs[i].SNAnim();
             if (orcs[i].isSNfinished) {
 
-                orcs.pop_back();
+                int j = i;
+                if (orcs.size() == 1) {
+
+                    orcs.pop_back();
+
+                }
+                else if (orcs.size() > 1) {
+                    while (j < orcs.size() - 1) {
+                        orcs[j] = orcs[j + 1];
+                        j++;
+                    }
+
+                    enemigo.pop_back();
+
+                }
 
             }
 
@@ -2136,12 +2166,27 @@ public:
                     marip[i].SNstart_time = GetTime();
                     i++;
                 }
+                firsttrymarip = false;
                 i = 0;
             }
             marip[i].SNAnim();
             if (marip[i].isSNfinished) {
 
-                marip.pop_back();
+                int j = i;
+                if (marip.size() == 1) {
+
+                    marip.pop_back();
+
+                }
+                else if (marip.size() > 1) {
+                    while (j < marip.size() - 1) {
+                        marip[j] = marip[j + 1];
+                        j++;
+                    }
+
+                    marip.pop_back();
+
+                }
 
             }
 
@@ -2150,6 +2195,9 @@ public:
         if (marip.size() == 0 && enemigo.size() == 0 && orcs.size() == 0) {
             finished = true;
             started = false;
+             firstTryenemy = true;
+             firstTryorcs = true;
+             firsttrymarip = true;
         }
     }
 
@@ -2884,6 +2932,10 @@ public:
         appearTime = GetTime();
         this->pos = vector;
     }
+
+    HeavyMachineGun(Player p) : Colision(pos) {
+        
+    }
     void UsePowerUp(float& powerRate) {
 
         powerRate -= 0.02;
@@ -2903,6 +2955,7 @@ public:
 
 
         DrawTexture(wow, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
 
     }
     friend bool PlayerPowerUpHMG(Player& p, HeavyMachineGun& pp);
@@ -2948,29 +3001,33 @@ private:
     bool ChangingLevel = false;
     Vector2 He;
     ScreenNuke gameNuke;
+    bool firstRound = true;
 
 
 public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 5;
-        stage = 5;
-        /*  BeginDrawing();*/
+        level = 1;
+        stage = 10;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
        
        ScreenNuke gameNuke();
     }
     //declara el nivel y stage inicial
-    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>gun, Store& tienda)
+    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>&gun, Store& tienda)
     {
-        if (p.status && (!ChangingLevel || (enemigo.size() + marip.size() + orcs.size() != 0)) && !tiendaActiva) {
+        int monstersize = enemigo.size() + marip.size() + orcs.size();
+        if (p.status && (!ChangingLevel || monstersize != 0) && !tiendaActiva) {
             ClearBackground(BLACK);
             /*BeginDrawing();*/
             BeginDrawing();
             if (tiempoiniciado == false) {
-
+                if (firstRound) {
+                    p.bag = 0;
+                    firstRound = false;
+                }
                 Tiempo.IniciarTiempo();
                 tiempoiniciado = true;
                 Tiempo.DrawInicial();
@@ -3099,21 +3156,21 @@ public:
                                         deadogres++;
 
 
-                                        int a = 0;
-                                        if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                        int a = GetRandomValue(1,10);
+                                        if (a==1 && Lives.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             PowerUpLive live(ee);
                                             Lives.push_back(live);
 
                                         }
-                                        else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
+                                        else if (a == 2 && cafe.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             Coffee live(ee);
                                             cafe.push_back(live);
 
 
                                         }
-                                        else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
+                                        else if (a == 3 && money.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             coins live(ee);
                                             money.push_back(live);
@@ -3121,7 +3178,7 @@ public:
 
 
                                         }
-                                        else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                        else if (a == 4 && cafe.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             Coffee live(ee);
                                             cafe.push_back(live);
@@ -3129,14 +3186,14 @@ public:
 
 
                                         }
-                                        else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                        else if (a== 5 && SN.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             ScreenNuke live(ee);
                                             SN.push_back(live);
 
 
                                         }
-                                        else if (GetRandomValue(1, 10) == 6 && gun.size() == 0) {
+                                        else if (a == 6 && gun.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             HeavyMachineGun live(ee);
                                             gun.push_back(live);
@@ -3267,8 +3324,8 @@ public:
                                     deadogres++;
 
 
-                                    int a = 0;
-                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                    int a = GetRandomValue(1, 10);
+                                    if (a== 1 && Lives.size() == 0) {
                                         Vector2 ee = marip[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
@@ -3278,7 +3335,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
+                                    else if (a == 2 && cafe.size() == 0) {
                                         Vector2 ee = marip[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
@@ -3289,7 +3346,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
+                                    else if (a == 3 && money.size() == 0) {
                                         Vector2 ee = marip[i].GetPosition();
                                         coins live(ee);
                                         money.push_back(live);
@@ -3298,7 +3355,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                    else if (a == 4 && cafe.size() == 0) {
                                         Vector2 ee = marip[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
@@ -3310,7 +3367,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                    else if (a == 5 && SN.size() == 0) {
                                         Vector2 ee = marip[i].GetPosition();
                                         ScreenNuke live(ee);
                                         SN.push_back(live);
@@ -3322,7 +3379,7 @@ public:
 
 
                                     }
-                                    else if (GetRandomValue(1, 10) == 6 && gun.size() == 0) {
+                                    else if (a == 6 && gun.size() == 0) {
                                         Vector2 ee = marip[i].GetPosition();
                                         HeavyMachineGun live(ee);
                                         gun.push_back(live);
@@ -3403,7 +3460,7 @@ public:
 
 
             }
-            if (level != 5  && !SNInUse) { //ogre
+            if (level != 1  && !SNInUse) { //ogre
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
 
@@ -3434,8 +3491,8 @@ public:
                                     auxTime.push_back(timehelp);
                                     deadogres++;
 
-
-                                    int a = 0;
+                                    
+                                    
                                     int Random = GetRandomValue(1, 10);
                                     if (Random == 1 && Lives.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
@@ -3504,7 +3561,7 @@ public:
 
                                     }
 
-
+                                   
 
 
                                     if (enemigo.size() == 1) {
@@ -3572,6 +3629,7 @@ public:
 
 
             }
+            
             i = 0;
             deadogres = dead.size();
             while (i < dead.size()) {
@@ -3688,6 +3746,7 @@ public:
                     HeavyMachineGun Aux(p.playerPos);
                     Aux.StopUsing(powerRate);
                     HMGEnUso = 0;
+                    HMGTimeInicial = 0;
 
 
                 }
@@ -3697,17 +3756,19 @@ public:
             while (auxiliarPowerUps < SN.size()) {
 
                 if (PlayerPowerUpScreenNuke(p, SN[auxiliarPowerUps])) {
+                    int a = 0;
                     if (p.bag == 1) {
                         SN.pop_back();
                         gameNuke.started = true;
                         gameNuke.finished = false;
                         SNInUse = true;
+
                     }
                     else {
 
                         p.bag++;
                         bagItem = 3;
-                        
+                        SN.pop_back();
 
 
                     }
@@ -3719,16 +3780,7 @@ public:
                 auxiliarPowerUps++;
 
             }
-            if (gameNuke.started && !gameNuke.finished && SNInUse) {
-                gameNuke.UsePowerUp(enemigo, orcs, marip);
-                p.bag = 0;
-                bagItem = 0;
-
-            }
-            if (gameNuke.finished) {
-
-                SNInUse = false;
-            }
+            
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < money.size()) {
 
@@ -3759,10 +3811,19 @@ public:
 
                 if (PlayerPowerUpCoffee(p, cafe[auxiliarPowerUps])) {
                     if (p.bag == 1) {
+                        if (cafeEnUso == 1) {
+                            timeCafeFinal = GetTime();
+                            
+
+                        }
+                        else {
+                        
+                        
                         cafe[0].UsePowerUp(p);
                         cafe.pop_back();
-
+                        cafeEnUso = 1;
                         timeCafeInicial = GetTime();
+                        }
                     }
                     else {
 
@@ -3776,20 +3837,15 @@ public:
                 auxiliarPowerUps++;
 
             }
-            if (cafeEnUso == 1) {
-                timeCafeFinal = GetTime();
-                if (timeCafeFinal - timeCafeInicial > 16) {
-                    Coffee Aux(p.playerPos);
-                    Aux.StopUsing(p);
+            
+            auxiliarPowerUps = 0;
+            if (timeCafeFinal - timeCafeInicial > 16) {
+                Coffee Aux(p.playerPos);
+                Aux.StopUsing(p);
 
 
-
-                }
 
             }
-            auxiliarPowerUps = 0;
-
-
 
             //actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
@@ -3813,6 +3869,7 @@ public:
                 else if (bagItem == 3) {
 
                     gameNuke.started = true;
+                    gameNuke.finished = false;
 
                     SNInUse = true;
                 }
@@ -3831,6 +3888,7 @@ public:
 
                 }
                 p.bag = 0;
+                bagItem = 0;
             }
 
 
@@ -3842,31 +3900,40 @@ public:
 
                 enemigo[i].CheckColisions(p);
 
-                if (p.status == true) {
+                if (p.status == true &&!SNInUse) {
 
                     enemigo[i].MovementEnemy(p, this->level);
 
 
                 }
+                if (!SNInUse) {
+
+                   
 
                 enemigo[i].Draw();
+                }
+
+
 
                 i++;
 
             }
             i = 0;
-            while (i < orcs.size()) {
+            while (i < orcs.size() ) {
 
                 orcs[i].CheckColisions(p);
 
-                if (p.status == true) {
+                if (p.status == true && !SNInUse) {
 
                     orcs[i].MovementEnemy(p, this->level);
 
 
                 }
-
+                if (!SNInUse) {
+                
                 orcs[i].Draw();
+                
+                }
 
                 i++;
 
@@ -3876,15 +3943,19 @@ public:
 
                 marip[i].CheckColisions(p);
 
-                if (p.status == true) {
+                if (p.status == true && !SNInUse) {
 
                     marip[i].MovementMariposa(p);
 
 
                 }
 
+                if (!SNInUse) {
 
                 marip[i].Draw();
+
+                }
+
 
                 i++;
 
@@ -3893,7 +3964,16 @@ public:
             bulletSize = bullets.size();
 
 
+            if (gameNuke.started && !gameNuke.finished && SNInUse) {
+                gameNuke.UsePowerUp(enemigo, orcs, marip);
+              
+                bagItem = 0;
 
+            }
+            if (gameNuke.finished) {
+
+                SNInUse = false;
+            }
             i = 0;
 
             while (i < bulletSize) {
@@ -3931,7 +4011,21 @@ public:
             p.Draw();
 
             if (p.status == false) {
+                p.bag = 0;
+                if (cafeEnUso==1) {
+                
+                    Coffee aux(p);
+                    aux.StopUsing(p);
+                
+                    cafeEnUso = 0;
+                }
+                if (HMGEnUso == 1) {
+                    HeavyMachineGun Aux(p.playerPos);
+                    Aux.UsePowerUp(this->powerRate);
+                    HMGEnUso = 1;
 
+                
+                }
                 p.Death();
                 Tiempo.Draw();
                 int x = 0;
@@ -4037,6 +4131,7 @@ public:
                 }
 
             }
+           
 
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangingLevel = true;
@@ -4129,8 +4224,8 @@ public:
 
 
         }
-
-        if (ChangingLevel && !tiendaActiva &&(enemigo.size()+orcs.size()+marip.size()==0)) {
+       
+        if (ChangingLevel && !tiendaActiva && monstersize==0) {
             ClearBackground(BLACK);
             BeginDrawing();
             p.Movement(level);
@@ -4140,7 +4235,7 @@ public:
             
             if (punteroDraw % 120 != 0) {
 
-                DrawTexture(puntero, 384, 480, WHITE);
+                DrawTexture(puntero, 350, 510, WHITE);
 
 
             }
@@ -4155,7 +4250,7 @@ public:
                 }
 
             }
-
+            EndDrawing();
         }
 
 
