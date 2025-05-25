@@ -7037,13 +7037,14 @@ public:
         // movvimiento hacia arriba
         position.y -= walkSpeed * deltaTime;
         PlaySound(caminar);
-        // Al llegar al borde superior, reiniciar
+
+        // CUANDO EL STOREMAN 
         if (position.y <= 0) {
             position.y = 0;
             isWalking = false;
             hasAppeared = false;
             estaCerrando = false;
-            tiempoTiendaAbierta = 0.0f; // Resetear temporizador
+            tiempoTiendaAbierta = 0.0f; 
             currentFrame = 0;
         }
     }
@@ -7193,7 +7194,7 @@ int main()
     Title t;
     bool gameovertime = false;
     float GOtime = 0;
-    bool tiendaActiva = false;
+    
     while (!WindowShouldClose()) {
 
         if (t.GameBegin) {
@@ -7208,11 +7209,11 @@ int main()
                     aa.draw(p);
 
 
-                    if (tiendaActiva) 
+                    if (game.tiendaActiva) //si el nivel que estamos es el 3 y no hay ningun enemigo sale el tendero y la tienda
                     {
                         float deltaTime = GetFrameTime();
                         tienda.Update(deltaTime);
-                        tienda.Compra(p.GetPosition(), p.money);
+                        tienda.Compra(p.GetPosition(), p.money); //funcion para seleccionr un objeto 
                         tienda.Draw();
                     }
                 }
