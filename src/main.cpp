@@ -7319,7 +7319,7 @@ int main()
 
 
 
-                }
+            }
                 else {
                     if (!gameovertime) {
                         GOtime = GetTime();
@@ -7343,19 +7343,17 @@ int main()
 
 
 
-            }
-            else {
-
-
-
-                t.Presentation();
-            }
-
-
-
-
-
         }
+       else {
+
+         t.Presentation();
+       }
+
+
+
+
+
+    }
 
         CloseAudioDevice();
         CloseWindow();
