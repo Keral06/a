@@ -1024,7 +1024,10 @@ class Store {
     const int precios[3] = { 10, 15, 10 }; // Precios de los items
     int itemSeleccionado = -1; //  ninguno seleccionado
     const float rangoCompra = 50.0f;
-
+    float tiempoTiendaAbierta = 0.0f;
+    const float tiempoMaximoTienda = 20.0f; // 30 segundos abierta
+    bool estaCerrando = false;
+    
 
 public:
     friend int main();
@@ -1056,7 +1059,7 @@ public:
         CosasDeLaTienda[4] = LoadTexture("tienda/128x128_cubo2.png");
         CosasDeLaTienda[5] = LoadTexture("tienda/128x128_mun.png");
 
-
+        
     }
 
 
@@ -1109,9 +1112,12 @@ public:
         // Detenerse al llegar a 0
         if (position.y >= 0)
         {
+
             position.y = 0;
             isWalking = false;
             hasAppeared = false;
+            estaCerrando = false;
+            tiempoTiendaAbierta = 0.0f;
             currentFrame = 0;
         }
     }
@@ -1146,6 +1152,23 @@ public:
             if (itemSeleccionado == -1) {
                 comprado = false;
             }
+        }
+    }
+
+    void Update(float deltaTime) {
+        if (!hasAppeared && !estaCerrando) {
+            aparecer(deltaTime); // Entrada
+        }
+        else if (hasAppeared && !estaCerrando) {
+            // Lógica mientras la tienda está abierta
+            tiempoTiendaAbierta += deltaTime;
+            if (tiempoTiendaAbierta >= tiempoMaximoTienda) {
+                estaCerrando = true;
+                isWalking = true;
+            }
+        }
+        else if (estaCerrando) {
+            desaparecer(deltaTime); // Salida
         }
     }
 
@@ -3228,7 +3251,7 @@ public:
             int bulletSize = bullets.size();
 
             //la tienda aparece solo en el level 3
-            if (level == 3 && enemigo.size() == 0)
+            if (level == 3&& enemigo.size() == 0)
             {
                 tiendaActiva = true;
 
@@ -4373,13 +4396,16 @@ public:
 
         if (tiendaActiva)
         {
-            ClearBackground(BLACK);
-            BeginDrawing();
-            p.Draw();
-            p.Movement(this->level);
+            p.Movement(this->level); 
             float deltaTime = GetFrameTime();
-            tienda.aparecer(deltaTime);
-            tienda.Draw();
+            tienda.Update(deltaTime); 
+            tienda.Compra(p.GetPosition(), p.money); // Lógica de compra
+
+
+            BeginDrawing();
+            ClearBackground(BLACK); 
+            tienda.Draw();         
+            p.Draw();               
             EndDrawing();
         }
         //reinicia los valores si el jugador pierde una vida
