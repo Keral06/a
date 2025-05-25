@@ -1266,10 +1266,10 @@ public:
 
 
         if (level == 1) {
-            Rectangle lado1 = { 64, 32, 32, 512 };
-            Rectangle lado2 = { 64, 32, 512, 32 };
-            Rectangle lado3 = { 544, 32, 32, 512 };
-            Rectangle lado4 = { 64, 512, 512, 32 };
+            Rectangle lado1 = { 64, 32, 32, 224 };
+            Rectangle lado2 = { 64, 32, 224, 32 };
+            Rectangle lado3 = { 544, 32, 32, 224 };
+            Rectangle lado4 = { 64, 512, 224, 32 };
             Rectangle lado17 = { 384, 32, 192, 32 };
             Rectangle lado18 = { 64, 352, 32, 192 };
             Rectangle lado19 = { 384, 512, 192, 32 };
@@ -1306,11 +1306,11 @@ public:
             Rectangle lado5 = { 384, 160, 64, 32 };
             Rectangle lado6 = { 416, 160, 32, 64 };
             Rectangle lado7 = { 384, 416, 64, 32 };
-            Rectangle lado8 = { 416, 384, 32, 64 };
-            Rectangle lado9 = { 64, 32, 32, 512 };
-            Rectangle lado10 = { 64, 32, 512, 32 };
-            Rectangle lado11 = { 544, 32, 32, 512 };
-            Rectangle lado12 = { 64, 512, 512, 32 };
+            Rectangle lado8 = { 416, 384, 32, 64 }; 
+            Rectangle lado9 = { 64, 32, 32, 224 };
+            Rectangle lado10 = { 64, 32, 224, 32 };
+            Rectangle lado11 = { 544, 32, 32, 224 };
+            Rectangle lado12 = { 64, 512, 224, 32 };
             Rectangle lado17 = { 384, 32, 192, 32 };
             Rectangle lado18 = { 64, 352, 32, 192 };
             Rectangle lado19 = { 384, 512, 192, 32 };
