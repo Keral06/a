@@ -1011,7 +1011,7 @@ class Store {
     Texture walkFrames[2];  // caminar
     Texture storemanTextures[5];
     Texture store;
-    Texture CosasDeLaTienda[7];
+    Texture CosasDeLaTienda[3];
 
     Vector2 position = { 255 + 65, 0 };
     float animTime = 0;
@@ -1115,9 +1115,11 @@ public:
             currentFrame = 0;
         }
     }
+    
 
     void Compra(Vector2 playerPos, int& playerCoins)
     {
+        bool comprado = false;  //para que no compre de mas 
         if (isWalking == false)
         {
             itemSeleccionado = -1;
@@ -1133,8 +1135,16 @@ public:
             for (int i = 0; i < 3; i++) {
                 if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
                     itemSeleccionado = i;
+
+                        if (!comprado && playerCoins >= precios[i]) {
+                            playerCoins -= precios[i];
+                            comprado = true;
+                        }
                     break; // Un item a la vez
                 }
+            }
+            if (itemSeleccionado == -1) {
+                comprado = false;
             }
         }
     }
