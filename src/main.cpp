@@ -3024,13 +3024,13 @@ public:
     }
     void UsePowerUp(float& powerRate) {
 
-        powerRate -= 0.02;
+        powerRate -= 0.1;
 
     }
 
     void StopUsing(float& powerRate) {
 
-        powerRate += 0.02;
+        powerRate += 0.1;
 
 
     }
@@ -3074,7 +3074,7 @@ private:
     float timeOfLive = 0;
     int bagItem = 0;
     int bagItemAux = 0;
-    float powerRate = 0.2;
+    float powerRate = 0.4;
     int timeCafeInicial;
     int timeCafeFinal;
     int HMGTimeInicial;
@@ -3094,7 +3094,7 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 5;
+        level = 1;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3855,7 +3855,9 @@ public:
 
                 }
                 auxiliarPowerUps++;
-
+                if (!IsSoundPlaying(power)) {
+                    PlaySound(power);
+                }
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < gun.size()) {
@@ -3875,7 +3877,9 @@ public:
 
 
                     }
-
+                    if (!IsSoundPlaying(power)) {
+                        PlaySound(power);
+                    }
                 }
                 auxiliarPowerUps++;
 
@@ -3890,7 +3894,9 @@ public:
 
 
                 }
-
+                if (!IsSoundPlaying(power)) {
+                    PlaySound(power);
+                }
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < SN.size()) {
@@ -3912,7 +3918,9 @@ public:
 
 
                     }
-
+                    if (!IsSoundPlaying(power)) {
+                        PlaySound(power);
+                    }
                 }
 
                
@@ -3944,7 +3952,9 @@ public:
                     money.pop_back();
                 }
                 auxiliarPowerUps++;
-
+                if (!IsSoundPlaying(power)) {
+                    PlaySound(power);
+                }
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < cafe.size()) {
@@ -3972,7 +3982,9 @@ public:
                         cafe.pop_back();
 
                     }
-
+                    if (!IsSoundPlaying(power)) {
+                        PlaySound(power);
+                    }
                 }
                 auxiliarPowerUps++;
 
