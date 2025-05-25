@@ -1177,14 +1177,14 @@ class Enemy : public Entity {
 public:
     friend class Shoot;
     Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
-    Texture humoo1 = LoadTexture("items/128x128_piedra1.png");
-    Texture humoo2 = LoadTexture("items/128x128_piedra2.png");
+    Texture humoo1 = LoadTexture("effects/128x128_hierba1.png");
+    Texture humoo2 = LoadTexture("effects/128x128_hierba2.png");
 
-    Texture humoo3 = LoadTexture("items/128x128_piedra3.png");
+    Texture humoo3 = LoadTexture("effects/128x128_hierba3.png");
 
-    Texture humoo4 = LoadTexture("items/128x128_piedra4.png");
+    Texture humoo4 = LoadTexture("effects/128x128_hierba4.png");
     bool isSNfinished = false;
-    Texture humoo5 = LoadTexture("items/128x128_piedra.png");
+    Texture humoo5 = LoadTexture("effects/128x128_hierba5.png");
     friend int main();
     friend class coins;
     friend class UI;
@@ -1943,7 +1943,7 @@ private:
 public:
     friend class PowerUpLive;
     friend class Game;
-    Mariposa() : Enemy(3, 1) {
+    Mariposa() : Enemy(1, 1) {
 
 
 
@@ -2853,8 +2853,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 1;
-        stage = 11;
+        level = 10;
+        stage = 10;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
