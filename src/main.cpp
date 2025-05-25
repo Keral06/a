@@ -7027,7 +7027,7 @@ public:
 
 
     void desaparecer(float deltaTime) {
-        // Animación de caminar (mismo código que antes)
+        
         animTime += deltaTime;
         if (animTime >= animSpeed) {
             animTime = 0;
