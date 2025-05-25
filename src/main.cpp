@@ -7038,7 +7038,7 @@ public:
         position.y -= walkSpeed * deltaTime;
         PlaySound(caminar);
 
-        // CUANDO EL STOREMAN 
+        // CUANDO EL STOREMAN llega al borde superior de la pantalla
         if (position.y <= 0) {
             position.y = 0;
             isWalking = false;
