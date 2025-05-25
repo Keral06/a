@@ -4,7 +4,7 @@
 #include <vector> 
 /*declarar las medidas de la pantalla jugable y de la pantalla en general*/
 const int screenWidth = 1024 / 2 + 32 * 2;
-const int screenHeight = 1024 / 2 + 32;
+const int screenHeight = 1024 / 2 + 64;
 const int playerScreenX = 1024 / 2;
 const int playerScreenY = 1024 / 2;
 // declarar las clases que se usaran
@@ -2353,46 +2353,73 @@ private:
     bool deathAnimationFinished = false;
 
 public:
+    friend Game;
     Boss() : Enemy(2, 2), isAlive(true), frameCounter(0), moving(false) {
         playerPos = { (float)(320), 448 };
         introStartTime = GetTime();
         Intro = true;
+        status = true;
         
     }
+    
 
     void Death() {
         if (!IsSoundPlaying(Die)) {
             PlaySound(Die);
         }
+        this->playerPos = playerPos;
         deathStartTime = GetTime();
+        DrawDeathAnim();
         status = false;
-        isAlive = false;
+        
+
+        
+    }
+    void DrawHealthBar() {
+        const int barWidth = 510;
+        const int barHeight = 20;
+        const int barX = 64;
+        const int barY = 550;
+
+        float healthRatio = (float)hp / 50.0f;
+        int currentBarWidth = (int)(barWidth * healthRatio);
+
+        
+        DrawRectangle(barX, barY, barWidth, barHeight, BLACK);
+        DrawRectangle(barX, barY, currentBarWidth, barHeight, RED);
+
     }
 
     void DrawDeathAnim() {
         float currentTime = GetTime();
         float elapsed = currentTime - deathStartTime;
 
-        if (elapsed < 4)
+        if (elapsed < 0.1f) {
             DrawTexture(Death1, playerPos.x, playerPos.y, WHITE);
-        else if (elapsed < 8)
-            DrawTexture(Death2, playerPos.x, playerPos.y, WHITE);
-        else if (elapsed < 12)
-            DrawTexture(Death3, playerPos.x, playerPos.y, WHITE);
-        else if (elapsed < 16)
-            DrawTexture(Death4, playerPos.x, playerPos.y, WHITE);
-        else if (elapsed < 20)
-            DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
-        else {
-            DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
-            deathAnimationFinished = true;
-            // Optionally trigger level end or game win here
         }
+        else if (elapsed < 0.2f) {
+            DrawTexture(Death2, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.3f) {
+            DrawTexture(Death3, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.4f) {
+            DrawTexture(Death4, playerPos.x, playerPos.y, WHITE);
+        }
+        else if (elapsed < 0.5f) {
+            DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
+        }
+        else {
+            // Animation finished
+            deathAnimationFinished = true;
+            // Optionally trigger a respawn or game over screen here
+        }
+    
     }
 
 
     void Update(Player& p) {
-        if (!isAlive) return;
+        if (!status) return;
 
         float now = GetTime();
 
@@ -2415,7 +2442,7 @@ public:
             if (contador % 7 == 0) {
                 Intro = true;
                 moving = false;
-                _sleep(4);
+                
                 return;
             }
             else {
@@ -2432,7 +2459,14 @@ public:
     }
 
     void Draw() {
-        
+        if (!status && deathAnimationFinished) {
+            return; // Stop drawing anything once the boss has finished dying
+        }
+
+        if (!status && !deathAnimationFinished) {
+            DrawDeathAnim();
+            return;
+        }
 
         frameCounter++;
         Texture current;
@@ -2445,28 +2479,18 @@ public:
         }
 
         DrawTexture(current, playerPos.x, playerPos.y, WHITE);
-        if (!isAlive && !deathAnimationFinished) {
-            DrawDeathAnim();
-            return;
-        }
+        
+        
 
-        if (!isAlive && deathAnimationFinished) {
-
-            return;
-        }
     }
+
+    
 
 
     bool IsAlive() const { return isAlive; }
+    
 
-    //void TakeDamage(int amount) {
-    //    hp -= amount;
-    //    if (hp <= 0) isAlive = false;
-    //}
-
-    //Rectangle GetHitbox() const {
-    //    return { playerPos.x, playerPos.y, 64, 64 }; // Adjust size if needed
-    //}
+    
 
 };
 
@@ -3091,11 +3115,12 @@ private:
 
 
 public:
+    friend Boss;
     friend int main();
     Game() {
         deadogres = 0;
-        level = 5;
-        stage = 5;        /*  BeginDrawing();*/
+        level = 4;
+        stage = 4;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
        
@@ -3148,7 +3173,7 @@ public:
 
             }
             int a = GetTime();
-            if (level == 5 && a > 17.0f && boss.IsAlive()) {
+            if (level == 5 && a > 17.0f && boss.status && boss.IsAlive()) {
                 static float shootTimer = powerRate;
 
                 if (shootTimer <= 0) {
@@ -3174,18 +3199,22 @@ public:
                     bullets[i].eliminate = true;
                 }
                 if (!bullets[i].isEnemyBullet &&
-                    CheckCollisionRecs(bulletRect, { boss.GetPosition().x, boss.GetPosition().y, 64, 64 })) {
+                    
+                    CheckCollisionRecs(bulletRect, { boss.GetPosition().x, boss.GetPosition().y, 32, 32 })) {
 
                     boss.hp--;
                     bullets[i].eliminate = true;
-
-                    if (boss.hp <= 0 && boss.IsAlive()) {
-                        
-                        boss.Death();  
-                        
-                    }
+                    
+                    
+                    
+                    
                 }
+                if (boss.hp <= 0 && boss.status == true) {
 
+                    boss.Death();
+
+                }
+                
                 
 
                 /*if (bullets[i].eliminate == true) {
@@ -3351,7 +3380,7 @@ public:
                                         else if (orcs.size() > 1) {
 
                                             aux = i;
-                                            orcs[i].Death();;
+                                            orcs[i].Death();
                                             while (aux < orcs.size() - 1) {
 
                                                 orcs[aux] = orcs[aux + 1];
@@ -4248,6 +4277,9 @@ public:
             if (bossFight && boss.IsAlive()) {
                 boss.Update(p);
                 boss.Draw();
+                if (boss.IsAlive()) {
+                    boss.DrawHealthBar();
+                }
 
 
             }
@@ -7415,15 +7447,30 @@ class music {
 
 private:
     Music Overworld;
-
+    Music BossTrack;
+    int bossStarted = 0;
     int starts;
 
 public:
 
     music() {
-        Overworld = LoadMusicStream("74.-Journey-Of-The-Prairie-King-_Overworld__1.mp3");;
+        Overworld = LoadMusicStream("74.-Journey-Of-The-Prairie-King-_Overworld__1.mp3");
+        BossTrack = LoadMusicStream("75.-Journey-Of-The-Prairie-King-_The-Outlaw_.ogg");
         starts = 0;
+        bossStarted = 0;
     }
+
+    void BossPlayer() {
+        UpdateMusicStream(BossTrack);
+        if (bossStarted == 0) {
+            PlayMusicStream(BossTrack);
+            bossStarted = 1;
+        }
+        if (GetMusicTimePlayed(BossTrack) / GetMusicTimeLength(BossTrack) > 1) {
+            bossStarted = 0;
+        }
+    }
+
     //carga la musica
     void OverworldPlayer() {
         UpdateMusicStream(Overworld);
@@ -7446,11 +7493,13 @@ public:
 
     }
     //inicia la musica y la resetea si se acaba
-    void stopmusic() {
-
+    void StopAllMusic() {
         StopMusicStream(Overworld);
+        StopMusicStream(BossTrack);
         starts = 0;
+        bossStarted = 0;
     }
+
     //para la musica
 
 
@@ -7583,7 +7632,14 @@ int main()
             if (!game.gameover) {
                 if (!game.wonGame) {
 
-                    player.OverworldPlayer();
+                    if (game.CheckLevel() == 5) {
+                               
+                        player.BossPlayer();       
+                    }
+                    else {
+                         
+                        player.OverworldPlayer();          
+                    }
                     ui.DrawInicial();
                     game.GameStart(p, b, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun, tienda);
                     desierto.LevelDraw(game);
@@ -7611,7 +7667,7 @@ int main()
                     gameovertime = true;
                 }
                 game.GameOverScreen(p);
-                player.stopmusic();
+                player.StopAllMusic();
 
                 float newTime = GetTime();
                 float difference = newTime - GOtime;
