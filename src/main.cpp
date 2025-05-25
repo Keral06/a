@@ -24,7 +24,6 @@ class coins;
 class HeavyMachineGun;
 class ScreenNuke;
 class Coffee;
-class Mariposa;
 enum Direccion
 {
     ARRIBA,
@@ -116,7 +115,7 @@ private:
     Texture Humo5 = LoadTexture("muerte4.png");
     Sound death = LoadSound("song/cowboy_dead.wav");
     bool status;
-    int bag=0;
+    int bag = 0;
     float deathStartTime = 0;
 
 public:
@@ -134,7 +133,7 @@ public:
     friend bool PlayerPowerUpScreenMoney(Player& p, coins& pp);
 
 
-    Player(int hp, int vel) : Entity(hp, vel, { (float)(playerScreenX+ 128) / 2, 240 }) {
+    Player(int hp, int vel) : Entity(hp, vel, { (float)(playerScreenX + 128) / 2, 240 }) {
         this->money = 0;
         this->lives = 3;
         this->dir = ARRIBA;
@@ -286,14 +285,14 @@ public:
     //dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
     void ResetPlayer(int level) {
 
-        
+
         status = true;
         if (level == 5) {
             playerPos = { (float)(playerScreenX + 128) / 2, 240 };
             status = true;
         }
         else {
-        
+
             playerPos = { (float)(playerScreenX + 128) / 2, 240 };
         }
 
@@ -388,21 +387,21 @@ public:
 
 
             if (level == 1) {
-                Rectangle lado1 = { 64, 32, 32, 512 };    
+                Rectangle lado1 = { 64, 32, 32, 512 };
                 Rectangle lado2 = { 64, 32, 512, 32 };
                 Rectangle lado3 = { 544, 32, 32, 512 };
                 Rectangle lado4 = { 64, 512, 512, 32 };
-               
 
-                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 }; 
 
-               
+                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
                 if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
                     !CheckCollisionRecs(nextPlayerPos, lado2) &&
                     !CheckCollisionRecs(nextPlayerPos, lado3) &&
                     !CheckCollisionRecs(nextPlayerPos, lado4)) {
 
-                    
+
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
@@ -414,22 +413,22 @@ public:
 
             }
             else if (level == 2) {
-                Rectangle lado1 = { 192, 160, 64, 32 };    
+                Rectangle lado1 = { 192, 160, 64, 32 };
                 Rectangle lado2 = { 192, 160, 32, 64 };
                 Rectangle lado3 = { 192, 416, 64, 32 };
                 Rectangle lado4 = { 192, 384, 32, 64 };
-                Rectangle lado5 = { 384, 160, 64, 32 };    
+                Rectangle lado5 = { 384, 160, 64, 32 };
                 Rectangle lado6 = { 416, 160, 32, 64 };
                 Rectangle lado7 = { 384, 416, 64, 32 };
                 Rectangle lado8 = { 416, 384, 32, 64 };
-                Rectangle lado9 = { 64, 32, 32, 512 };    
+                Rectangle lado9 = { 64, 32, 32, 512 };
                 Rectangle lado10 = { 64, 32, 512, 32 };
                 Rectangle lado11 = { 544, 32, 32, 512 };
                 Rectangle lado12 = { 64, 512, 512, 32 };
 
-                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 }; 
+                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
 
-                
+
                 if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
                     !CheckCollisionRecs(nextPlayerPos, lado2) &&
                     !CheckCollisionRecs(nextPlayerPos, lado3) &&
@@ -437,13 +436,13 @@ public:
                     !CheckCollisionRecs(nextPlayerPos, lado5) &&
                     !CheckCollisionRecs(nextPlayerPos, lado6) &&
                     !CheckCollisionRecs(nextPlayerPos, lado7) &&
-                    !CheckCollisionRecs(nextPlayerPos, lado8) &&                   
+                    !CheckCollisionRecs(nextPlayerPos, lado8) &&
                     !CheckCollisionRecs(nextPlayerPos, lado10) &&
                     !CheckCollisionRecs(nextPlayerPos, lado11) &&
                     !CheckCollisionRecs(nextPlayerPos, lado11) &&
                     !CheckCollisionRecs(nextPlayerPos, lado12)) {
 
-                    
+
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
@@ -466,7 +465,7 @@ public:
                 Rectangle lado6 = { 96, 64, 32, 64 };
                 Rectangle lado7 = { 512, 64, 32, 64 };
                 Rectangle lado8 = { 480, 64, 64, 32 };
-                Rectangle lado9 = { 64, 32, 32, 512 };    
+                Rectangle lado9 = { 64, 32, 32, 512 };
                 Rectangle lado10 = { 64, 32, 512, 32 };
                 Rectangle lado11 = { 544, 32, 32, 512 };
                 Rectangle lado12 = { 64, 512, 512, 32 };
@@ -475,9 +474,9 @@ public:
                 Rectangle lado15 = { 512, 448, 32, 64 };
                 Rectangle lado16 = { 480, 480, 64, 32 };
 
-                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 }; 
+                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
 
-                
+
                 if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
                     !CheckCollisionRecs(nextPlayerPos, lado2) &&
                     !CheckCollisionRecs(nextPlayerPos, lado3) &&
@@ -495,7 +494,7 @@ public:
                     !CheckCollisionRecs(nextPlayerPos, lado15) &&
                     !CheckCollisionRecs(nextPlayerPos, lado16)) {
 
-                    
+
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
@@ -556,14 +555,14 @@ public:
                 DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
                 DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
                 DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-                
+
             }
             else if (level == 5) {
                 Rectangle lado1 = { 320, 160, 32, 32 };
                 Rectangle lado2 = { 224, 224, 32, 32 };
                 Rectangle lado3 = { 384, 224, 32, 32 };
                 Rectangle lado4 = { 288, 416, 96, 32 };
-                Rectangle lado5 = { 64, 288, 512, 32 };                
+                Rectangle lado5 = { 64, 288, 512, 32 };
                 Rectangle lado9 = { 64, 32, 32, 512 };
                 Rectangle lado10 = { 64, 32, 512, 32 };
                 Rectangle lado11 = { 544, 32, 32, 512 };
@@ -590,7 +589,7 @@ public:
                 DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
                 DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
                 DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                }
+            }
             else if (level == 6) {
                 Rectangle lado1 = { 96, 64, 96, 32 };
                 Rectangle lado2 = { 96, 64, 32, 96 };
@@ -616,7 +615,7 @@ public:
                     !CheckCollisionRecs(nextPlayerPos, lado2) &&
                     !CheckCollisionRecs(nextPlayerPos, lado3) &&
                     !CheckCollisionRecs(nextPlayerPos, lado4) &&
-                    !CheckCollisionRecs(nextPlayerPos, lado5) && 
+                    !CheckCollisionRecs(nextPlayerPos, lado5) &&
                     !CheckCollisionRecs(nextPlayerPos, lado6) &&
                     !CheckCollisionRecs(nextPlayerPos, lado7) &&
                     !CheckCollisionRecs(nextPlayerPos, lado8) &&
@@ -637,7 +636,7 @@ public:
                 DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
                 DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
                 DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                }
+            }
             else if (level == 7) {
                 Rectangle lado1 = { 128, 128, 32, 32 };
                 Rectangle lado2 = { 160, 160, 32, 32 };
@@ -727,7 +726,7 @@ public:
                 DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
                 DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
                 DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-                }
+            }
 
             else if (level == 9) {
                 Rectangle lado1 = { 192, 160, 64, 64 };
@@ -773,7 +772,7 @@ public:
                 DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
                 DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
                 DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-                }
+            }
 
             else if (level == 10) {
                 Rectangle lado1 = { 64, 64, 224, 32 };
@@ -817,7 +816,7 @@ public:
                 DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
                 DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
                 DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-                }
+            }
             else if (level == 11) {
                 Rectangle lado1 = { 64, 64, 512, 32 };
                 Rectangle lado2 = { 64, 480, 512, 32 };
@@ -842,7 +841,7 @@ public:
                 }
                 DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
                 DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                }
+            }
             ColisionPlayer(playerPos);
         }
     }
@@ -893,12 +892,12 @@ public:
 
         if (!IsSoundPlaying(death)) {
             PlaySound(death); // Play the sound only if it�s not already playing
-        lives--;
+            lives--;
 
-        deathStartTime = GetTime();
+            deathStartTime = GetTime();
         }
 
-       
+
     }
     //resetea al jugador despues de morir
 
@@ -953,7 +952,74 @@ public:
 
 
 };
+class ScreenNuke : public Colision {
 
+private:
+    Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
+    Vector2 pos;
+    float appearTime;
+public:
+    friend class Game;
+    friend class Player;
+    friend class Colision;
+
+    friend  bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
+    ScreenNuke(Vector2 position) : Colision(pos) {
+        this->pos = position;
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        appearTime = GetTime();
+
+    }
+    //dibuja el item de vida +
+    ScreenNuke(Player p) : Colision(pos) {
+
+
+
+    }
+    //suma la vida al jugador despues de recoger el item
+
+
+
+    void UsePowerUp(std::vector<Ogre>& enemigo, std::vector <Orc>& orcs, std::vector <Mariposa>& marip) {
+
+        int i = 0;
+
+        while (enemigo.size() != 0) {
+
+            enemigo.pop_back();
+
+
+        }
+        while (orcs.size() != 0) {
+
+            orcs.pop_back();
+
+
+        }
+        while (marip.size() != 0) {
+
+            marip.pop_back();
+
+        }
+
+    }
+
+    //suma la vida
+    void Draw() {
+
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+    //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
+
+
+
+
+
+
+};
 class Coffee : public Colision {
 private:
     Texture vida = LoadTexture("items/128x128_taza.png");
@@ -975,7 +1041,7 @@ public:
     //dibuja el item de vida +
     Coffee(Player p) : Colision(pos) {
 
-        
+
 
     }
     //suma la vida al jugador despues de recoger el item
@@ -1004,7 +1070,7 @@ public:
 
 
 };
-int currentLevel;  
+int currentLevel;
 
 
 class Enemy : public Entity {
@@ -1014,17 +1080,6 @@ public:
     friend class coins;
     friend class UI;
     friend class Game;
-    friend class ScreenNuke;
-    float SNstart_time;
-    Texture humoo1 = LoadTexture("items/128x128_piedra1.png");
-    Texture humoo2 = LoadTexture("items/128x128_piedra2.png");
-    Texture humoo3 = LoadTexture("items/128x128_piedra3.png");
-    Texture humoo4 = LoadTexture("items/128x128_piedra4.png");
-    Texture humoo5 = LoadTexture("items/128x128_piedra5.png");
-    bool isSNfinished = false;
-    bool didItStart = false;
-    
-    
     Enemy(int hp, int vel) : Entity(hp, vel, { 0, 0 }) {
         if (currentLevel == 11) {
             int posicion = GetRandomValue(1, 2);  // Only two spawn points
@@ -1052,33 +1107,7 @@ public:
         }
     }
 
-    void SNAnim() {
-        float currentTime = GetTime();
-        float elapsed = currentTime - SNstart_time;
 
-        if (elapsed < 0.1) {
-            DrawTexture(humoo1, playerPos.x, playerPos.y, WHITE);
-        }
-        else if (elapsed < 0.2) {
-            DrawTexture(humoo2, playerPos.x, playerPos.y, WHITE);
-        }
-        else if (elapsed < 0.3) {
-            DrawTexture(humoo3, playerPos.x, playerPos.y, WHITE);
-        }
-        else if (elapsed < 0.4) {
-            DrawTexture(humoo4, playerPos.x, playerPos.y, WHITE);
-        }
-        else if (elapsed < 0.5) {
-            DrawTexture(humoo5, playerPos.x, playerPos.y, WHITE);
-        }
-        
-        else {
-            // Animation finished
-            isSNfinished = true;
-            // Optionally trigger a respawn or game over screen here
-        }
-    
-    }
     //declara la posicion inicial del enemigo y sus atributos (velocidad, vida)
     friend class Colision;
     void MovementEnemy(Player p, int level) {
@@ -1098,7 +1127,7 @@ public:
         else {
             nextY -= vel;  // Changed from += to -=
         }
-        
+
 
         if (level == 1) {
             Rectangle lado1 = { 64, 32, 32, 512 };
@@ -1355,7 +1384,7 @@ public:
             DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
             DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
         }
-            
+
         else if (level == 7) {
             Rectangle lado1 = { 128, 128, 32, 32 };
             Rectangle lado2 = { 160, 160, 32, 32 };
@@ -1410,7 +1439,7 @@ public:
             DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
             DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
             DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-            }
+        }
         else if (level == 8) {
             Rectangle lado1 = { 64, 192, 120, 32 };
             Rectangle lado2 = { 224, 192, 88, 32 };
@@ -1419,7 +1448,7 @@ public:
             Rectangle lado5 = { 64, 352, 120, 32 };
             Rectangle lado6 = { 224, 352, 88, 32 };
             Rectangle lado7 = { 352, 352, 88, 32 };
-            Rectangle lado8 = { 480, 352, 88, 32 }; 
+            Rectangle lado8 = { 480, 352, 88, 32 };
             Rectangle lado9 = { 64, 32, 32, 224 };
             Rectangle lado10 = { 64, 32, 224, 32 };
             Rectangle lado11 = { 544, 32, 32, 224 };
@@ -1461,7 +1490,7 @@ public:
             DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
             DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
             DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-                }
+        }
         else if (level == 9) {
             Rectangle lado1 = { 192, 160, 64, 64 };
             Rectangle lado2 = { 192, 352, 64, 32 };
@@ -1514,7 +1543,7 @@ public:
             DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
             DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
             DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-                }
+        }
         else if (level == 10) {
             Rectangle lado1 = { 64, 64, 224, 32 };
             Rectangle lado2 = { 384, 64, 192, 32 };
@@ -1565,7 +1594,7 @@ public:
             DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
             DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
             DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-                }
+        }
         else if (level == 11) {
             Rectangle lado1 = { 64, 64, 512, 32 };
             Rectangle lado2 = { 64, 480, 512, 32 };
@@ -1598,10 +1627,10 @@ public:
             }
             DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
             DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                }
+        }
 
 
-        
+
         ColisionPlayer(playerPos);
     }
 
@@ -1784,15 +1813,13 @@ public:
 
 
 
-<<<<<<< HEAD
-=======
     }
     //declara al enemigo
     void SetPosition(Vector2 pos) {
         playerPos = pos;
->>>>>>> d5a034e17a2bdf977a39f575b2734e2ae4cc3e88
     }
-    //declara al enemigo
+
+
     void MovementMariposa(Player p) {
 
 
@@ -1818,13 +1845,13 @@ public:
 
 
 
-        
 
 
-            playerPos.x = nextX;
-            playerPos.y = nextY;
-        
-            ColisionPlayer(playerPos);
+
+        playerPos.x = nextX;
+        playerPos.y = nextY;
+
+
 
     }
     void Death() {
@@ -1892,96 +1919,7 @@ public:
 
 };
 
-class ScreenNuke : public Colision {
 
-private:
-    Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
-    Vector2 pos;
-    float appearTime;
-    bool finished = false;
-    bool started = false;
-public:
-    friend class Game;
-    friend class Player;
-    friend class Colision;
-
-    friend  bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
-    ScreenNuke(Vector2 position) : Colision(pos) {
-        this->pos = position;
-
-        DrawTexture(vida, pos.x, pos.y, WHITE);
-        appearTime = GetTime();
-
-    }
-    //dibuja el item de vida +
-    ScreenNuke(Player p) : Colision(pos) {
-
-
-
-    }
-    //suma la vida al jugador despues de recoger el item
-
-
-
-    void UsePowerUp(std::vector<Ogre>& enemigo, std::vector <Orc>& orcs, std::vector <Mariposa>& marip) {
-
-        int i = 0;
-
-        while (enemigo.size() > i) {
-
-            enemigo[i].SNAnim();
-            if (enemigo[i].isSNfinished) {
-
-                enemigo.pop_back();
-
-            }
-
-            i++;
-        }
-        i = 0;
-        while (orcs.size() > i) {
-
-            orcs[i].SNAnim();
-            if (orcs[i].isSNfinished) {
-
-                orcs.pop_back();
-
-            }
-
-            i++;
-        }
-        while (marip.size() > i) {
-
-            marip[i].SNAnim();
-            if (marip[i].isSNfinished) {
-
-                marip.pop_back();
-
-            }
-
-            i++;
-        }
-        if (marip.size() == 0 && enemigo.size() == 0 && orcs.size() == 0) {
-            finished = true;
-            started = false;
-        }
-    }
-
-    //suma la vida
-    void Draw() {
-
-
-        DrawTexture(vida, pos.x, pos.y, WHITE);
-        ColisionPlayer(pos);
-    }
-    //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
-
-
-
-
-
-
-};
 class DeadOgre {
 private:
     Texture Mon1 = LoadTexture("effects/128x128_hierba6.png");
@@ -2079,8 +2017,8 @@ private:
 
 public:
     Boss() : Enemy(30, 2), isAlive(true), frameCounter(0), moving(false) {
-        playerPos = { (float)(320), 448 };  
-        introStartTime = GetTime(); 
+        playerPos = { (float)(320), 448 };
+        introStartTime = GetTime();
         Intro = true;
     }
 
@@ -2091,10 +2029,10 @@ public:
 
         float now = GetTime();
 
-        
+
         if (Intro) {
-            if (now - introStartTime < 17.0f ) { //cambiar mas tarde, solo fase prueba//
-                moving = false; 
+            if (now - introStartTime < 17.0f) { //cambiar mas tarde, solo fase prueba//
+                moving = false;
                 DrawTexture(Dialogo, 310, 360, WHITE);
                 return;
 
@@ -2120,7 +2058,7 @@ public:
                 if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
                 return;
             }
-            
+
         }
 
 
@@ -2191,8 +2129,8 @@ public:
     //declara las direcciones y teclas asignadas a disparar
     friend class Game;
     // Add method to update bullet position
-    
- 
+
+
 
 
     Shoot(Player p) : Colision(p.GetPosition()) {
@@ -2313,16 +2251,16 @@ public:
             };
         }
 
-        
-        
+
+
         for (const auto& wall : walls) {
             if (CheckCollisionRecs(nextBulletPos, wall)) {
                 eliminate = true;
-                return; 
+                return;
             }
         }
 
-        
+
         playerPos.x = nextX;
         playerPos.y = nextY;
         ColisionBullet(playerPos);
@@ -2337,13 +2275,13 @@ public:
 
     }
     void Draw() {
-        
-            DrawTexture(bulletTex, playerPos.x, playerPos.y, WHITE);
+
+        DrawTexture(bulletTex, playerPos.x, playerPos.y, WHITE);
 
 
 
     }
-    
+
 
 
 };
@@ -2523,7 +2461,7 @@ public:
             moneda = 1;
 
         }
-        
+
         appearTime = GetTime();
 
     }
@@ -2580,7 +2518,7 @@ public:
 
 };
 
-class HeavyMachineGun : public Colision{
+class HeavyMachineGun : public Colision {
 
 private:
 
@@ -2649,29 +2587,28 @@ private:
     int timeCafeFinal;
     int HMGTimeInicial;
     int HMGTimeFinal;
-    int cafeEnUso=0;
-    int HMGEnUso=0;
+    int cafeEnUso = 0;
+    int HMGEnUso = 0;
     Boss boss;
     bool bossFight = false;
     bool tiendaActiva = false;
     bool ChangingLevel = false;
-    bool SNInUse = false;
-   
-    
+
+
 public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 1;
+        level = 11;
         stage = 11;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
     }
     //declara el nivel y stage inicial
-    void GameStart(Player& p,Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>&SN, std::vector <HeavyMachineGun>gun)
-     {
-        if (p.status && (!ChangingLevel ||(enemigo.size()!=0 || marip.size() !=0|| orcs.size()!=0))) {
+    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>gun)
+    {
+        if (p.status && (!ChangingLevel || (enemigo.size() != 0 || marip.size() != 0 || orcs.size() != 0))) {
             ClearBackground(BLACK);
             /*BeginDrawing();*/
             BeginDrawing();
@@ -2692,11 +2629,11 @@ public:
 
             if (level == 11) {
                 currentLevel = 11;
-               
+
             }
 
 
-             // Handle bullet creation with arrow keys
+            // Handle bullet creation with arrow keys
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
                 IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
                 // Add rate limiting for bullets
@@ -2704,14 +2641,14 @@ public:
                 if (shootTimer <= 0) {
                     bullets.push_back(Shoot(p));
                     shootTimer = powerRate; // Shoot every 0.2 seconds while holding key
-                   
+
                 }
                 shootTimer -= GetFrameTime();
 
 
             }
             int a = GetTime();
-            if (level == 5 && a > 17.0f ) {
+            if (level == 5 && a > 17.0f) {
                 // Add rate limiting for bullets
                 static float shootTimer = powerRate;
                 if (shootTimer <= 0) {
@@ -2723,7 +2660,7 @@ public:
 
 
             }
-           int i = 0;
+            int i = 0;
             // dibuja el ogro 
             while (i < bullets.size()) {
 
@@ -2732,7 +2669,7 @@ public:
 
                 if (bullets[i].eliminate == true) {
 
-                   
+
                     int p = i;
                     if (bullets.size() == 1) {
 
@@ -2748,7 +2685,7 @@ public:
                         bullets.pop_back();
 
                     }
-                    
+
 
                 }
                 i++;
@@ -2762,18 +2699,18 @@ public:
             int bulletSize = bullets.size();
 
             //la tienda aparece solo en el level 3
-            if (level ==3 && enemigo.size() == 0)
+            if (level == 3 && enemigo.size() == 0)
             {
                 tiendaActiva = true;
 
             }
-            else 
+            else
             {
                 tiendaActiva = false;
             }
-            
 
-            if (level > 3 && level != 5 && !SNInUse) {
+
+            if (level > 3 && level != 5) {
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -2810,29 +2747,29 @@ public:
                                         Vector2 ee = orcs[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
-                                       
-                                       
-                                       
-                                       
-                                       
+
+
+
+
+
                                     }
                                     else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
                                         Vector2 ee = orcs[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
-                                       
-                                       
-                                        
-                                           
 
-                                       
+
+
+
+
+
                                     }
                                     else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
                                         Vector2 ee = orcs[i].GetPosition();
                                         coins live(ee);
                                         money.push_back(live);
-                                        
-                                       
+
+
 
 
                                     }
@@ -2840,13 +2777,13 @@ public:
                                         Vector2 ee = orcs[i].GetPosition();
                                         Coffee live(ee);
                                         cafe.push_back(live);
-                                        
-                                      
-                                        
 
-                                           
 
-                                        
+
+
+
+
+
                                     }
                                     else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
                                         Vector2 ee = orcs[i].GetPosition();
@@ -2951,12 +2888,7 @@ public:
                 bossFight = false;
             }
 
-<<<<<<< HEAD
-            if (level > 6 && !SNInUse) { //mariposa
-                int i = 0;
-=======
             if (level > 6 && level != 5) {
->>>>>>> d5a034e17a2bdf977a39f575b2734e2ae4cc3e88
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
                     Mariposa auxiliar;
 
@@ -2974,7 +2906,7 @@ public:
                     auxiliar.SetPosition(spawnPos);  // Set manually after creation
                     marip.push_back(auxiliar);
                 }
-            
+
 
                 if (marip.size() > 0) {
 
@@ -2984,21 +2916,7 @@ public:
                     while (i < marip.size()) {
 
                         while (j < bullets.size()) {
-                            if (i >= marip.size()) break;
 
-                            if (bullets[j].ColisionBullet(marip[i])) {
-                                DeadOgre deadMarip(marip[i].GetPosition());
-                                dead.push_back(deadMarip);
-                                auxTime.push_back(GetTime());
-                                deadogres++;
-
-                                marip[i].Death();
-
-                                marip.erase(marip.begin() + i);
-                                bullets.erase(bullets.begin() + j);
-                                bulletSize = bullets.size();
-                                continue; // skip increment i, we just erased it
-                            }
                             if (i >= marip.size()) {
 
 
@@ -3085,26 +3003,26 @@ public:
 
 
 
-                                        if (marip.size() == 1) {
-                                            marip[i].Death();
-                                            marip.pop_back();
+                                    if (marip.size() == 1) {
+                                        marip[i].Death();
+                                        marip.pop_back();
+
+                                    }
+
+                                    else if (marip.size() > 1) {
+
+                                        aux = i;
+                                        marip[i].Death();;
+                                        while (aux < marip.size() - 1) {
+
+                                            marip[aux] = marip[aux + 1];
+                                            aux++;
 
                                         }
-
-                                        else if (marip.size() > 1) {
-
-                                            aux = i;
-                                            marip[i].Death();;
-                                            while (aux < marip.size() - 1) {
-
-                                                marip[aux] = marip[aux + 1];
-                                                aux++;
-
-                                            }
-                                            marip.pop_back();
+                                        marip.pop_back();
 
 
-                                        }
+                                    }
 
                                     bulletSize = bullets.size();
                                     aux = j;
@@ -3144,13 +3062,13 @@ public:
                 }
 
 
-               
+
 
 
 
 
             }
-            if (level != 5 &&  !SNInUse) { //ogre
+            if (level != 5) { //ogre
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
 
@@ -3183,8 +3101,8 @@ public:
 
 
                                     int a = 0;
-                                    int Random = GetRandomValue(1,10);
-                                    if (Random == 1&& Lives.size() == 0) {
+                                    int Random = GetRandomValue(1, 10);
+                                    if (Random == 1 && Lives.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
@@ -3319,7 +3237,7 @@ public:
 
 
             }
-             i = 0;
+            i = 0;
             deadogres = dead.size();
             while (i < dead.size()) {
 
@@ -3333,11 +3251,11 @@ public:
             while (auxiliarPowerUps < Lives.size()) {
                 Lives[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (helperDrawer- Lives[auxiliarPowerUps].appearTime >10) {
+                if (helperDrawer - Lives[auxiliarPowerUps].appearTime > 10) {
                     Lives.pop_back();
                 }
                 auxiliarPowerUps++;
-            
+
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < gun.size()) {
@@ -3354,7 +3272,7 @@ public:
 
                 SN[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if (helperDrawer- SN[auxiliarPowerUps].appearTime > 10) {
+                if (helperDrawer - SN[auxiliarPowerUps].appearTime > 10) {
                     SN.pop_back();
                 }
                 auxiliarPowerUps++;
@@ -3364,9 +3282,9 @@ public:
 
                 money[auxiliarPowerUps].Draw();
                 float helperDrawer = GetTime();
-                if ( helperDrawer - money[auxiliarPowerUps].appearTime > 10) {
+                if (helperDrawer - money[auxiliarPowerUps].appearTime > 10) {
                     int zz = auxiliarPowerUps;
-                    while (zz < money.size()-1) {
+                    while (zz < money.size() - 1) {
                         money[zz] = money[zz + 1];
                         zz++;
                     }
@@ -3391,12 +3309,12 @@ public:
             while (auxiliarPowerUps < Lives.size()) {
 
                 if (PlayerPowerUp(p, Lives[auxiliarPowerUps])) {
-                   
-                        Lives[0].UsePowerUp(p);
-                        Lives.pop_back();
-                    
-                   
-                
+
+                    Lives[0].UsePowerUp(p);
+                    Lives.pop_back();
+
+
+
                 }
                 auxiliarPowerUps++;
 
@@ -3430,8 +3348,8 @@ public:
                     HeavyMachineGun Aux(p.playerPos);
                     Aux.StopUsing(powerRate);
                     HMGEnUso = 0;
-                
-                
+
+
                 }
 
             }
@@ -3440,8 +3358,9 @@ public:
 
                 if (PlayerPowerUpScreenNuke(p, SN[auxiliarPowerUps])) {
                     if (p.bag == 1) {
-                        SN[0].started = true;
-                        SNInUse = true;
+                        SN[0].UsePowerUp(enemigo, orcs, marip);
+                        SN.pop_back();
+
                     }
                     else {
 
@@ -3453,15 +3372,6 @@ public:
                     }
 
                 }
-            if (SN[0].started && !SN[0].finished) {
-                SN[0].UsePowerUp(enemigo, orcs, marip);
-            
-            }if (SN.size() >= 0) {
-                if (SN[0].finished) {
-                    SN.pop_back();
-                    SNInUse = false;
-                }
-            }
                 auxiliarPowerUps++;
 
             }
@@ -3473,17 +3383,17 @@ public:
                     int lala = auxiliarPowerUps;
                     if (money.size() == 1) {
 
-                        
+
 
                     }
                     else {
-                    
-                    while (lala < money.size()-1) {
-                        money[lala] = money[lala + 1];
-                        lala++;
-                    
-                    }
-                    
+
+                        while (lala < money.size() - 1) {
+                            money[lala] = money[lala + 1];
+                            lala++;
+
+                        }
+
                     }
                     money.pop_back();
                 }
@@ -3497,7 +3407,7 @@ public:
                     if (p.bag == 1) {
                         cafe[0].UsePowerUp(p);
                         cafe.pop_back();
-                      
+
                         timeCafeInicial = GetTime();
                     }
                     else {
@@ -3514,7 +3424,7 @@ public:
             }
             if (cafeEnUso == 1) {
                 timeCafeFinal = GetTime();
-                if ( timeCafeFinal - timeCafeInicial > 16) {
+                if (timeCafeFinal - timeCafeInicial > 16) {
                     Coffee Aux(p.playerPos);
                     Aux.StopUsing(p);
 
@@ -3525,45 +3435,45 @@ public:
             }
             auxiliarPowerUps = 0;
 
-           
+
 
             //actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
-                 if (bagItem == 2) {
-                    
+                if (bagItem == 2) {
+
                     if (HMGEnUso == 1) {
                         HMGTimeInicial = GetTime();
-                    
+
                     }
                     else {
                         HeavyMachineGun Aux(p.playerPos);
                         Aux.UsePowerUp(this->powerRate);
                         HMGEnUso = 1;
-                    
-                    
+
+
                     }
-                    
+
 
 
                 }
                 else if (bagItem == 3) {
-                     SN[0].started = true;
-                     SNInUse = true;
 
+                    ScreenNuke Aux(p);
+                    Aux.UsePowerUp(enemigo, orcs, marip);
                 }
                 else if (bagItem == 4) {
-                    
+
                     if (cafeEnUso == 1) {
                         timeCafeInicial = GetTime();
-                    
+
                     }
                     else {
                         Coffee Aux(p.playerPos);
                         Aux.UsePowerUp(p);
                         cafeEnUso = 1;
-                    
+
                     }
-                
+
                 }
                 p.bag = 0;
             }
@@ -3627,10 +3537,10 @@ public:
             i = 0;
             bulletSize = bullets.size();
 
-            
+
 
             i = 0;
-            
+
             while (i < bulletSize) {
 
                 if (0 > bullets[i].GetPosition().x || GetScreenWidth() < bullets[i].GetPosition().x || GetScreenHeight() < bullets[i].GetPosition().y || 0 > bullets[i].GetPosition().y) {
@@ -3697,7 +3607,7 @@ public:
 
                 }
                 while (0 < Lives.size()) {
-                
+
                     Lives.pop_back();
                 }
                 while (0 < SN.size()) {
@@ -3722,8 +3632,8 @@ public:
                     Lives.pop_back();
 
                 }
-                 
-                 deadogres = 0;
+
+                deadogres = 0;
 
                 if (p.lives < 0) {
 
@@ -3737,7 +3647,7 @@ public:
                     while (0 < dead.size()) {
 
                         dead.pop_back();
-                       
+
 
                     }
 
@@ -3747,32 +3657,32 @@ public:
 
             }
             if (bossFight && boss.IsAlive()) {
-                boss.Update(p);  
+                boss.Update(p);
                 boss.Draw();
 
 
             }
-            
+
             if (p.bag == 1) {
-               if (bagItem == 1) {
+                if (bagItem == 1) {
                     DrawTexture(vida, 14, 12, WHITE);
-                
+
                 }
                 else if (bagItem == 2) {
-                
+
                     DrawTexture(pistola, 14, 12, WHITE);
                 }
                 else if (bagItem == 3) {
                     DrawTexture(destructor, 14, 12, WHITE);
-                
+
                 }
                 else if (bagItem == 4) {
                     DrawTexture(cafee, 14, 12, WHITE);
-                
+
                 }
-            
+
             }
-            
+
             if (Tiempo.tiempo() == true && p.status == true) {
                 ChangingLevel = true;
                 while (0 < Lives.size()) {
@@ -3838,15 +3748,15 @@ public:
                 cafe.pop_back();
             }while (0 < money.size()) {
                 money.pop_back();
-            
+
             }
             while (0 < enemigo.size()) {
-            
+
                 enemigo.pop_back();
             }
             while (0 < orcs.size()) {
                 orcs.pop_back();
-            
+
             }while (0 < marip.size()) {
                 marip.pop_back();
             }
@@ -3871,12 +3781,12 @@ public:
 
             }
             if (p.lives >= 0) {
-            
+
                 p.DeathAnim();
-            
+
             }
             i = 0;
-            
+
             if (p.status == true && p.lives < 0) {
                 GameOver(p);
             }
@@ -3892,7 +3802,7 @@ public:
 
         }
 
-        else if (ChangingLevel) {
+        if (ChangingLevel) {
             ClearBackground(BLACK);
             BeginDrawing();
             p.Movement(level);
@@ -3900,8 +3810,8 @@ public:
             punteroDraw++;
             int i = 0;
             while (i < dead.size()) {
-            
-            
+
+
             }
             if (punteroDraw % 120 != 0) {
 
@@ -3920,7 +3830,7 @@ public:
                 }
 
             }
-        
+
         }
         //reinicia los valores si el jugador pierde una vida
 
@@ -4501,7 +4411,7 @@ public:
         y = y + 32;
         x = x + 64;
         DrawTexture(valla, x, y, WHITE);
-        x = 128+ 64;
+        x = 128 + 64;
         y = 352 + 64;
         for (int i = 0; i < 2; i++) {
             DrawTexture(valla, x, y, WHITE);
@@ -4808,7 +4718,7 @@ public:
             }
         }
         DrawTexture(valla, 256 + 64, 128 + 32, WHITE);
-        DrawTexture(valla, 256 +64, 384 + 32, WHITE);
+        DrawTexture(valla, 256 + 64, 384 + 32, WHITE);
         DrawTexture(valla, 128 + 64, 256 + 32, WHITE);
         DrawTexture(valla, 384 + 64, 256 + 32, WHITE);
         DrawTexture(desierto4, 160 + 64, 96 + 32, WHITE);
@@ -7031,29 +6941,25 @@ public:
 };
 
 
-class Store{
+class Store {
     Texture walkFrames[2];  // caminar
     Texture storemanTextures[5];
     Texture store;
-    Texture CosasDeLaTienda[3];
+    Texture CosasDeLaTienda[7];
 
-    Vector2 position = { 255+65, 0 };
+    Vector2 position = { 255 + 65, 0 };
     float animTime = 0;
     const float animSpeed = 0.2f; // Velocidad cambio de frames
-    const float walkSpeed = 100.0f; 
+    const float walkSpeed = 100.0f;
     bool isWalking = true;
     int currentFrame = 0;
-    bool hasAppeared = false; 
-
-    float tiempoTiendaAbierta = 0.0f;
-    const float tiempoMaximoTienda = 20.0f; // 30 segundos abierta
-    bool estaCerrando = false;
+    bool hasAppeared = false;
 
     const int precios[3] = { 10, 15, 10 }; // Precios de los items
     int itemSeleccionado = -1; //  ninguno seleccionado
-    const float rangoCompra = 50.0f; 
+    const float rangoCompra = 50.0f;
 
-    Sound caminar;
+
 public:
     friend int main();
     friend coins;
@@ -7080,16 +6986,18 @@ public:
         CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
         CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
         CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
-    
-        //sonido de caminar 
-        caminar = LoadSound("sound effects/prairie king walk.ogg");
+        CosasDeLaTienda[3] = LoadTexture("tienda/128x128_pistola2.png");
+        CosasDeLaTienda[4] = LoadTexture("tienda/128x128_cubo2.png");
+        CosasDeLaTienda[5] = LoadTexture("tienda/128x128_mun.png");
+
+
     }
 
-  
-    
-    
+
+
+
     void aparecer(float deltaTime) {
- 
+
 
         if (!isWalking) return;
 
@@ -7102,7 +7010,6 @@ public:
 
         // Movimiento hacia abajo
         position.y += walkSpeed * deltaTime;
-        PlaySound(caminar);
 
         // Detenerse al llegar a pos 200
         if (position.y >= 200)
@@ -7112,117 +7019,89 @@ public:
             hasAppeared = true;
             currentFrame = 0;
         }
-        
+
     }
 
 
 
 
-    void desaparecer(float deltaTime) {
-        
+    void desaparecer(float deltaTime)
+    {
+
+        if (!isWalking) return;
+
+        // Animación de caminar
         animTime += deltaTime;
         if (animTime >= animSpeed) {
             animTime = 0;
             currentFrame = (currentFrame + 1) % 2;
         }
 
-        // movvimiento hacia arriba
+        // Movimiento hacia arriba
         position.y -= walkSpeed * deltaTime;
-        PlaySound(caminar);
 
-        // CUANDO EL STOREMAN llega al borde superior de la pantalla
-        if (position.y <= 0) {
+        // Detenerse al llegar a 0
+        if (position.y >= 0)
+        {
             position.y = 0;
             isWalking = false;
             hasAppeared = false;
-            estaCerrando = false;
-            tiempoTiendaAbierta = 0.0f; 
             currentFrame = 0;
         }
     }
 
-    void Compra(Vector2 playerPos, int& playerCoins) {
-        if (isWalking || !hasAppeared) return;  //cuando el storeman esta quieto y visible
+    void Compra(Vector2 playerPos, int& playerCoins)
+    {
+        if (isWalking == false)
+        {
+            itemSeleccionado = -1;
 
-        itemSeleccionado = -1; // Resetear seleccion
+            // Posiciones de los items en la tienda
+            Vector2 itemPositions[3] = {
+                {210, 250}, // Pistola
+                {260, 250}, // Cubo
+                {310, 250}  // Munición
+            };
 
-        // Posiciones de los items en la tienda
-        Vector2 itemPositions[3] = {
-            {210, 250}, // Pistola
-            {260, 250}, // Cubo
-            {310, 250}  // Munición
-        };
-
-        // Verificar proximidad con cada item
-        for (int i = 0; i < 3; i++) {
-            if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
-                itemSeleccionado = i;
-
-                //SI PRESIONA LA TECLA K por ejemplo 
-                if (IsKeyPressed(KEY_K)) {
-                    if (playerCoins >= precios[i]) {   
-                        playerCoins -= precios[i];
-
-
-                        // Añadir el item al inventario 
-
-                       
-                    }
-                    else {
-                        //monedas insuficientes
-                        DrawText("No tienes suficientes monedas", position.x, position.y - 30, 20, RED);
-                        
-                    }
+            // Verificar proximidad con cada item
+            for (int i = 0; i < 3; i++) {
+                if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
+                    itemSeleccionado = i;
+                    break; // Un item a la vez
                 }
-                break;
             }
         }
     }
 
-    void Update(float deltaTime) {
-        if (!hasAppeared && !estaCerrando) {
-            aparecer(deltaTime); // Entrada
-        }
-        else if (hasAppeared && !estaCerrando) {
-            // Lógica mientras la tienda está abierta
-            tiempoTiendaAbierta += deltaTime;
-            if (tiempoTiendaAbierta >= tiempoMaximoTienda) {
-                estaCerrando = true;
-                isWalking = true;
-            }
-        }
-        else if (estaCerrando) {
-            desaparecer(deltaTime); // Salida
-        }
-    }
 
 
     void Draw() {   //aparicion y compra
         // Dibujar al tendero 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        if (hasAppeared) { 
+        if (hasAppeared) {
             // Dibujar tendero quieto (textura de frente)
             DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
 
             // dibujar la tienda y los items cuando el tendero está quieto
-            DrawTexture(store , 190, 230, WHITE);
+            DrawTexture(store, 190, 230, WHITE);
             for (int i = 0; i < 3; i++) {
                 DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
                 DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
-            }
 
+
+            }
         }
-        else 
+        else
         {
             // Dibujar animación de aparición
             DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
         }
     }
-    
-   
-    
-    
+
+
+
+
 
 
 
@@ -7259,7 +7138,7 @@ int main()
     Boss b;
 
 
-   
+
 
     Store tienda;
     Background desierto;
@@ -7286,7 +7165,7 @@ int main()
     Title t;
     bool gameovertime = false;
     float GOtime = 0;
-    
+    bool tiendaActiva = false;
     while (!WindowShouldClose()) {
 
         if (t.GameBegin) {
@@ -7301,66 +7180,65 @@ int main()
                     aa.draw(p);
 
 
-                    if (game.tiendaActiva) //si el nivel que estamos es el 3 y no hay ningun enemigo sale el tendero y la tienda
+                    if (tiendaActiva)
                     {
                         float deltaTime = GetFrameTime();
-                        tienda.Update(deltaTime);
-                        tienda.Compra(p.GetPosition(), p.money); //funcion para seleccionr un objeto 
+                        tienda.aparecer(deltaTime);
                         tienda.Draw();
                     }
                 }
 
-                    else {
-
-                        game.GameWon();
-
-
-
-
-                    }
-
-
-
-                }
                 else {
-                    if (!gameovertime) {
-                        GOtime = GetTime();
 
-                        gameovertime = true;
-                    }
-                    game.GameOverScreen(p);
-                    player.stopmusic();
+                    game.GameWon();
 
-                    float newTime = GetTime();
-                    float difference = newTime - GOtime;
-                    if (difference > 3) {
 
-                        t.GameBegin = false;
-                        gameovertime = false;
-                        game.gameover = false;
 
-                    }
+
                 }
-
 
 
 
             }
             else {
+                if (!gameovertime) {
+                    GOtime = GetTime();
 
+                    gameovertime = true;
+                }
+                game.GameOverScreen(p);
+                player.stopmusic();
 
+                float newTime = GetTime();
+                float difference = newTime - GOtime;
+                if (difference > 3) {
 
-                t.Presentation();
+                    t.GameBegin = false;
+                    gameovertime = false;
+                    game.gameover = false;
+
+                }
             }
 
 
 
 
+        }
+        else {
 
+
+
+            t.Presentation();
         }
 
-        CloseAudioDevice();
-        CloseWindow();
-        return 0;
+
+
+
 
     }
+
+    CloseAudioDevice();
+    CloseWindow();
+    return 0;
+
+}
