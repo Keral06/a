@@ -14,6 +14,7 @@ class Player;
 class Enemy;
 class Mummy;
 class Orc;
+class Store;
 class Shoot;
 class Ogre;
 class PowerUpLive;
@@ -952,7 +953,6 @@ public:
 
 
 };
-class ScreenNuke : public Colision {
 
 private:
     Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
@@ -1073,6 +1073,172 @@ public:
 int currentLevel;
 
 
+class Store {
+    Texture walkFrames[2];  // caminar
+    Texture storemanTextures[5];
+    Texture store;
+    Texture CosasDeLaTienda[7];
+
+    Vector2 position = { 255 + 65, 0 };
+    float animTime = 0;
+    const float animSpeed = 0.2f; // Velocidad cambio de frames
+    const float walkSpeed = 100.0f;
+    bool isWalking = true;
+    int currentFrame = 0;
+    bool hasAppeared = false;
+
+    const int precios[3] = { 10, 15, 10 }; // Precios de los items
+    int itemSeleccionado = -1; //  ninguno seleccionado
+    const float rangoCompra = 50.0f;
+
+
+public:
+    friend int main();
+    friend coins;
+    friend Player;
+    friend Entity;
+    friend Colision;
+    friend Game;
+    Store() {
+        // Cargar texturas de caminata
+        walkFrames[0] = LoadTexture("64x64/128x128_p4.png");
+        walkFrames[1] = LoadTexture("64x64/128x128_p4-1.png");
+
+        // Cargar todas las texturas del tendero
+        storemanTextures[0] = LoadTexture("64x64/128x128_p4.png");
+        storemanTextures[1] = LoadTexture("64x64/128x128_p4-1.png");
+        storemanTextures[2] = LoadTexture("64x64/128x128_p4-2.png");
+        storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
+        storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
+
+        //textura del fondo tienda
+        store = LoadTexture("tienda_red.png");
+
+        //textura de las cosas de la tienda 
+        CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
+        CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
+        CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
+        CosasDeLaTienda[3] = LoadTexture("tienda/128x128_pistola2.png");
+        CosasDeLaTienda[4] = LoadTexture("tienda/128x128_cubo2.png");
+        CosasDeLaTienda[5] = LoadTexture("tienda/128x128_mun.png");
+
+
+    }
+
+
+
+
+    void aparecer(float deltaTime) {
+
+
+        if (!isWalking) return;
+
+        // Animación de caminar
+        animTime += deltaTime;
+        if (animTime >= animSpeed) {
+            animTime = 0;
+            currentFrame = (currentFrame + 1) % 2;
+        }
+
+        // Movimiento hacia abajo
+        position.y += walkSpeed * deltaTime;
+
+        // Detenerse al llegar a pos 200
+        if (position.y >= 200)
+        {
+            position.y = 200;
+            isWalking = false;
+            hasAppeared = true;
+            currentFrame = 0;
+        }
+
+    }
+
+
+
+
+    void desaparecer(float deltaTime)
+    {
+
+        if (!isWalking) return;
+
+        // Animación de caminar
+        animTime += deltaTime;
+        if (animTime >= animSpeed) {
+            animTime = 0;
+            currentFrame = (currentFrame + 1) % 2;
+        }
+
+        // Movimiento hacia arriba
+        position.y -= walkSpeed * deltaTime;
+
+        // Detenerse al llegar a 0
+        if (position.y >= 0)
+        {
+            position.y = 0;
+            isWalking = false;
+            hasAppeared = false;
+            currentFrame = 0;
+        }
+    }
+
+    void Compra(Vector2 playerPos, int& playerCoins)
+    {
+        if (isWalking == false)
+        {
+            itemSeleccionado = -1;
+
+            // Posiciones de los items en la tienda
+            Vector2 itemPositions[3] = {
+                {210, 250}, // Pistola
+                {260, 250}, // Cubo
+                {310, 250}  // Munición
+            };
+
+            // Verificar proximidad con cada item
+            for (int i = 0; i < 3; i++) {
+                if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
+                    itemSeleccionado = i;
+                    break; // Un item a la vez
+                }
+            }
+        }
+    }
+
+
+
+    void Draw() {   //aparicion y compra
+        // Dibujar al tendero 
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        if (hasAppeared) {
+            // Dibujar tendero quieto (textura de frente)
+            DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
+
+            // dibujar la tienda y los items cuando el tendero está quieto
+            DrawTexture(store, 190, 230, WHITE);
+            for (int i = 0; i < 3; i++) {
+                DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
+                DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
+
+
+            }
+        }
+        else
+        {
+            // Dibujar animación de aparición
+            DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
+        }
+    }
+
+
+
+
+
+
+
+
+};
 class Enemy : public Entity {
 public:
     friend class Shoot;
@@ -1920,7 +2086,96 @@ public:
 
 };
 
+class ScreenNuke : public Colision {
 
+private:
+
+    Texture vida = LoadTexture("items/128x128_tumbacraneo.png");
+    Vector2 pos;
+    float appearTime;
+public:
+    friend class Game;
+    friend class Player;
+    friend class Colision;
+    bool started = false;
+    bool finished = false;
+    friend  bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
+    ScreenNuke(Vector2 position) : Colision(pos) {
+        this->pos = position;
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        appearTime = GetTime();
+
+    }
+    //dibuja el item de vida +
+    ScreenNuke(Player p) : Colision(pos) {
+
+
+
+    }
+    //suma la vida al jugador despues de recoger el item
+
+
+
+    void UsePowerUp(std::vector<Ogre>& enemigo, std::vector <Orc>& orcs, std::vector <Mariposa>& marip) {
+
+        int i = 0;
+
+        while (enemigo.size() > i) {
+
+            enemigo[i].SNAnim();
+            if (enemigo[i].isSNfinished) {
+
+                enemigo.pop_back();
+
+            }
+
+            i++;
+        }
+        i = 0;
+        while (orcs.size() > i) {
+
+            orcs[i].SNAnim();
+            if (orcs[i].isSNfinished) {
+
+                orcs.pop_back();
+
+            }
+
+            i++;
+        }
+        while (marip.size() > i) {
+
+            marip[i].SNAnim();
+            if (marip[i].isSNfinished) {
+
+                marip.pop_back();
+
+            }
+
+            i++;
+        }
+        if (marip.size() == 0 && enemigo.size() == 0 && orcs.size() == 0) {
+            finished = true;
+            started = false;
+        }
+    }
+
+    //suma la vida
+    void Draw() {
+
+
+        DrawTexture(vida, pos.x, pos.y, WHITE);
+        ColisionPlayer(pos);
+    }
+    //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
+
+
+
+
+
+
+};
 class DeadOgre {
 private:
     Texture Mon1 = LoadTexture("effects/128x128_hierba6.png");
@@ -2600,16 +2855,16 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 11;
+        level = 1;
         stage = 11;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
     }
     //declara el nivel y stage inicial
-    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>gun)
+    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>gun, Store &tienda)
     {
-        if (p.status && (!ChangingLevel || (enemigo.size() != 0 || marip.size() != 0 || orcs.size() != 0))) {
+        if (p.status && (!ChangingLevel || (enemigo.size() + marip.size() + orcs.size() != 0)) && !tiendaActiva) {
             ClearBackground(BLACK);
             /*BeginDrawing();*/
             BeginDrawing();
@@ -2735,105 +2990,85 @@ public:
                             else {
 
                                 if (bullets[j].ColisionBullet(orcs[i]) == true) {
-
-                                    DeadOgre auxiliari(orcs[i].GetPosition());
-                                    dead.push_back(auxiliari);
-                                    float timehelp = GetTime();
-                                    auxTime.push_back(timehelp);
-                                    deadogres++;
-
-
-                                    int a = 0;
-                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
-                                        Vector2 ee = orcs[i].GetPosition();
-                                        PowerUpLive live(ee);
-                                        Lives.push_back(live);
+                                    orcs[i].hp--;
+                                    if (orcs[i].hp < 0) {
+                                    
+                                        DeadOgre auxiliari(orcs[i].GetPosition());
+                                        dead.push_back(auxiliari);
+                                        float timehelp = GetTime();
+                                        auxTime.push_back(timehelp);
+                                        deadogres++;
 
 
-
-
-
-                                    }
-                                    else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
-                                        Vector2 ee = orcs[i].GetPosition();
-                                        Coffee live(ee);
-                                        cafe.push_back(live);
-
-
-
-
-
-
-                                    }
-                                    else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
-                                        Vector2 ee = orcs[i].GetPosition();
-                                        coins live(ee);
-                                        money.push_back(live);
-
-
-
-
-                                    }
-                                    else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
-                                        Vector2 ee = orcs[i].GetPosition();
-                                        Coffee live(ee);
-                                        cafe.push_back(live);
-
-
-
-
-
-
-
-                                    }
-                                    else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
-                                        Vector2 ee = orcs[i].GetPosition();
-                                        ScreenNuke live(ee);
-                                        SN.push_back(live);
-
-
-
-
-
-
-
-                                    }
-                                    else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
-                                        Vector2 ee = orcs[i].GetPosition();
-                                        HeavyMachineGun live(ee);
-                                        gun.push_back(live);
-
-
-
-
-
-
-
-                                    }
-
-
-
-
-                                    if (orcs.size() == 1) {
-                                        orcs[i].Death();
-                                        orcs.pop_back();
-
-                                    }
-
-                                    else if (orcs.size() > 1) {
-
-                                        aux = i;
-                                        orcs[i].Death();;
-                                        while (aux < orcs.size() - 1) {
-
-                                            orcs[aux] = orcs[aux + 1];
-                                            aux++;
+                                        int a = 0;
+                                        if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                            Vector2 ee = orcs[i].GetPosition();
+                                            PowerUpLive live(ee);
+                                            Lives.push_back(live);
 
                                         }
-                                        orcs.pop_back();
+                                        else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
+                                            Vector2 ee = orcs[i].GetPosition();
+                                            Coffee live(ee);
+                                            cafe.push_back(live);
 
 
+                                        }
+                                        else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
+                                            Vector2 ee = orcs[i].GetPosition();
+                                            coins live(ee);
+                                            money.push_back(live);
+
+
+
+                                        }
+                                        else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                            Vector2 ee = orcs[i].GetPosition();
+                                            Coffee live(ee);
+                                            cafe.push_back(live);
+
+
+
+                                        }
+                                        else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                            Vector2 ee = orcs[i].GetPosition();
+                                            ScreenNuke live(ee);
+                                            SN.push_back(live);
+
+
+                                        }
+                                        else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                            Vector2 ee = orcs[i].GetPosition();
+                                            HeavyMachineGun live(ee);
+                                            gun.push_back(live);
+
+
+                                        }
+
+
+                                        if (orcs.size() == 1) {
+                                            orcs[i].Death();
+                                            orcs.pop_back();
+
+                                        }
+
+                                        else if (orcs.size() > 1) {
+
+                                            aux = i;
+                                            orcs[i].Death();;
+                                            while (aux < orcs.size() - 1) {
+
+                                                orcs[aux] = orcs[aux + 1];
+                                                aux++;
+
+                                            }
+                                            orcs.pop_back();
+
+
+                                        }
+                                    
                                     }
+                                   
 
                                     bulletSize = bullets.size();
                                     aux = j;
@@ -3374,7 +3609,16 @@ public:
                     }
 
                 }
-                auxiliarPowerUps++;
+
+                if (SN[0].started && !SN[0].finished) {
+                SN[0].UsePowerUp(enemigo, orcs, marip);
+            
+            }if (SN.size() >= 0) {
+                if (SN[0].finished) {
+                    SN.pop_back();
+                    SNInUse = false;
+                }
+            }
 
             }
             auxiliarPowerUps = 0;
@@ -3804,7 +4048,7 @@ public:
 
         }
 
-        if (ChangingLevel) {
+        if (ChangingLevel && !tiendaActiva) {
             ClearBackground(BLACK);
             BeginDrawing();
             p.Movement(level);
@@ -3833,6 +4077,19 @@ public:
 
             }
 
+        }
+
+
+        if (tiendaActiva)
+        {
+            ClearBackground(BLACK);
+            BeginDrawing();
+            p.Draw();
+            p.Movement(this->level);
+            float deltaTime = GetFrameTime();
+            tienda.aparecer(deltaTime);
+            tienda.Draw();
+            EndDrawing();
         }
         //reinicia los valores si el jugador pierde una vida
 
@@ -6943,172 +7200,6 @@ public:
 };
 
 
-class Store {
-    Texture walkFrames[2];  // caminar
-    Texture storemanTextures[5];
-    Texture store;
-    Texture CosasDeLaTienda[7];
-
-    Vector2 position = { 255 + 65, 0 };
-    float animTime = 0;
-    const float animSpeed = 0.2f; // Velocidad cambio de frames
-    const float walkSpeed = 100.0f;
-    bool isWalking = true;
-    int currentFrame = 0;
-    bool hasAppeared = false;
-
-    const int precios[3] = { 10, 15, 10 }; // Precios de los items
-    int itemSeleccionado = -1; //  ninguno seleccionado
-    const float rangoCompra = 50.0f;
-
-
-public:
-    friend int main();
-    friend coins;
-    friend Player;
-    friend Entity;
-    friend Colision;
-    friend Game;
-    Store() {
-        // Cargar texturas de caminata
-        walkFrames[0] = LoadTexture("64x64/128x128_p4.png");
-        walkFrames[1] = LoadTexture("64x64/128x128_p4-1.png");
-
-        // Cargar todas las texturas del tendero
-        storemanTextures[0] = LoadTexture("64x64/128x128_p4.png");
-        storemanTextures[1] = LoadTexture("64x64/128x128_p4-1.png");
-        storemanTextures[2] = LoadTexture("64x64/128x128_p4-2.png");
-        storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
-        storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
-
-        //textura del fondo tienda
-        store = LoadTexture("tienda_red.png");
-
-        //textura de las cosas de la tienda 
-        CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
-        CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
-        CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
-        CosasDeLaTienda[3] = LoadTexture("tienda/128x128_pistola2.png");
-        CosasDeLaTienda[4] = LoadTexture("tienda/128x128_cubo2.png");
-        CosasDeLaTienda[5] = LoadTexture("tienda/128x128_mun.png");
-
-
-    }
-
-
-
-
-    void aparecer(float deltaTime) {
-
-
-        if (!isWalking) return;
-
-        // Animación de caminar
-        animTime += deltaTime;
-        if (animTime >= animSpeed) {
-            animTime = 0;
-            currentFrame = (currentFrame + 1) % 2;
-        }
-
-        // Movimiento hacia abajo
-        position.y += walkSpeed * deltaTime;
-
-        // Detenerse al llegar a pos 200
-        if (position.y >= 200)
-        {
-            position.y = 200;
-            isWalking = false;
-            hasAppeared = true;
-            currentFrame = 0;
-        }
-
-    }
-
-
-
-
-    void desaparecer(float deltaTime)
-    {
-
-        if (!isWalking) return;
-
-        // Animación de caminar
-        animTime += deltaTime;
-        if (animTime >= animSpeed) {
-            animTime = 0;
-            currentFrame = (currentFrame + 1) % 2;
-        }
-
-        // Movimiento hacia arriba
-        position.y -= walkSpeed * deltaTime;
-
-        // Detenerse al llegar a 0
-        if (position.y >= 0)
-        {
-            position.y = 0;
-            isWalking = false;
-            hasAppeared = false;
-            currentFrame = 0;
-        }
-    }
-
-    void Compra(Vector2 playerPos, int& playerCoins)
-    {
-        if (isWalking == false)
-        {
-            itemSeleccionado = -1;
-
-            // Posiciones de los items en la tienda
-            Vector2 itemPositions[3] = {
-                {210, 250}, // Pistola
-                {260, 250}, // Cubo
-                {310, 250}  // Munición
-            };
-
-            // Verificar proximidad con cada item
-            for (int i = 0; i < 3; i++) {
-                if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
-                    itemSeleccionado = i;
-                    break; // Un item a la vez
-                }
-            }
-        }
-    }
-
-
-
-    void Draw() {   //aparicion y compra
-        // Dibujar al tendero 
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        if (hasAppeared) {
-            // Dibujar tendero quieto (textura de frente)
-            DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
-
-            // dibujar la tienda y los items cuando el tendero está quieto
-            DrawTexture(store, 190, 230, WHITE);
-            for (int i = 0; i < 3; i++) {
-                DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
-                DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
-
-
-            }
-        }
-        else
-        {
-            // Dibujar animación de aparición
-            DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
-        }
-    }
-
-
-
-
-
-
-
-
-};
 
 
 
@@ -7177,17 +7268,11 @@ int main()
 
                     player.OverworldPlayer();
                     ui.DrawInicial();
-                    game.GameStart(p, b, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun);
+                    game.GameStart(p, b, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun, tienda);
                     desierto.LevelDraw(game);
                     aa.draw(p);
 
 
-                    if (tiendaActiva)
-                    {
-                        float deltaTime = GetFrameTime();
-                        tienda.aparecer(deltaTime);
-                        tienda.Draw();
-                    }
                 }
 
                 else {
