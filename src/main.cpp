@@ -3460,7 +3460,7 @@ public:
 
 
             }
-            if (level != 1  && !SNInUse) { //ogre
+            if (level != 5  && !SNInUse) { //ogre
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
 
@@ -4210,7 +4210,7 @@ public:
             }
             i = 0;
 
-            if (p.status == true && p.lives < 0) {
+            if ( p.lives < 0) {
                 GameOver(p);
             }
             if (p.status == true) {
