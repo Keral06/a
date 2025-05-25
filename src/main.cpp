@@ -2889,14 +2889,6 @@ public:
             }
 
             if (level > 6 && level != 5) {
-
-
-            if (level > 6 && !SNInUse) { //mariposa
-                int i = 0;
-
-            if (level > 6 && level != 5) {
-
-
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
                     Mariposa auxiliar;
 
@@ -7196,19 +7188,6 @@ int main()
                     }
                 }
 
-
-                    else {
-
-                        game.GameWon();
-
-
-
-
-                    }
-
-
-
-            }
                 else {
 
                     game.GameWon();
@@ -7250,18 +7229,7 @@ int main()
 
 
             t.Presentation();
-
         }
-       else {
-
-         t.Presentation();
-       }
-
-
-
-
-
-    }
 
 
 
