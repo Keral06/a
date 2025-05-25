@@ -1666,7 +1666,7 @@ private:
 public:
     friend class PowerUpLive;
     friend class Game;
-    Orc() : Enemy(3, 0.5) {}
+    Orc() : Enemy(3, 1) {}
     //declara al enemigo
     void Death() {
 
@@ -1807,34 +1807,16 @@ private:
 public:
     friend class PowerUpLive;
     friend class Game;
-    /*Mariposa() : Enemy(3, 1) {
+    Mariposa() : Enemy(3, 1) {
 
 
 
 
 
-    }*/
+    }
     //declara al enemigo
-    Mariposa(int hp, int vel) : Enemy(3, 1) {
-        this->hp = hp;
-        this->vel = vel;
-
-        int border = GetRandomValue(1, 4);  // 1=Top, 2=Bottom, 3=Left, 4=Right
-
-        switch (border) {
-        case 1: // Top
-            playerPos = { (float)GetRandomValue(64, 544), 32 };
-            break;
-        case 2: // Bottom
-            playerPos = { (float)GetRandomValue(64, 544), 544 };
-            break;
-        case 3: // Left
-            playerPos = { 64, (float)GetRandomValue(32, 544) };
-            break;
-        case 4: // Right
-            playerPos = { 544, (float)GetRandomValue(32, 544) };
-            break;
-        }
+    void SetPosition(Vector2 pos) {
+        playerPos = pos;
     }
 
 
@@ -2752,74 +2734,61 @@ public:
                             else {
 
                                 if (bullets[j].ColisionBullet(orcs[i]) == true) {
-                                    orcs[i].hp--;
-                                    if(orcs[i].hp<0) {
-                                        DeadOgre auxiliari(orcs[i].GetPosition());
-                                        dead.push_back(auxiliari);
-                                        float timehelp = GetTime();
-                                        auxTime.push_back(timehelp);
-                                        deadogres++;
+
+                                    DeadOgre auxiliari(orcs[i].GetPosition());
+                                    dead.push_back(auxiliari);
+                                    float timehelp = GetTime();
+                                    auxTime.push_back(timehelp);
+                                    deadogres++;
 
 
-                                        int a = 0;
-                                        if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
-                                            Vector2 ee = orcs[i].GetPosition();
-                                            PowerUpLive live(ee);
-                                            Lives.push_back(live);
+                                    int a = 0;
+                                    if (GetRandomValue(1, 10) == 1 && Lives.size() == 0) {
+                                        Vector2 ee = orcs[i].GetPosition();
+                                        PowerUpLive live(ee);
+                                        Lives.push_back(live);
+                                       
+                                       
+                                       
+                                       
+                                       
+                                    }
+                                    else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
+                                        Vector2 ee = orcs[i].GetPosition();
+                                        Coffee live(ee);
+                                        cafe.push_back(live);
+                                       
+                                       
+                                        
+                                           
+
+                                       
+                                    }
+                                    else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
+                                        Vector2 ee = orcs[i].GetPosition();
+                                        coins live(ee);
+                                        money.push_back(live);
+                                        
+                                       
 
 
+                                    }
+                                    else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
+                                        Vector2 ee = orcs[i].GetPosition();
+                                        Coffee live(ee);
+                                        cafe.push_back(live);
+                                        
+                                      
+                                        
 
+                                           
 
-
-                                        }
-                                        else if (GetRandomValue(1, 10) == 2 && cafe.size() == 0) {
-                                            Vector2 ee = orcs[i].GetPosition();
-                                            Coffee live(ee);
-                                            cafe.push_back(live);
-
-
-
-
-
-
-                                        }
-                                        else if (GetRandomValue(1, 10) == 3 && money.size() == 0) {
-                                            Vector2 ee = orcs[i].GetPosition();
-                                            coins live(ee);
-                                            money.push_back(live);
-
-
-
-
-                                        }
-                                        else if (GetRandomValue(1, 10) == 4 && cafe.size() == 0) {
-                                            Vector2 ee = orcs[i].GetPosition();
-                                            Coffee live(ee);
-                                            cafe.push_back(live);
-
-
-
-
-
-
-
-                                        }
-                                        else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
-                                            Vector2 ee = orcs[i].GetPosition();
-                                            ScreenNuke live(ee);
-                                            SN.push_back(live);
-
-
-
-
-
-
-
-                                        }
-                                        else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
-                                            Vector2 ee = orcs[i].GetPosition();
-                                            HeavyMachineGun live(ee);
-                                            gun.push_back(live);
+                                        
+                                    }
+                                    else if (GetRandomValue(1, 10) == 5 && SN.size() == 0) {
+                                        Vector2 ee = orcs[i].GetPosition();
+                                        ScreenNuke live(ee);
+                                        SN.push_back(live);
 
 
 
@@ -2827,59 +2796,70 @@ public:
 
 
 
-                                        }
+                                    }
+                                    else if (GetRandomValue(1, 10) == 5 && gun.size() == 0) {
+                                        Vector2 ee = orcs[i].GetPosition();
+                                        HeavyMachineGun live(ee);
+                                        gun.push_back(live);
 
 
 
 
-                                        if (orcs.size() == 1) {
-                                            orcs[i].Death();
-                                            orcs.pop_back();
-
-                                        }
-
-                                        else if (orcs.size() > 1) {
-
-                                            aux = i;
-                                            orcs[i].Death();;
-                                            while (aux < orcs.size() - 1) {
-
-                                                orcs[aux] = orcs[aux + 1];
-                                                aux++;
-
-                                            }
-                                            orcs.pop_back();
 
 
-                                        }
-
-                                        bulletSize = bullets.size();
-                                        aux = j;
-                                        if (bullets.size() == 1) {
-
-                                            bullets.pop_back();
-                                            bulletSize--;
-                                        }
-                                        else if (bullets.size() > 1) {
-                                            while (aux < bullets.size() - 1) {
-                                                bullets[aux] = bullets[aux + 1];
-                                                aux++;
-                                            }
-
-                                            bullets.pop_back();
-
-                                        }
-                                        bulletSize = bullets.size();
 
                                     }
 
 
-                                }
-                                // chequea si la bala colisiona con el ogro
-                                if (orcs.size() == 0) { j = bulletSize; }
 
-                                j++;
+
+                                    if (orcs.size() == 1) {
+                                        orcs[i].Death();
+                                        orcs.pop_back();
+
+                                    }
+
+                                    else if (orcs.size() > 1) {
+
+                                        aux = i;
+                                        orcs[i].Death();;
+                                        while (aux < orcs.size() - 1) {
+
+                                            orcs[aux] = orcs[aux + 1];
+                                            aux++;
+
+                                        }
+                                        orcs.pop_back();
+
+
+                                    }
+
+                                    bulletSize = bullets.size();
+                                    aux = j;
+                                    if (bullets.size() == 1) {
+
+                                        bullets.pop_back();
+                                        bulletSize--;
+                                    }
+                                    else if (bullets.size() > 1) {
+                                        while (aux < bullets.size() - 1) {
+                                            bullets[aux] = bullets[aux + 1];
+                                            aux++;
+                                        }
+
+                                        bullets.pop_back();
+
+                                    }
+                                    bulletSize = bullets.size();
+
+                                }
+
+
                             }
+                            // chequea si la bala colisiona con el ogro
+                            if (orcs.size() == 0) { j = bulletSize; }
+
+                            j++;
                         }
 
                         j = 0;
@@ -2908,15 +2888,26 @@ public:
                 bossFight = false;
             }
 
-            if (level > 6 ) { //mariposa
-                int i = 0;
+            if (level > 6 && level != 5) {
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15) {
-
                     Mariposa auxiliar;
+
+                    // Random border spawn position
+                    int border = GetRandomValue(1, 4);  // 1=Top, 2=Bottom, 3=Left, 4=Right
+                    Vector2 spawnPos;
+
+                    switch (border) {
+                    case 1: spawnPos = { (float)GetRandomValue(64, 544), 32 }; break;
+                    case 2: spawnPos = { (float)GetRandomValue(64, 544), 544 }; break;
+                    case 3: spawnPos = { 64, (float)GetRandomValue(32, 544) }; break;
+                    case 4: spawnPos = { 544, (float)GetRandomValue(32, 544) }; break;
+                    }
+
+                    auxiliar.SetPosition(spawnPos);  // Set manually after creation
                     marip.push_back(auxiliar);
-
-
                 }
+            
+
                 if (marip.size() > 0) {
 
 
