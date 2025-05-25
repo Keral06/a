@@ -134,7 +134,7 @@ public:
 
 
     Player(int hp, int vel) : Entity(hp, vel, { (float)(playerScreenX+ 128) / 2, 240 }) {
-        this->money = 0;
+        this->money = 20;
         this->lives = 3;
         this->dir = ARRIBA;
         dire = 1;
@@ -2694,7 +2694,7 @@ public:
             int bulletSize = bullets.size();
 
             //la tienda aparece solo en el level 3
-            if (level ==3 && enemigo.size() == 0)
+            if (level ==1 /* && enemigo.size() == 0*/)
             {
                 tiendaActiva = true;
 
