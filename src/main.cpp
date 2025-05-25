@@ -3067,7 +3067,9 @@ private:
     int deadogres;
     bool tiempoiniciado;
     Sound power = LoadSound("song/cowboy_powerup.wav");
+    Sound explosion = LoadSound("cowboy_explosion.wav");
     Sound Die = LoadSound("song/cowboy_dead.wav");
+    Sound Hit = LoadSound("song/cowboy_monsterhit.wav");/*cowboy_monsterhit.wa*/
     bool gameover = false;
     float timesincedeletion = 0;
     float timeoflastdelete = 0;
@@ -3296,8 +3298,8 @@ public:
                                         deadogres++;
 
 
-                                        int a = GetRandomValue(1,10);
-                                        if (a==1 && Lives.size() == 0) {
+                                        int a = GetRandomValue(1, 10);
+                                        if (a == 1 && Lives.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             PowerUpLive live(ee);
                                             Lives.push_back(live);
@@ -3326,7 +3328,7 @@ public:
 
 
                                         }
-                                        else if (a== 5 && SN.size() == 0) {
+                                        else if (a == 5 && SN.size() == 0) {
                                             Vector2 ee = orcs[i].GetPosition();
                                             ScreenNuke live(ee);
                                             SN.push_back(live);
@@ -3363,6 +3365,12 @@ public:
 
                                         }
 
+                                    }
+                                    else {
+                                        if (!IsSoundPlaying(Hit) ){
+                                            PlaySound(Hit);
+                                        }
+                                        
                                     }
 
 
@@ -4118,7 +4126,9 @@ public:
 
             if (gameNuke.started && !gameNuke.finished && SNInUse) {
                 gameNuke.UsePowerUp(enemigo, orcs, marip);
-              
+                if (!IsSoundPlaying(explosion)) {
+                    PlaySound(explosion);
+                }
                 bagItem = 0;
 
             }
