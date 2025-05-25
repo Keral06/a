@@ -6943,7 +6943,7 @@ class Store{
     Texture walkFrames[2];  // caminar
     Texture storemanTextures[5];
     Texture store;
-    Texture CosasDeLaTienda[7];
+    Texture CosasDeLaTienda[3];
 
     Vector2 position = { 255+65, 0 };
     float animTime = 0;
@@ -6953,11 +6953,15 @@ class Store{
     int currentFrame = 0;
     bool hasAppeared = false; 
 
+    float tiempoTiendaAbierta = 0.0f;
+    const float tiempoMaximoTienda = 20.0f; // 30 segundos abierta
+    bool estaCerrando = false;
+
     const int precios[3] = { 10, 15, 10 }; // Precios de los items
     int itemSeleccionado = -1; //  ninguno seleccionado
     const float rangoCompra = 50.0f; 
 
-
+    Sound caminar;
 public:
     friend int main();
     friend coins;
@@ -6984,11 +6988,9 @@ public:
         CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
         CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
         CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
-        CosasDeLaTienda[3] = LoadTexture("tienda/128x128_pistola2.png");
-        CosasDeLaTienda[4] = LoadTexture("tienda/128x128_cubo2.png");
-        CosasDeLaTienda[5] = LoadTexture("tienda/128x128_mun.png");
-      
-
+    
+        //sonido de caminar 
+        caminar = LoadSound("sound effects/prairie king walk.ogg");
     }
 
   
@@ -7008,6 +7010,7 @@ public:
 
         // Movimiento hacia abajo
         position.y += walkSpeed * deltaTime;
+        PlaySound(caminar);
 
         // Detenerse al llegar a pos 200
         if (position.y >= 200)
@@ -7023,54 +7026,82 @@ public:
 
 
 
-    void desaparecer(float deltaTime)
-    {
-        
-        if (!isWalking) return;
-
-        // Animación de caminar
+    void desaparecer(float deltaTime) {
+        // Animación de caminar (mismo código que antes)
         animTime += deltaTime;
         if (animTime >= animSpeed) {
             animTime = 0;
-            currentFrame = (currentFrame + 1) % 2; 
+            currentFrame = (currentFrame + 1) % 2;
         }
 
-        // Movimiento hacia arriba
+        // movvimiento hacia arriba
         position.y -= walkSpeed * deltaTime;
-
-        // Detenerse al llegar a 0
-        if (position.y >= 0)
-        {
+        PlaySound(caminar);
+        // Al llegar al borde superior, reiniciar
+        if (position.y <= 0) {
             position.y = 0;
             isWalking = false;
             hasAppeared = false;
+            estaCerrando = false;
+            tiempoTiendaAbierta = 0.0f; // Resetear temporizador
             currentFrame = 0;
         }
     }
 
-    void Compra(Vector2 playerPos, int& playerCoins)
-    {
-        if (isWalking == false)  
-        {
-            itemSeleccionado = -1;
+    void Compra(Vector2 playerPos, int& playerCoins) {
+        if (isWalking || !hasAppeared) return;  //cuando el storeman esta quieto y visible
 
-            // Posiciones de los items en la tienda
-            Vector2 itemPositions[3] = {
-                {210, 250}, // Pistola
-                {260, 250}, // Cubo
-                {310, 250}  // Munición
-            };
+        itemSeleccionado = -1; // Resetear seleccion
 
-            // Verificar proximidad con cada item
-            for (int i = 0; i < 3; i++) {
-                if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
-                    itemSeleccionado = i;
-                    break; // Un item a la vez
+        // Posiciones de los items en la tienda
+        Vector2 itemPositions[3] = {
+            {210, 250}, // Pistola
+            {260, 250}, // Cubo
+            {310, 250}  // Munición
+        };
+
+        // Verificar proximidad con cada item
+        for (int i = 0; i < 3; i++) {
+            if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
+                itemSeleccionado = i;
+
+                //SI PRESIONA LA TECLA K por ejemplo 
+                if (IsKeyPressed(KEY_K)) {
+                    if (playerCoins >= precios[i]) {   
+                        playerCoins -= precios[i];
+
+
+                        // Añadir el item al inventario 
+
+                       
+                    }
+                    else {
+                        //monedas insuficientes
+                        DrawText("No tienes suficientes monedas", position.x, position.y - 30, 20, RED);
+                        
+                    }
                 }
+                break;
             }
         }
     }
 
+    void Update(float deltaTime) {
+        if (!hasAppeared && !estaCerrando) {
+            aparecer(deltaTime); // Entrada
+        }
+        else if (hasAppeared && !estaCerrando) {
+            // Lógica mientras la tienda está abierta
+            tiempoTiendaAbierta += deltaTime;
+            if (tiempoTiendaAbierta >= tiempoMaximoTienda) {
+                estaCerrando = true;
+                isWalking = true;
+            }
+        }
+        else if (estaCerrando) {
+            desaparecer(deltaTime); // Salida
+        }
+    }
 
 
     void Draw() {   //aparicion y compra
@@ -7086,9 +7117,8 @@ public:
             for (int i = 0; i < 3; i++) {
                 DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
                 DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
-                
-            
             }
+
         }
         else 
         {
@@ -7181,7 +7211,8 @@ int main()
                     if (tiendaActiva) 
                     {
                         float deltaTime = GetFrameTime();
-                        tienda.aparecer(deltaTime);
+                        tienda.Update(deltaTime);
+                        tienda.Compra(p.GetPosition(), p.money);
                         tienda.Draw();
                     }
                 }
