@@ -1953,6 +1953,7 @@ public:
     //declara al enemigo
     void SetPosition(Vector2 pos) {
         playerPos = pos;
+        Square = { playerPos.x, playerPos.y, 32, 32 };
     }
 
 
@@ -1977,18 +1978,11 @@ public:
         }
 
 
-
-
-
-
-
-
-
         playerPos.x = nextX;
         playerPos.y = nextY;
 
         ColisionPlayer(playerPos);
-
+        Square = { playerPos.x, playerPos.y, 32, 32 };
     }
     void Death() {
 
@@ -1996,13 +1990,13 @@ public:
             PlaySound(Die); // Play the sound only if it�s not already playing
         }
         deathStartTime = GetTime();
-
+        status = false;
     }
     //declara la muerte y el sonido de muerte del enemigo
 
 
     void Update(Player p) {
-
+        if (!status) return;
         if (p.playerPos.x > 0) {
 
             playerPos.x += vel;
@@ -2028,7 +2022,7 @@ public:
     }
     //actualiza la posicion y direcion del enemigo dependiendo de la posicion del jugador
     void Draw() {
-
+        if (!status) return;
         /*BeginDrawing();*/
         if (dire <= 50) {
 
@@ -2359,7 +2353,7 @@ public:
     friend class Enemy;
     Direccion dir;
     Vector2 GetPosition() const { return this->playerPos; }
-    bool ColisionBullet(Enemy s) {
+    bool ColisionBullet(const Enemy& s) {
 
         return CheckCollisionRecs(this->Square, s.Square);
 
@@ -2517,8 +2511,7 @@ public:
         else if (level == 5) {
             walls = {
             { 320, 160, 32, 32 }, { 224, 224, 32, 32 },
-            { 384, 224, 32, 32 }, { 288, 416, 96, 32 },
-            { 64, 288, 512, 32 }, { 64, 32, 32, 512 },
+            { 384, 224, 32, 32 }, { 288, 416, 96, 32 }, { 64, 32, 32, 512 },
             { 64, 32, 512, 32 }, { 544, 32, 32, 512 },
             { 64, 512, 512, 32 }
 
@@ -2621,6 +2614,7 @@ public:
 
         playerPos.x = nextX;
         playerPos.y = nextY;
+        this->Square = { playerPos.x, playerPos.y, 3, 3 };
         ColisionBullet(playerPos);
     }
 
@@ -2960,8 +2954,8 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 10;
-        stage = 10;
+        level = 5;
+        stage = 5;
         /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3012,16 +3006,14 @@ public:
             }
             int a = GetTime();
             if (level == 5 && a > 17.0f) {
-                // Add rate limiting for bullets
                 static float shootTimer = powerRate;
+
                 if (shootTimer <= 0) {
-                    bullets.push_back(Shoot(b));
-                    shootTimer = powerRate; // Shoot every 0.2 seconds while holding key
-
+                    bullets.push_back(Shoot(boss)); // Pass the boss instance here
+                    shootTimer = powerRate;
                 }
+
                 shootTimer -= GetFrameTime();
-
-
             }
             int i = 0;
             // dibuja el ogro 
