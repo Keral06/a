@@ -3813,7 +3813,7 @@ public:
                     if (p.bag == 1) {
                         if (cafeEnUso == 1) {
                             timeCafeFinal = GetTime();
-                            
+                            cafe.pop_back();
 
                         }
                         else {
