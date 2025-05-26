@@ -338,7 +338,7 @@ public:
 
     void Movement(int level) {
 
-        /* BeginDrawing();*/
+        
         Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
         Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
         bool moved = false;
@@ -419,7 +419,7 @@ public:
             else {
                 if (!IsSoundPlaying(Walk)) {
                     PlaySound(Walk);
-                }
+                }//sonidos del jugador cuando se mueve
 
             }
 
@@ -445,7 +445,7 @@ public:
                     playerPos.y = nextY;
                 }
 
-            }
+            }//colisiones nivel 1
             else if (level == 2) {
                 Rectangle lado1 = { 192, 160, 64, 32 };
                 Rectangle lado2 = { 192, 160, 32, 64 };
@@ -481,7 +481,7 @@ public:
                     playerPos.y = nextY;
                 }
 
-            }
+            }//colisiones nivel 2
             else if (level == 3) {
                 Rectangle lado1 = { 320, 160, 32, 32 };
                 Rectangle lado2 = { 320, 416, 32, 32 };
@@ -526,7 +526,7 @@ public:
                 }
 
 
-            }
+            }//colisiones nivel 3
             else if (level == 4) {
                 Rectangle lado1 = { 224, 192, 96, 32 };
                 Rectangle lado2 = { 352, 192, 96, 32 };
@@ -563,7 +563,7 @@ public:
                 }
                
 
-            }
+            }//colisiones nivel 4
             else if (level == 5) {
                 Rectangle lado1 = { 320, 160, 32, 32 };
                 Rectangle lado2 = { 224, 224, 32, 32 };
@@ -593,7 +593,7 @@ public:
                     playerPos.y = nextY;
                 }
               
-            }
+            }//colisiones boss
             else if (level == 51) {
                 Rectangle lado1 = { 320, 160, 32, 32 };
                 Rectangle lado2 = { 224, 224, 32, 32 };
@@ -625,7 +625,7 @@ public:
                     playerPos.y = nextY;
                 }
                
-                }
+                }//colisiones boss
             else if (level == 6) {
                 Rectangle lado1 = { 96, 64, 96, 32 };
                 Rectangle lado2 = { 96, 64, 32, 96 };
@@ -669,7 +669,7 @@ public:
                     playerPos.y = nextY;
                 }
                
-            }
+            }//colisiones nivel 6
             else if (level == 7) {
                 Rectangle lado1 = { 128, 128, 32, 32 };
                 Rectangle lado2 = { 160, 160, 32, 32 };
@@ -709,7 +709,7 @@ public:
                     playerPos.y = nextY;
                 }
                
-            }
+            }//colisiones nivel 7
             else if (level == 8) {
                 Rectangle lado1 = { 64, 192, 120, 32 };
                 Rectangle lado2 = { 224, 192, 88, 32 };
@@ -745,7 +745,7 @@ public:
                     playerPos.y = nextY;
                 }
                
-            }
+            }//colisiones nivel 8
 
             else if (level == 9) {
                 Rectangle lado1 = { 192, 160, 64, 64 };
@@ -784,7 +784,7 @@ public:
                     playerPos.y = nextY;
                 }
               
-            }
+            }//colisiones nivel 9
 
             else if (level == 10) {
                 Rectangle lado1 = { 64, 64, 224, 32 };
@@ -821,7 +821,7 @@ public:
                     playerPos.y = nextY;
                 }
                
-            }
+            }//colisiones nivel 10
             else if (level == 11) {
                 Rectangle lado1 = { 64, 64, 512, 32 };
                 Rectangle lado2 = { 64, 480, 512, 32 };
@@ -845,7 +845,7 @@ public:
                     playerPos.y = nextY;
                 }
                 
-            }
+            }//colisiones nivel 11
             ColisionPlayer(playerPos);
         }
     }
@@ -1898,7 +1898,7 @@ private:
 public:
     friend class PowerUpLive;
     friend class Game;
-    Orc() : Enemy(3, 0.5) {}
+    Orc() : Enemy(3, 1) {}
     //declara al enemigo
     void Death() {
 
@@ -2441,16 +2441,23 @@ public:
         Intro = true;
         status = true;
         
-    }
-    void DrawGoofer() {
+    }//constructor del boss
+    void DrawGoofer(Player& player, int& level, int& currentLevel) {
         float currentTime = GetTime();
 
         if (currentTime - lastGooferUpdateTime > 0.2f) {
             gooferFrame++;
             lastGooferUpdateTime = currentTime;
             gooferPos.y += 15;  
+        }//hacer que los goofers vallan hacia abajo
+        if (gooferPos.y + 32 >= screenHeight) { 
+            player.ResetPlayer(6);
+            level = 6;
+            currentLevel = 6;
+            showGoofer = false; 
+            gooferPos.y = 0;     
+            return;              
         }
-        
         Texture current;
         Texture current2;
         int frame = ((int)(GetTime() * 5)) % 4;
@@ -2466,7 +2473,7 @@ public:
         }
         else {
             current = Goofer2;
-        }
+        }//animacion goofers
         DrawTexture(current, gooferPos.x, gooferPos.y, WHITE);
 
         int frame2 = ((int)(GetTime() * 5)) % 4;
@@ -2481,7 +2488,7 @@ public:
         }
         else {
             current2 = Goofer5;
-        }
+        }//animacion goofers
 
         DrawTexture(current2, gooferPos.x + 16, gooferPos.y + 64, WHITE);
         DrawTexture(current2, gooferPos.x -16, gooferPos.y + 64, WHITE);
@@ -2499,7 +2506,7 @@ public:
         deathStartTime = GetTime();
         DrawDeathAnim();
         status = false;
-        
+        //funcion para la muerte del bos
 
         
     }
@@ -2515,7 +2522,7 @@ public:
         
         DrawRectangle(barX, barY, barWidth, barHeight, BLACK);
         DrawRectangle(barX, barY, currentBarWidth, barHeight, RED);
-
+        //dibuja y reduce la barra de vida del boss
     }
 
     void DrawDeathAnim() {
@@ -2613,12 +2620,12 @@ public:
             DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
         }
         else {
-            // Animation finished
+            
             deathAnimationFinished = true;
-            // Optionally trigger a respawn or game over screen here
+            
         }
     
-    }
+    }//animacion de muerte del boss
 
 
     void Update(Player& p) {
@@ -2637,9 +2644,8 @@ public:
                 moving = true;
                 lastMoveTime = now;
             }
-        }
+        }//la intro donde habla y esta quieto
 
-        // Handle pause-resume cycle
         if (!isPaused && now - lastMoveTime >= 6.0f) {
             isPaused = true;
             pauseStartTime = now;
@@ -2650,13 +2656,13 @@ public:
             lastMoveTime = now;
             moving = true;
 
-        }
+        }//hace que cada 6 segundos pare durante 4 segundes y se quede en su idle sin disparar
 
         if (moving) {
             playerPos.x += direction * vel;
             if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
             return;
-        }
+        }//movimiento del boss hacia los lados
             
 
         
@@ -2666,13 +2672,13 @@ public:
 
     void Draw() {
         if (!status && deathAnimationFinished) {
-            return; // Stop drawing anything once the boss has finished dying
+            return; 
         }
 
         if (!status && !deathAnimationFinished) {
             DrawDeathAnim();
             return;
-        }
+        }//dibuja la animacion de muerte si el boss muere i la animacion no se ha ejecutado
 
         frameCounter++;
         Texture current;
@@ -2682,7 +2688,7 @@ public:
         }
         else {
             current = (frameCounter / 30 % 2 == 0) ? Boss1 : Boss2;
-        }
+        }//animacion del movimiento de los lados del boss
 
         DrawTexture(current, playerPos.x, playerPos.y, WHITE);
         
@@ -3333,7 +3339,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 1;
+        level = 5;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3366,9 +3372,12 @@ public:
 
 
             }
+            
             //empieza el tiempo, lo dibuja y lo va actualizando
             if (boss.showGoofer) {
                 DrawRectangle(64, 32, GetScreenWidth(), GetScreenHeight(), BLACK);
+                boss.DrawGoofer(p, level,currentLevel);
+                showLog = false;
                 boss.DrawGoofer();
                 p.followingGoofer = true;
                 p.Draw();
@@ -3401,7 +3410,7 @@ public:
                 else {
                     DrawTexture(tronco,320, 352, WHITE);
                 }
-            }
+            }//muestra el tronco de la victoria
             if (showLog && !p.logEffectActive) {
                 Rectangle playerRect = { p.GetPosition().x, p.GetPosition().y, 32, 32 };
                 Rectangle logRect = { 320, 352, 32, 32};
@@ -3412,14 +3421,15 @@ public:
                     p.logEffectStartTime = GetTime();
                     logOnPlayer = true;
                 }
-            }
+            }//cuando el player colisiona con el tronco, el tronco se pone en su cabeza y el player cambia de sprite
             if (p.logEffectActive && (GetTime() - p.logEffectStartTime >= 2.0f)) {
                 p.logEffectActive = false;
 
                 boss.showGoofer = true;
                 boss.gooferStartTime = GetTime();
                 boss.gooferPos = { p.GetPosition().x, 0 }; 
-            }
+            }//para mostrar el goofer
+
             // Handle bullet creation with arrow keys
 
             //para las bullets
@@ -3453,7 +3463,7 @@ public:
 
 
             int i = 0;
-            // boss, comentalo queralt
+           
             while (i < bullets.size()) {
 
                 bullets[i].UpdatePosition(level); 
@@ -3465,7 +3475,7 @@ public:
                 if (bullets[i].isEnemyBullet && CheckCollisionRecs(bulletRect, playerHitbox) && p.status) {
                     p.status = false;
                     bullets[i].eliminate = true;
-                }
+                }//detecta que la bala es del enemigo i mata al player cuando le da
                 if (!bullets[i].isEnemyBullet &&
                     
                     CheckCollisionRecs(bulletRect, { boss.GetPosition().x, boss.GetPosition().y, 32, 32 })) {
@@ -3491,14 +3501,15 @@ public:
                     
                     
                     
-                }
+                }//detecta que la bala es del player i le resta vida al boss dependiendo de la pistola que tenga el player
                 if (boss.hp <= 0 && boss.status == true) {
 
                     boss.Death();
                     
 
-                }
-                if (!boss.status && !boss.deathHandled) {
+                }//cuando el boss llega a 0 de vida activa la funcion de muerte
+                if ((level == 5 || level == 51) &&!boss.status && !boss.deathHandled) {
+                
                     float elapsed = GetTime() - boss.deathTime;
 
                     if (elapsed > 2.0f) { 
@@ -3507,32 +3518,12 @@ public:
                         showLog = true; 
 
                         boss.deathHandled = true;
-                    }
+                    }//hace que salga el tronco de la victoria y que el boss dropee una vida
                 }
                 
                 
 
-                /*if (bullets[i].eliminate == true) {
-
-
-                    int p = i;
-                    if (bullets.size() == 1) {
-
-                        bullets.pop_back();
-
-                    }
-                    else if (bullets.size() > 1) {
-                        while (p < bullets.size() - 1) {
-                            bullets[p] = bullets[p + 1];
-                            p++;
-                        }
-
-                        bullets.pop_back();
-
-                    }
-
-
-                }*/
+                
                 if (bullets[i].eliminate) {
                     bullets.erase(bullets.begin() + i); 
                 }
@@ -3739,10 +3730,10 @@ public:
             }
             else if (level > 5 && !bossFight || level < 5 && !bossFight) {
                 bossFight = false;
-            }
+            }//activa/descativa la boss fight dependiendo del nivel
             //es el mismo código que el orco
 
-            if (level > 6 && level != 5 && level != 51  && !SNInUse) {
+            if (level > 5 && level != 5 && level != 51  && !SNInUse) {
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
                     Mariposa auxiliar;
 
@@ -4972,7 +4963,6 @@ public:
 
 
     void Drawlevel1() {
-        /* BeginDrawing();*/
         int x = 64;
         for (int i = 0; i < 7; i++) {
             if (currentTime % 2 == 0) {
