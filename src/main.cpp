@@ -167,11 +167,11 @@ public:
 
     void SetContento(bool feliz) {
         estaContento = feliz;
-        if (feliz) tiempoContento = 0.0f; 
+        if (feliz) tiempoContento = 0.0f;
     }
 
     void Update() {
-        
+
         if (estaContento) {
             float frameTime = GetFrameTime();
             tiempoContento += GetFrameTime();
@@ -317,7 +317,7 @@ public:
 
 
         }
-        
+
     }
     //dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
     void ResetPlayer(int level) {
@@ -338,14 +338,14 @@ public:
 
     void Movement(int level) {
 
-        /* BeginDrawing();*/
+
         Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
         Texture Abajo2 = LoadTexture("64x64/personaje.adelante1.png");
         bool moved = false;
         float nextX = playerPos.x;
         float nextY = playerPos.y;
         if (logEffectActive && (GetTime() - logEffectStartTime < 10.0f)) {
-            return; 
+            return;
         }
         if (status == true) {
 
@@ -419,7 +419,7 @@ public:
             else {
                 if (!IsSoundPlaying(Walk)) {
                     PlaySound(Walk);
-                }
+                }//sonidos del jugador cuando se mueve
 
             }
 
@@ -445,7 +445,7 @@ public:
                     playerPos.y = nextY;
                 }
 
-            }
+            }//colisiones nivel 1
             else if (level == 2) {
                 Rectangle lado1 = { 192, 160, 64, 32 };
                 Rectangle lado2 = { 192, 160, 32, 64 };
@@ -482,7 +482,7 @@ public:
                     playerPos.y = nextY;
                 }
 
-            }
+            }//colisiones nivel 2
             else if (level == 3) {
                 Rectangle lado1 = { 320, 160, 32, 32 };
                 Rectangle lado2 = { 320, 416, 32, 32 };
@@ -527,7 +527,7 @@ public:
                 }
 
 
-            }
+            }//colisiones nivel 3
             else if (level == 4) {
                 Rectangle lado1 = { 224, 192, 96, 32 };
                 Rectangle lado2 = { 352, 192, 96, 32 };
@@ -562,9 +562,9 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-               
 
-            }
+
+            }//colisiones nivel 4
             else if (level == 5) {
                 Rectangle lado1 = { 320, 160, 32, 32 };
                 Rectangle lado2 = { 224, 224, 32, 32 };
@@ -593,8 +593,8 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-              
-            }
+
+            }//colisiones boss
             else if (level == 51) {
                 Rectangle lado1 = { 320, 160, 32, 32 };
                 Rectangle lado2 = { 224, 224, 32, 32 };
@@ -625,8 +625,8 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-               
-                }
+
+            }//colisiones boss
             else if (level == 6) {
                 Rectangle lado1 = { 96, 64, 96, 32 };
                 Rectangle lado2 = { 96, 64, 32, 96 };
@@ -669,8 +669,8 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-               
-            }
+
+            }//colisiones nivel 6
             else if (level == 7) {
                 Rectangle lado1 = { 128, 128, 32, 32 };
                 Rectangle lado2 = { 160, 160, 32, 32 };
@@ -709,8 +709,8 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-               
-            }
+
+            }//colisiones nivel 7
             else if (level == 8) {
                 Rectangle lado1 = { 64, 192, 120, 32 };
                 Rectangle lado2 = { 224, 192, 88, 32 };
@@ -745,8 +745,8 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-               
-            }
+
+            }//colisiones nivel 8
 
             else if (level == 9) {
                 Rectangle lado1 = { 192, 160, 64, 64 };
@@ -784,8 +784,8 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-              
-            }
+
+            }//colisiones nivel 9
 
             else if (level == 10) {
                 Rectangle lado1 = { 64, 64, 224, 32 };
@@ -821,8 +821,8 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-               
-            }
+
+            }//colisiones nivel 10
             else if (level == 11) {
                 Rectangle lado1 = { 64, 64, 512, 32 };
                 Rectangle lado2 = { 64, 480, 512, 32 };
@@ -845,8 +845,8 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                
-            }
+
+            }//colisiones nivel 11
             ColisionPlayer(playerPos);
         }
     }
@@ -1034,9 +1034,9 @@ class Store {
     float tiempoTiendaAbierta = 0.0f;
     const float tiempoMaximoTienda = 20.0f; // segundos abierta
     bool estaCerrando = false;
-   
-    std::vector<int> inventario; 
-    const Vector2 inventarioPos = { 20, 400 }; 
+
+    std::vector<int> inventario;
+    const Vector2 inventarioPos = { 20, 400 };
     const float espacioentreitems = 35.0f;
     const int maxItemsVisible = 5;
 
@@ -1057,7 +1057,7 @@ class Store {
     const int preciosPistola[3] = { 10, 20, 30 };
     const int preciosCubo[3] = { 15, 30, 45 };
     int primero = 0;
-  
+
 
 
 public:
@@ -1078,14 +1078,14 @@ public:
         storemanTextures[2] = LoadTexture("64x64/128x128_p4-2.png");
         storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
         storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
-       
+
         //textura del fondo tienda
         store = LoadTexture("tienda_red.png");
 
         //textura de las cosas de la tienda 
         botas[0] = LoadTexture("tienda/botas.png");
 
-        botas[1] = LoadTexture("tienda/botas2.png");  
+        botas[1] = LoadTexture("tienda/botas2.png");
         botas[2] = LoadTexture("tienda/cabeza.png");
         pistola[0] = LoadTexture("tienda/pistola.png");
         pistola[1] = LoadTexture("tienda/pistola2.png");
@@ -1094,9 +1094,9 @@ public:
         caja[1] = LoadTexture("tienda/cubo2.png");
         caja[2] = LoadTexture("tienda/cubo3.png");
 
-        
+
         texturaContento = LoadTexture("64x64/personaje_contento.jpg");
-        
+
     }
 
 
@@ -1145,8 +1145,8 @@ public:
         position.y -= walkSpeed * deltaTime;
 
         // Verificar si ha salido completamente de pantalla
-        if (position.y <= 0) {  
-            position.y = 0;      
+        if (position.y <= 0) {
+            position.y = 0;
             isWalking = false;
             hasAppeared = false;
             estaCerrando = false;
@@ -1156,7 +1156,7 @@ public:
             itemSeleccionado = -1;
         }
     }
-    
+
     void DrawInventario() {
         // Solo dibujar si hay items
         if (inventario.empty()) return;
@@ -1182,13 +1182,13 @@ public:
         }
     }
 
-   
 
-    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage, int level, int &lives) {
+
+    void Compra(Vector2 playerPos, int& playerCoins, bool& tiendaActiva, float& vel, float& powerRate, int& bulletDamage, int level, int& lives) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
-        
+
         if (currentTime - ultimaCompraTime < compraCooldown) return;
 
         itemSeleccionado = -1;
@@ -1197,7 +1197,7 @@ public:
         for (int i = 0; i < 3; i++) {
             if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
                 itemSeleccionado = i;
-                
+
 
                 int precioActual = 0;
                 bool puedeComprar = false;
@@ -1232,18 +1232,19 @@ public:
                     jugadorContento = true;
                     tiempoContento = 0.0f;
                     if (i == 1) {
-                        if (primero == 0 || primero==1) {
-                        
-                        vel += 0.5;
-                        
-                        }else if (primero==2){
+                        if (primero == 0 || primero == 1) {
+
+                            vel += 0.5;
+
+                        }
+                        else if (primero == 2) {
                             lives++;
                         }
                         primero++;
-                    
+
                     }if (i == 2) {
 
-                       powerRate -= 0.2;
+                        powerRate -= 0.2;
                     }if (i == 2) {
 
                         bulletDamage += 1;
@@ -1257,7 +1258,7 @@ public:
         }
     }
 
-    void Update(float deltaTime, bool &tiendaActiva) {
+    void Update(float deltaTime, bool& tiendaActiva) {
         if (!hasAppeared && !estaCerrando) {
             aparecer(deltaTime); // 
             tiendaActiva = false;
@@ -1282,9 +1283,9 @@ public:
             }
         }
     }
-    
 
-    void CerrarTienda(bool &tiendaActiva) {
+
+    void CerrarTienda(bool& tiendaActiva) {
         estaCerrando = true;
         isWalking = true;
         tiendaActiva = false;
@@ -1293,8 +1294,8 @@ public:
 
     void Draw() {
         // Dibujar al tendero 
-        
-       
+
+
 
         if (estaCerrando) {
             // Usar animación de caminar cuando se está yendo
@@ -1325,7 +1326,7 @@ public:
         }
 
         DrawInventario(); //permanente
-        
+
     }
 
 
@@ -1455,7 +1456,7 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-           
+
 
 
         }
@@ -1467,7 +1468,7 @@ public:
             Rectangle lado5 = { 384, 160, 64, 32 };
             Rectangle lado6 = { 416, 160, 32, 64 };
             Rectangle lado7 = { 384, 416, 64, 32 };
-            Rectangle lado8 = { 416, 384, 32, 64 }; 
+            Rectangle lado8 = { 416, 384, 32, 64 };
             Rectangle lado9 = { 64, 32, 32, 224 };
             Rectangle lado10 = { 64, 32, 224, 32 };
             Rectangle lado11 = { 544, 32, 32, 224 };
@@ -1487,7 +1488,7 @@ public:
                 !CheckCollisionRecs(nextPlayerPos, lado5) &&
                 !CheckCollisionRecs(nextPlayerPos, lado6) &&
                 !CheckCollisionRecs(nextPlayerPos, lado7) &&
-                !CheckCollisionRecs(nextPlayerPos, lado8) && 
+                !CheckCollisionRecs(nextPlayerPos, lado8) &&
                 !CheckCollisionRecs(nextPlayerPos, lado9) &&
                 !CheckCollisionRecs(nextPlayerPos, lado10) &&
                 !CheckCollisionRecs(nextPlayerPos, lado11) &&
@@ -1502,7 +1503,7 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-          
+
 
         }
         else if (level == 3) {
@@ -1899,7 +1900,7 @@ private:
 public:
     friend class PowerUpLive;
     friend class Game;
-    Orc() : Enemy(3, 0.5) {}
+    Orc() : Enemy(3, 1) {}
     //declara al enemigo
     void Death() {
 
@@ -2192,7 +2193,7 @@ public:
         while (enemigo.size() > i) {
             int h = i;
             if (firstTryenemy) { //hace un timer para ver cuando ha empezado a eliminarse en cada personaje individualmente
-            
+
                 while (i < enemigo.size()) {
                     enemigo[i].SNstart_time = GetTime();
                     i++;
@@ -2206,7 +2207,7 @@ public:
                 if (enemigo.size() == 1) {
 
                     enemigo.pop_back();
-                    
+
                 }
                 else if (enemigo.size() > 1) {
                     while (j < enemigo.size() - 1) {
@@ -2292,9 +2293,9 @@ public:
         if (marip.size() == 0 && enemigo.size() == 0 && orcs.size() == 0) {
             finished = true;
             started = false;
-             firstTryenemy = true;
-             firstTryorcs = true;
-             firsttrymarip = true;
+            firstTryenemy = true;
+            firstTryorcs = true;
+            firsttrymarip = true;
         }
     }
 
@@ -2324,7 +2325,7 @@ private:
     Texture Death5 = LoadTexture("effects/128x128_hierba5.png");
     Texture Death6 = LoadTexture("effects/128x128_hierba6.png");
     float deathStartTime = 0;
-     float kDeadLifetime = 3.0f;
+    float kDeadLifetime = 3.0f;
     bool isFinished = false;
 public:
 
@@ -2357,7 +2358,7 @@ public:
         }
         return false;
     }
-    
+
 
     void DeathAnim() {
 
@@ -2429,11 +2430,11 @@ private:
     Texture Goofer5 = LoadTexture("64x64/p3_6.png");
     Texture Goofer6 = LoadTexture("64x64/p3_7.png");
     Texture cosa = LoadTexture("128x128_112.png");
-    bool showGoofer = false; 
+    bool showGoofer = false;
     int gooferFrame = 0;
     float gooferStartTime = 0.0f;
     Vector2 gooferPos = { 320, 0 };
-    float lastGooferUpdateTime = 0;     
+    float lastGooferUpdateTime = 0;
 public:
     friend Game;
     Boss() : Enemy(1, 2), isAlive(true), frameCounter(0), moving(false) {
@@ -2441,7 +2442,7 @@ public:
         introStartTime = GetTime();
         Intro = true;
         status = true;
-        
+
     }//constructor del boss
     void DrawGoofer(Player& player, int& level, int& currentLevel) {
         float currentTime = GetTime();
@@ -2449,7 +2450,7 @@ public:
         if (currentTime - lastGooferUpdateTime > 0.2f) {
             gooferFrame++;
             lastGooferUpdateTime = currentTime;
-            gooferPos.y += 15;  
+            gooferPos.y += 15;
         }//hacer que los goofers vallan hacia abajo
         if (gooferPos.y + 32 >= screenHeight) {
             player.ResetPlayer(6);
@@ -2459,7 +2460,6 @@ public:
             gooferPos.y = 0;
             return;
         }
-        
         Texture current;
         Texture current2;
         int frame = ((int)(GetTime() * 5)) % 4;
@@ -2475,7 +2475,7 @@ public:
         }
         else {
             current = Goofer2;
-        }
+        }//animacion goofers
         DrawTexture(current, gooferPos.x, gooferPos.y, WHITE);
 
         int frame2 = ((int)(GetTime() * 5)) % 4;
@@ -2490,15 +2490,15 @@ public:
         }
         else {
             current2 = Goofer5;
-        }
+        }//animacion goofers
 
         DrawTexture(current2, gooferPos.x + 16, gooferPos.y + 64, WHITE);
-        DrawTexture(current2, gooferPos.x -16, gooferPos.y + 64, WHITE);
+        DrawTexture(current2, gooferPos.x - 16, gooferPos.y + 64, WHITE);
         DrawTexture(current, gooferPos.x, gooferPos.y, WHITE);
-        DrawTexture(cosa, gooferPos.x - 16 , gooferPos.y + 32, WHITE);
+        DrawTexture(cosa, gooferPos.x - 16, gooferPos.y + 32, WHITE);
         DrawTexture(Contento, gooferPos.x - 16, gooferPos.y + 32, WHITE);
     }
-    
+
 
     void Death() {
         if (!IsSoundPlaying(Die)) {
@@ -2508,9 +2508,9 @@ public:
         deathStartTime = GetTime();
         DrawDeathAnim();
         status = false;
-        
+        //funcion para la muerte del bos
 
-        
+
     }
     void DrawHealthBar() {
         const int barWidth = 510;
@@ -2521,10 +2521,10 @@ public:
         float healthRatio = (float)hp / 50.0f;
         int currentBarWidth = (int)(barWidth * healthRatio);
 
-        
+
         DrawRectangle(barX, barY, barWidth, barHeight, BLACK);
         DrawRectangle(barX, barY, currentBarWidth, barHeight, RED);
-
+        //dibuja y reduce la barra de vida del boss
     }
 
     void DrawDeathAnim() {
@@ -2548,7 +2548,7 @@ public:
         }
         else if (elapsed < 0.4f) {
             DrawTexture(Death4, playerPos.x, playerPos.y, WHITE);
-            DrawTexture(Death3, playerPos.x +32, playerPos.y, WHITE);
+            DrawTexture(Death3, playerPos.x + 32, playerPos.y, WHITE);
             DrawTexture(Death3, playerPos.x, playerPos.y + 32, WHITE);
             DrawTexture(Death2, playerPos.x - 32, playerPos.y, WHITE);
             DrawTexture(Death2, playerPos.x, playerPos.y - 32, WHITE);
@@ -2622,12 +2622,12 @@ public:
             DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
         }
         else {
-            // Animation finished
+
             deathAnimationFinished = true;
-            // Optionally trigger a respawn or game over screen here
+
         }
-    
-    }
+
+    }//animacion de muerte del boss
 
 
     void Update(Player& p) {
@@ -2646,9 +2646,8 @@ public:
                 moving = true;
                 lastMoveTime = now;
             }
-        }
+        }//la intro donde habla y esta quieto
 
-        // Handle pause-resume cycle
         if (!isPaused && now - lastMoveTime >= 6.0f) {
             isPaused = true;
             pauseStartTime = now;
@@ -2659,29 +2658,29 @@ public:
             lastMoveTime = now;
             moving = true;
 
-        }
+        }//hace que cada 6 segundos pare durante 4 segundes y se quede en su idle sin disparar
 
         if (moving) {
             playerPos.x += direction * vel;
             if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
             return;
-        }
-            
+        }//movimiento del boss hacia los lados
 
-        
+
+
 
 
     }
 
     void Draw() {
         if (!status && deathAnimationFinished) {
-            return; // Stop drawing anything once the boss has finished dying
+            return;
         }
 
         if (!status && !deathAnimationFinished) {
             DrawDeathAnim();
             return;
-        }
+        }//dibuja la animacion de muerte si el boss muere i la animacion no se ha ejecutado
 
         frameCounter++;
         Texture current;
@@ -2691,21 +2690,21 @@ public:
         }
         else {
             current = (frameCounter / 30 % 2 == 0) ? Boss1 : Boss2;
-        }
+        }//animacion del movimiento de los lados del boss
 
         DrawTexture(current, playerPos.x, playerPos.y, WHITE);
-        
-        
+
+
 
     }
 
-    
+
 
 
     bool IsAlive() const { return isAlive; }
-    
 
-    
+
+
 
 };
 
@@ -2889,7 +2888,7 @@ public:
 
             };
 
-            
+
         }
         else if (level == 6) {
             walls = {
@@ -2902,11 +2901,11 @@ public:
                 { 160, 416, 32, 32 }, { 480, 416, 32, 96 },
                 { 448, 448, 32, 32 }, { 512, 448, 32, 64 }
 
-                
-            };
-         
 
-            
+            };
+
+
+
         }
         else if (level == 7) {
             walls = {
@@ -2919,7 +2918,7 @@ public:
                 { 384, 416, 32, 32 }, { 448, 416, 32, 32 }
             };
 
-            
+
         }
         else if (level == 8) {
             walls = {
@@ -2947,7 +2946,7 @@ public:
                 { 448, 416, 32, 32 },
 
             };
-            
+
         }
 
         else if (level == 10) {
@@ -2971,7 +2970,7 @@ public:
 
             };
 
-            
+
         }
 
 
@@ -3114,7 +3113,7 @@ public:
         double porcentaje = tiempoTranscurrido / tiempoFinal;
 
         barraAncho = (int)((playerScreenX - 32) * (1 - porcentaje));
-      
+
 
 
 
@@ -3259,7 +3258,7 @@ public:
     }
 
     HeavyMachineGun(Player p) : Colision(pos) {
-        
+
     }
     void UsePowerUp(float& powerRate) {
 
@@ -3289,8 +3288,8 @@ public:
 
 class Game {
 private:
-    Texture2D tronco = LoadTexture("items/128x128_e.png"); 
-    Vector2 logPos= { 0, 0 };
+    Texture2D tronco = LoadTexture("items/128x128_e.png");
+    Vector2 logPos = { 0, 0 };
     bool showLog = false;
     bool logOnPlayer = false;
     int punteroDraw;
@@ -3342,16 +3341,16 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 1;
+        level = 2;
         stage = 2;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
-     
-       
-       ScreenNuke gameNuke();
+
+
+        ScreenNuke gameNuke();
     }
     //declara el nivel y stage inicial
-    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>&gun, Store& tienda)
+    void GameStart(Player& p, Boss& b, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, int& og, int& ayxi, int& dire, int& ogreaux, int& bulletaux, time& Tiempo, std::vector<float>& auxTime, float& HelpMeTime, std::vector <PowerUpLive>& Lives, std::vector<coins>& money, std::vector <Orc>& orcs, std::vector <Mariposa>& marip, std::vector<Coffee>& cafe, std::vector <ScreenNuke>& SN, std::vector <HeavyMachineGun>& gun, Store& tienda)
     {
         int monstersize = enemigo.size() + marip.size() + orcs.size();
         if (p.status && (!ChangingLevel || monstersize != 0) && !tiendaActiva) {
@@ -3365,25 +3364,26 @@ public:
                 }
                 Tiempo.IniciarTiempo(); //inicia el tiempo (entrar en función para explicación, esto irá pasando por todo el código)
                 tiempoiniciado = true; //para que no vuelva a iniciar el tiempo en un futuro
-               
+
             }
             else { //si el tiempo ya ha sido iniciado
-                
-                    Tiempo.TiempoQueHaPasado();
-                    Tiempo.Draw();
-                
+
+                Tiempo.TiempoQueHaPasado();
+                Tiempo.Draw();
+
 
 
             }
+
             //empieza el tiempo, lo dibuja y lo va actualizando
             if (boss.showGoofer) {
                 DrawRectangle(64, 32, GetScreenWidth(), GetScreenHeight(), BLACK);
-                boss.DrawGoofer(p, level,currentLevel);
+                boss.DrawGoofer(p, level, currentLevel);
                 showLog = false;
                 EndDrawing();
                 return;
             }
-            
+
             if (level == 11) {
                 currentLevel = 11;//para las colisiones del nivel 11
 
@@ -3394,27 +3394,28 @@ public:
                     DrawTexture(tronco, playerPos.x, playerPos.y - 32, WHITE); // 40 pixels above
                 }
                 else {
-                    DrawTexture(tronco,320, 352, WHITE);
+                    DrawTexture(tronco, 320, 352, WHITE);
                 }
-            }
+            }//muestra el tronco de la victoria
             if (showLog && !p.logEffectActive) {
                 Rectangle playerRect = { p.GetPosition().x, p.GetPosition().y, 32, 32 };
-                Rectangle logRect = { 320, 352, 32, 32};
+                Rectangle logRect = { 320, 352, 32, 32 };
 
                 if (CheckCollisionRecs(playerRect, logRect)) {
                     p.logEffectActive = true;
-                    
+
                     p.logEffectStartTime = GetTime();
                     logOnPlayer = true;
                 }
-            }
+            }//cuando el player colisiona con el tronco, el tronco se pone en su cabeza y el player cambia de sprite
             if (p.logEffectActive && (GetTime() - p.logEffectStartTime >= 2.0f)) {
                 p.logEffectActive = false;
 
                 boss.showGoofer = true;
                 boss.gooferStartTime = GetTime();
-                boss.gooferPos = { p.GetPosition().x, 0 }; 
-            }
+                boss.gooferPos = { p.GetPosition().x, 0 };
+            }//para mostrar el goofer
+
             // Handle bullet creation with arrow keys
 
             //para las bullets
@@ -3432,8 +3433,8 @@ public:
 
 
             }
-            
-           //lo mismo que el anterior pero es para el boss
+
+            //lo mismo que el anterior pero es para el boss
             int a = GetTime();
             if ((level == 5) && a > 17.0f && boss.status && boss.IsAlive() && !boss.isPaused) {
                 static float shootTimer = powerRate;
@@ -3448,10 +3449,10 @@ public:
 
 
             int i = 0;
-            // boss, comentalo queralt
+
             while (i < bullets.size()) {
 
-                bullets[i].UpdatePosition(level); 
+                bullets[i].UpdatePosition(level);
                 bullets[i].Draw();
                 Rectangle bulletRect = { bullets[i].GetPosition().x, bullets[i].GetPosition().y, 3, 3 };
                 Rectangle playerHitbox = { p.GetPosition().x, p.GetPosition().y, 32, 32 };
@@ -3460,9 +3461,9 @@ public:
                 if (bullets[i].isEnemyBullet && CheckCollisionRecs(bulletRect, playerHitbox) && p.status) {
                     p.status = false;
                     bullets[i].eliminate = true;
-                }
+                }//detecta que la bala es del enemigo i mata al player cuando le da
                 if (!bullets[i].isEnemyBullet &&
-                    
+
                     CheckCollisionRecs(bulletRect, { boss.GetPosition().x, boss.GetPosition().y, 32, 32 })) {
                     if (bulletDamage = 1) {
                         boss.hp--;
@@ -3481,86 +3482,67 @@ public:
                         bullets[i].eliminate = true;
 
                     }
-                    
-                    
-                    
-                    
-                    
-                }
+
+
+
+
+
+                }//detecta que la bala es del player i le resta vida al boss dependiendo de la pistola que tenga el player
                 if (boss.hp <= 0 && boss.status == true) {
 
                     boss.Death();
-                    
 
-                }
-                if (!boss.status && !boss.deathHandled) {
+
+                }//cuando el boss llega a 0 de vida activa la funcion de muerte
+                if ((level == 5 || level == 51) && !boss.status && !boss.deathHandled) {
+
                     float elapsed = GetTime() - boss.deathTime;
 
-                    if (elapsed > 2.0f) { 
-                        level = 51; 
+                    if (elapsed > 2.0f) {
+                        level = 51;
                         Lives.push_back(PowerUpLive(boss.GetPosition()));
-                        showLog = true; 
+                        showLog = true;
 
                         boss.deathHandled = true;
-                    }
+                    }//hace que salga el tronco de la victoria y que el boss dropee una vida
                 }
-                
-                
-
-                /*if (bullets[i].eliminate == true) {
 
 
-                    int p = i;
-                    if (bullets.size() == 1) {
-
-                        bullets.pop_back();
-
-                    }
-                    else if (bullets.size() > 1) {
-                        while (p < bullets.size() - 1) {
-                            bullets[p] = bullets[p + 1];
-                            p++;
-                        }
-
-                        bullets.pop_back();
-
-                    }
 
 
-                }*/
                 if (bullets[i].eliminate) {
-                    bullets.erase(bullets.begin() + i); 
+                    bullets.erase(bullets.begin() + i);
                 }
                 else {
-                    i++;  
+                    i++;
                 }
-                
 
-                
+
+
             }
 
             tienda.DrawInventario(); //dibuja lo que tiene el jugador en el inventario
             i = 0;
             while (i < dead.size()) { //los cosas que sueltan los monstruos al morir
-             
+
                 if (dead[i].Delete()) {
-                
+
                     if (dead.size() == 1) {
-                    
+
                         dead.pop_back();
-                    //si solo hay uno hay poop back pero si hay más de uno, lo que hacemos es que el que se ha de eliminar es suplantado por el siguiente, y al último le hacemos pop_back
+                        //si solo hay uno hay poop back pero si hay más de uno, lo que hacemos es que el que se ha de eliminar es suplantado por el siguiente, y al último le hacemos pop_back
                     }
                     else {
-                       int j = i;
-                       while (j < dead.size() - 1) {
-                       
-                           dead[j] = dead[j + 1];
-                           j++;
-                       }
-                    
+                        int j = i;
+                        while (j < dead.size() - 1) {
+
+                            dead[j] = dead[j + 1];
+                            j++;
+                        }
+
                     }
-                
-                
+
+
                 }
                 i++;
             }
@@ -3569,12 +3551,12 @@ public:
 
             int bulletSize = bullets.size();
 
-            
-           
+
+
 
             if (level > 3 && level != 5 && level != 51 && !SNInUse) { //este aparece en todos los niveles a partir del 3, menos en el del boss, y cuando esta en uso el screen nuke no pueden hacer nada
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) { //hacemos que el máximo de enemigos son 8 mas el nivel en el que se encuentran para que haya mas dificultad
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6 + level && !ChangingLevel) { //hacemos que el máximo de enemigos son 8 mas el nivel en el que se encuentran para que haya mas dificultad
 
                     Orc auxiliar;
                     orcs.push_back(auxiliar);
@@ -3594,9 +3576,9 @@ public:
 
                             }
                             else {
-                                
+
                                 if (bullets[j].ColisionBullet(orcs[i]) == true) { //si choca creamos un goop verde, el DeadOgre, y 
-                                    orcs[i].hp-=bulletDamage;
+                                    orcs[i].hp -= bulletDamage;
                                     if (orcs[i].hp < 0) {
 
                                         DeadOgre auxiliari(orcs[i].GetPosition());
@@ -3675,10 +3657,10 @@ public:
 
                                     }
                                     else {
-                                        if (!IsSoundPlaying(Hit) ){ //hace un sonido diferente si no ha muerto pero le han golpeado
+                                        if (!IsSoundPlaying(Hit)) { //hace un sonido diferente si no ha muerto pero le han golpeado
                                             PlaySound(Hit);
                                         }
-                                        
+
                                     }
 
 
@@ -3734,10 +3716,10 @@ public:
             }
             else if (level > 5 && !bossFight || level < 5 && !bossFight) {
                 bossFight = false;
-            }
+            }//activa/descativa la boss fight dependiendo del nivel
             //es el mismo código que el orco
 
-            if (level > 6 && level != 5 && level != 51  && !SNInUse) {
+            if (level > 5 && level != 5 && level != 51 && !SNInUse) {
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
                     Mariposa auxiliar;
 
@@ -3782,7 +3764,7 @@ public:
 
 
                                     int a = GetRandomValue(1, 10);
-                                    if (a== 1 && Lives.size() == 0) {
+                                    if (a == 1 && Lives.size() == 0) {
                                         Vector2 ee = marip[i].GetPosition();
                                         PowerUpLive live(ee);
                                         Lives.push_back(live);
@@ -3948,8 +3930,8 @@ public:
                                     auxTime.push_back(timehelp);
                                     deadogres++;
 
-                                    
-                                    
+
+
                                     int Random = GetRandomValue(1, 10);
                                     if (Random == 1 && Lives.size() == 0) {
                                         Vector2 ee = enemigo[i].GetPosition();
@@ -4018,7 +4000,7 @@ public:
 
                                     }
 
-                                   
+
 
 
                                     if (enemigo.size() == 1) {
@@ -4086,7 +4068,7 @@ public:
 
 
             }
-            
+
             i = 0;
             deadogres = dead.size();
             while (i < dead.size()) {
@@ -4120,16 +4102,16 @@ public:
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < SN.size()) {
                 if (!SN[auxiliarPowerUps].inInventry) {
-                
-                
-                
-                SN[auxiliarPowerUps].Draw();
-                float helperDrawer = GetTime();
-                if (helperDrawer - SN[auxiliarPowerUps].appearTime > 10) {
-                   
-                    SN.pop_back();
-                }
-                auxiliarPowerUps++;
+
+
+
+                    SN[auxiliarPowerUps].Draw();
+                    float helperDrawer = GetTime();
+                    if (helperDrawer - SN[auxiliarPowerUps].appearTime > 10) {
+
+                        SN.pop_back();
+                    }
+                    auxiliarPowerUps++;
                 }
             }
             auxiliarPowerUps = 0;
@@ -4211,7 +4193,7 @@ public:
 
 
                 }
-                
+
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < SN.size()) {
@@ -4238,12 +4220,12 @@ public:
                     }
                 }
 
-               
-                
+
+
                 auxiliarPowerUps++;
 
             }
-            
+
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < money.size()) {
 
@@ -4282,12 +4264,12 @@ public:
 
                         }
                         else {
-                        
-                        
-                        cafe[0].UsePowerUp(p);
-                        cafe.pop_back();
-                        cafeEnUso = 1;
-                        timeCafeInicial = GetTime();
+
+
+                            cafe[0].UsePowerUp(p);
+                            cafe.pop_back();
+                            cafeEnUso = 1;
+                            timeCafeInicial = GetTime();
                         }
                     }
                     else {
@@ -4304,7 +4286,7 @@ public:
                 auxiliarPowerUps++;
 
             }
-            
+
             auxiliarPowerUps = 0;
             if (timeCafeFinal - timeCafeInicial > 16) {
                 Coffee Aux(p.playerPos);
@@ -4366,7 +4348,7 @@ public:
 
                 enemigo[i].CheckColisions(p);
 
-                if (p.status == true &&!SNInUse) {
+                if (p.status == true && !SNInUse) {
 
                     enemigo[i].MovementEnemy(p, this->level);
 
@@ -4374,9 +4356,9 @@ public:
                 }
                 if (!SNInUse) {
 
-                   
 
-                enemigo[i].Draw();
+
+                    enemigo[i].Draw();
                 }
 
 
@@ -4385,7 +4367,7 @@ public:
 
             }
             i = 0;
-            while (i < orcs.size() ) {
+            while (i < orcs.size()) {
 
                 orcs[i].CheckColisions(p);
 
@@ -4396,9 +4378,9 @@ public:
 
                 }
                 if (!SNInUse) {
-                
-                orcs[i].Draw();
-                
+
+                    orcs[i].Draw();
+
                 }
 
                 i++;
@@ -4418,7 +4400,7 @@ public:
 
                 if (!SNInUse) {
 
-                marip[i].Draw();
+                    marip[i].Draw();
 
                 }
 
@@ -4431,7 +4413,7 @@ public:
 
 
             if (gameNuke.started && !gameNuke.finished && SNInUse) {
-                gameNuke.UsePowerUp(enemigo, orcs, marip); 
+                gameNuke.UsePowerUp(enemigo, orcs, marip);
                 if (!IsSoundPlaying(explosion)) {
                     PlaySound(explosion);
                 }
@@ -4472,17 +4454,17 @@ public:
                 i++;
             }
 
-           
+
             p.Movement(this->level);
             p.Draw();
 
             if (p.status == false) {
                 p.bag = 0; //si ha muerto el personaje deja de usar todos los power ups
-                if (cafeEnUso==1) {
-                
+                if (cafeEnUso == 1) {
+
                     Coffee aux(p);
                     aux.StopUsing(p);
-                
+
                     cafeEnUso = 0;
                 }
                 if (HMGEnUso == 1) {
@@ -4490,9 +4472,9 @@ public:
                     Aux.UsePowerUp(this->powerRate);
                     HMGEnUso = 1;
 
-                
+
                 }
-                p.Death(); 
+                p.Death();
                 Tiempo.Draw();
                 int x = 0;
                 //elimina todos los power ups y enemigos
@@ -4593,11 +4575,11 @@ public:
                 }
 
             }
-           
-           
+
+
             if (Tiempo.tiempo() == true && p.status == true) { //si ha acabado el
                 ChangingLevel = true;
-                
+
             }
             EndDrawing();
         }
@@ -4635,7 +4617,7 @@ public:
                 money.pop_back();
 
             }
-           
+
             while (i < dead.size()) {
 
                 dead[i].DeathAnim();
@@ -4649,7 +4631,7 @@ public:
 
 
                 }
-             
+
 
                 i++;
 
@@ -4663,7 +4645,7 @@ public:
             }
             i = 0;
 
-            if ( p.lives < 0) { //si hay menos de 0 es game over
+            if (p.lives < 0) { //si hay menos de 0 es game over
                 GameOver(p);
             }
             if (p.status == true) {
@@ -4677,15 +4659,15 @@ public:
 
 
         }
-       
-        if (ChangingLevel && !tiendaActiva && monstersize==0) { //si el nivel se esta cambiando, el personaje tiene que ir hasta el final de la pantalla para ir al siguiente nivel
+
+        if (ChangingLevel && !tiendaActiva && monstersize == 0) { //si el nivel se esta cambiando, el personaje tiene que ir hasta el final de la pantalla para ir al siguiente nivel
             ClearBackground(BLACK);
             BeginDrawing();
             p.Movement(level);
             p.Draw();
             punteroDraw++;
             int i = 0;
-            
+
             if (punteroDraw % 120 != 0) {
 
                 DrawTexture(puntero, 350, 510, WHITE);
@@ -4706,7 +4688,7 @@ public:
             EndDrawing();
         }
 
-        if ((level == 2 || level ==4 || level ==6 || level == 8 || level ==9 || level==11) && monstersize == 0 && ChangingLevel && p.status) //mira si las conficiones se cumplen para la tienda
+        if ((level == 2 || level == 4 || level == 6 || level == 8 || level == 9 || level == 11) && monstersize == 0 && ChangingLevel && p.status) //mira si las conficiones se cumplen para la tienda
         {
             tiendaActiva = true;
 
@@ -4716,7 +4698,7 @@ public:
             tiendaActiva = false;
         }
 
-        if (tiendaActiva && monstersize == 0 &&p.status)
+        if (tiendaActiva && monstersize == 0 && p.status)
         {
             while (0 < Lives.size()) {
 
@@ -4737,16 +4719,16 @@ public:
 
             }
             ClearBackground(BLACK);
-            
+
             BeginDrawing();
-            p.Movement(this->level); 
+            p.Movement(this->level);
             float deltaTime = GetFrameTime();
-            tienda.Update(deltaTime, this->tiendaActiva); 
+            tienda.Update(deltaTime, this->tiendaActiva);
             tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage, level, p.lives); // Lógica de compra
 
-            
-            tienda.Draw();         
-            p.Draw();  
+
+            tienda.Draw();
+            p.Draw();
             punteroDraw++;
             int i = 0;
 
@@ -4781,7 +4763,7 @@ public:
         tiempoiniciado = false;
         int x = 0;
 
-      //limpia cuando se cambia de nivel y suma al nivel para cambiarlo
+        //limpia cuando se cambia de nivel y suma al nivel para cambiarlo
 
 
 
@@ -4967,7 +4949,6 @@ public:
 
 
     void Drawlevel1() {
-        /* BeginDrawing();*/
         int x = 64;
         for (int i = 0; i < 7; i++) {
             if (currentTime % 2 == 0) {
@@ -8114,12 +8095,12 @@ int main()
                 if (!game.wonGame) {
 
                     if (game.CheckLevel() == 5) { //mira que cancion 
-                               
-                        player.BossPlayer();       
+
+                        player.BossPlayer();
                     }
                     else {
-                         
-                        player.OverworldPlayer();          
+
+                        player.OverworldPlayer();
                     }
                     ui.DrawInicial();
                     game.GameStart(p, b, enemigo, bullets, og, ayxi, dire, ogreaux, bulletaux, ui, auxTime, HelpMeTime, Lives, money, orcs, marip, cafe, SN, gun, tienda);
