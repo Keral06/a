@@ -1244,7 +1244,7 @@ public:
 
                     }if (i == 2) {
 
-                        powerRate -= 0.2;
+                        powerRate -= 0.1;
                     }if (i == 2) {
 
                         bulletDamage += 1;
@@ -3262,13 +3262,13 @@ public:
     }
     void UsePowerUp(float& powerRate) {
 
-        powerRate -= 0.1;
+        powerRate -= 0.05;
 
     }
 
     void StopUsing(float& powerRate) {
 
-        powerRate += 0.1;
+        powerRate += 0.05;
 
 
     }
@@ -4469,7 +4469,7 @@ public:
                 }
                 if (HMGEnUso == 1) {
                     HeavyMachineGun Aux(p.playerPos);
-                    Aux.UsePowerUp(this->powerRate);
+                    Aux.StopUsing(this->powerRate);
                     HMGEnUso = 1;
 
 
@@ -4589,6 +4589,20 @@ public:
         else if (!p.status) {
 
             ClearBackground(BLACK);
+            if (cafeEnUso == 1) {
+
+                Coffee aux(p);
+                aux.StopUsing(p);
+
+                cafeEnUso = 0;
+            }
+            if (HMGEnUso == 1) {
+                HeavyMachineGun Aux(p.playerPos);
+                Aux.StopUsing(this->powerRate);
+                HMGEnUso = 1;
+
+
+            }
             /*BeginDrawing();*/
             BeginDrawing();
             int i = 0;
@@ -4666,6 +4680,20 @@ public:
             p.Movement(level);
             p.Draw();
             punteroDraw++;
+            if (cafeEnUso == 1) {
+
+                Coffee aux(p);
+                aux.StopUsing(p);
+
+                cafeEnUso = 0;
+            }
+            if (HMGEnUso == 1) {
+                HeavyMachineGun Aux(p.playerPos);
+                Aux.StopUsing(this->powerRate);
+                HMGEnUso = 1;
+
+
+            }
             int i = 0;
 
             if (punteroDraw % 120 != 0) {
@@ -4700,7 +4728,20 @@ public:
 
         if (tiendaActiva && monstersize == 0 && p.status)
         {
-          
+            if (cafeEnUso == 1) {
+
+                Coffee aux(p);
+                aux.StopUsing(p);
+
+                cafeEnUso = 0;
+            }
+            if (HMGEnUso == 1) {
+                HeavyMachineGun Aux(p.playerPos);
+                Aux.StopUsing(this->powerRate);
+                HMGEnUso = 1;
+
+
+            }
             ClearBackground(BLACK);
 
             BeginDrawing();
