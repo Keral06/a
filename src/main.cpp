@@ -1154,7 +1154,7 @@ public:
 
    
 
-    void Compra(Vector2 playerPos, int& playerCoins) {
+    void Compra(Vector2 playerPos, int& playerCoins, bool tiendaActiva) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
@@ -1178,14 +1178,14 @@ public:
                     tiempoContento = 0.0f;
 
                     // Cerrar tienda inmediatamente después de comprar
-                    CerrarTienda();
+                    CerrarTienda(tiendaActiva);
                 }
                 break;
             }
         }
     }
 
-    void Update(float deltaTime) {
+    void Update(float deltaTime, bool &tiendaActiva) {
         if (!hasAppeared && !estaCerrando) {
             aparecer(deltaTime); // 
             tiendaActiva = false;
@@ -1195,7 +1195,7 @@ public:
             // Lógica mientras la tienda está abierta
             tiempoTiendaAbierta += deltaTime;
             if (tiempoTiendaAbierta >= tiempoMaximoTienda) { //si en un tiempo no hay ningun paso se cierra la tienda
-                CerrarTienda();
+                CerrarTienda(tiendaActiva);
             }
         }
         else if (estaCerrando) {
@@ -1212,7 +1212,7 @@ public:
     }
     
 
-    void CerrarTienda() {
+    void CerrarTienda(bool &tiendaActiva) {
         estaCerrando = true;
         isWalking = true;
         tiendaActiva = false;
@@ -3166,15 +3166,17 @@ private:
     bool firstRound = true;
 
 
+
 public:
     friend Boss;
     friend int main();
     Game() {
         deadogres = 0;
-        level = 3;
+        level = 1;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
+     
        
        ScreenNuke gameNuke();
     }
@@ -3332,16 +3334,7 @@ public:
             int bulletSize = bullets.size();
 
             //la tienda aparece solo en el level 3
-            if (level == 3&& enemigo.size() == 0)
-            {
-                tiendaActiva = true;
-
-            }
-            else
-            {
-                tiendaActiva = false;
-            }
-
+           
 
             if (level > 3 && level != 5 && !SNInUse) {
                 int i = 0;
@@ -4497,19 +4490,48 @@ public:
             EndDrawing();
         }
 
-
-        if (tiendaActiva)
+        if (level == 2 && monstersize == 0 && ChangingLevel && p.status)
         {
+            tiendaActiva = true;
+
+        }
+        else
+        {
+            tiendaActiva = false;
+        }
+
+        if (tiendaActiva && monstersize == 0 &&p.status)
+        {
+            ClearBackground(BLACK);
+            BeginDrawing();
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
-            tienda.Update(deltaTime); 
-            tienda.Compra(p.GetPosition(), p.money); // Lógica de compra
+            tienda.Update(deltaTime, this->tiendaActiva); 
+            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva); // Lógica de compra
 
-
-            BeginDrawing();
-            ClearBackground(BLACK); 
+            
             tienda.Draw();         
-            p.Draw();               
+            p.Draw();  
+            punteroDraw++;
+            int i = 0;
+
+            if (punteroDraw % 120 != 0) {
+
+                DrawTexture(puntero, 350, 510, WHITE);
+
+
+            }
+            if (p.playerPos.y > 475) {
+
+                if (p.playerPos.x > 288 && p.playerPos.x < 384) {
+
+
+                    ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+                    ChangingLevel = false;
+
+                }
+
+            }
             EndDrawing();
         }
         //reinicia los valores si el jugador pierde una vida
