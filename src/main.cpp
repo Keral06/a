@@ -315,8 +315,8 @@ public:
 
 
         }
-        }
-    
+        
+    }
     //dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
     void ResetPlayer(int level) {
 
@@ -1114,7 +1114,9 @@ class Store {
     bool jugadorContento = false;
     float tiempoContento = 0.0f;
     const float duracionContento = 1.5f;
-    
+    Texture botas[3];
+    Texture pistola[3];
+    Texture caja[3];
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
 
@@ -1124,6 +1126,9 @@ class Store {
     const int preciosBotas[3] = { 8, 20, 10 };
     const int preciosPistola[3] = { 10, 20, 30 };
     const int preciosCubo[3] = { 15, 30, 45 };
+    int primero = 0;
+  
+
 
 public:
     friend int main();
@@ -1149,6 +1154,7 @@ public:
 
         //textura de las cosas de la tienda 
         botas[0] = LoadTexture("tienda/botas.png");
+
         botas[1] = LoadTexture("tienda/botas2.png");  
         botas[2] = LoadTexture("tienda/cabeza.png");
         pistola[0] = LoadTexture("tienda/pistola.png");
@@ -1249,7 +1255,7 @@ public:
 
    
 
-    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage, int level) {
+    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage, int level, int &lives) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
@@ -1294,13 +1300,22 @@ public:
                     inventario.push_back(i);
                     if (!IsSoundPlaying(buy)) PlaySound(buy);
                     ultimaCompraTime = currentTime;
-                    
-                    
-                    if (i == 0) {
-
+                    jugadorContento = true;
+                    tiempoContento = 0.0f;
+                    if (i == 1) {
+                        if (primero == 0 || primero==1) {
+                        
                         vel += 0.5;
-                    }if (i == 1) {
+                        
+                        }else if (primero==2){
+                            lives++;
+                        }
+                        primero++;
+                    
+                    }if (i == 2) {
 
+                       
+                    
                         powerRate -= 0.2;
                     }if (i == 2) {
 
@@ -2546,7 +2561,12 @@ private:
     bool isPaused = false;
     bool deathHandled = false;
     float deathTime = 0.0f;
-
+    Texture Goofer1 = LoadTexture("64x64/p3_11.png");
+    Texture Goofer2 = LoadTexture("64x64/p3_9.png");
+    bool showGoofer = false;
+    int gooferFrame = 0;
+    float gooferStartTime = 0.0f;
+    Vector2 gooferPos = { 320, 0 };
 public:
     friend Game;
     Boss() : Enemy(1, 2), isAlive(true), frameCounter(0), moving(false) {
@@ -3433,7 +3453,11 @@ public:
 
             }
             //empieza el tiempo, lo dibuja y lo va actualizando
-
+            if (boss.showGoofer) {
+                ClearBackground(BLACK);
+                boss.DrawGoofer();          
+                return;                 
+            }
             if (level == 11) {
                 currentLevel = 11;
 
@@ -3458,7 +3482,18 @@ public:
                     logOnPlayer = true;
                 }
             }
+            if (p.logEffectActive && (GetTime() - p.logEffectStartTime >= 2.0f)) {
+                p.logEffectActive = false;
+
+                boss.showGoofer = true;
+                boss.gooferStartTime = GetTime();
+                boss.showGoofer = true;
+                boss.gooferPos = { p.GetPosition().x, 0 }; 
+            }
+            // Handle bullet creation with arrow keys
+
             //para las bullets
+
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
                 IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
                 //el timer de cuando ha de esperar una bullet para volver a ser lanzada es el power rate, por eso hay upgrades para disminuirlo
@@ -4764,7 +4799,7 @@ public:
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
             tienda.Update(deltaTime, this->tiendaActiva); 
-            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage, level); // Lógica de compra
+            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage, level, p.lives); // Lógica de compra
 
             
             tienda.Draw();         
