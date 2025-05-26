@@ -3342,7 +3342,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 2;
+        level = 1;
         stage = 2;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3380,12 +3380,6 @@ public:
                 DrawRectangle(64, 32, GetScreenWidth(), GetScreenHeight(), BLACK);
                 boss.DrawGoofer(p, level,currentLevel);
                 showLog = false;
-                p.followingGoofer = true;
-                p.Draw();
-                p.followingGoofer = true;
-                p.Draw();
-                p.followingGoofer = true;
-                p.Draw();
                 EndDrawing();
                 return;
             }
