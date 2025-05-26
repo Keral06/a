@@ -471,6 +471,7 @@ public:
                     !CheckCollisionRecs(nextPlayerPos, lado6) &&
                     !CheckCollisionRecs(nextPlayerPos, lado7) &&
                     !CheckCollisionRecs(nextPlayerPos, lado8) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado9) &&
                     !CheckCollisionRecs(nextPlayerPos, lado10) &&
                     !CheckCollisionRecs(nextPlayerPos, lado11) &&
                     !CheckCollisionRecs(nextPlayerPos, lado11) &&
@@ -1152,7 +1153,6 @@ public:
             tiempoTiendaAbierta = 0.0f;
             currentFrame = 0;
 
-            // (Opcional) Resetear otros estados si es necesario
             itemSeleccionado = -1;
         }
     }
@@ -1487,7 +1487,8 @@ public:
                 !CheckCollisionRecs(nextPlayerPos, lado5) &&
                 !CheckCollisionRecs(nextPlayerPos, lado6) &&
                 !CheckCollisionRecs(nextPlayerPos, lado7) &&
-                !CheckCollisionRecs(nextPlayerPos, lado8) &&
+                !CheckCollisionRecs(nextPlayerPos, lado8) && 
+                !CheckCollisionRecs(nextPlayerPos, lado9) &&
                 !CheckCollisionRecs(nextPlayerPos, lado10) &&
                 !CheckCollisionRecs(nextPlayerPos, lado11) &&
                 !CheckCollisionRecs(nextPlayerPos, lado11) &&
@@ -2442,7 +2443,7 @@ public:
         status = true;
         
     }//constructor del boss
-    void DrawGoofer(Player& player, int& level, int& currentLevel, time& t) {
+    void DrawGoofer(Player& player, int& level, int& currentLevel) {
         float currentTime = GetTime();
 
         if (currentTime - lastGooferUpdateTime > 0.2f) {
@@ -2456,7 +2457,6 @@ public:
             currentLevel = 6;
             showGoofer = false;
             gooferPos.y = 0;
-            t.IniciarTiempo(); 
             return;
         }
         Texture current;
@@ -3340,8 +3340,8 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 5;
-        stage = 5;        /*  BeginDrawing();*/
+        level = 2;
+        stage = 2;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
      
@@ -3377,7 +3377,7 @@ public:
             //empieza el tiempo, lo dibuja y lo va actualizando
             if (boss.showGoofer) {
                 DrawRectangle(64, 32, GetScreenWidth(), GetScreenHeight(), BLACK);
-                boss.DrawGoofer(p, level,currentLevel, Tiempo);
+                boss.DrawGoofer(p, level,currentLevel);
                 showLog = false;
                 EndDrawing();
                 return;
