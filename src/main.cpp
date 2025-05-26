@@ -154,6 +154,7 @@ public:
         this->money = 0;
         this->lives = 3;
         this->dir = ARRIBA;
+        this->vel = 2;
         dire = 1;
         status = true;
         bag = 0;
@@ -164,10 +165,10 @@ public:
         if (logEffectActive) {
             if (now - logEffectStartTime < 10.0f) {
                 DrawTexture(contento, GetPosition().x, GetPosition().y, WHITE);
-                return;  
+                return;  // Prevent drawing other sprites while happy
             }
             else {
-                logEffectActive = false;  
+                logEffectActive = false;  // End effect
             }
         }
         if (status == true) {
@@ -1918,7 +1919,7 @@ public:
     //declara las posiciones donde el enemigo no puede acceder, colisiones
 
 
-    bool CheckColisions(Player& p) {
+    bool CheckColisions(Player& p) { //mira si ha coli
 
         bool check = CheckCollisionRecs(this->Square, p.Square);
         if (check == true) {
@@ -2236,7 +2237,7 @@ public:
 
         while (enemigo.size() > i) {
             int h = i;
-            if (firstTryenemy) {
+            if (firstTryenemy) { //hace un timer para ver cuando ha empezado a eliminarse en cada personaje individualmente
             
                 while (i < enemigo.size()) {
                     enemigo[i].SNstart_time = GetTime();
@@ -2245,8 +2246,8 @@ public:
                 i = h;
                 firstTryenemy = false;
             }
-            enemigo[i].SNAnim();
-            if (enemigo[i].isSNfinished) {
+            enemigo[i].SNAnim(); //animacion del humo de cuando se eliminan
+            if (enemigo[i].isSNfinished) { //si se ha acabado se elimina el personaje de la misma manera que vista anteriormente
                 int j = i;
                 if (enemigo.size() == 1) {
 
@@ -2466,12 +2467,6 @@ private:
     bool isPaused = false;
     bool deathHandled = false;
     float deathTime = 0.0f;
-    int gooferFrame = 0;
-    float lastGooferUpdateTime = 0;
-    Texture Goofer1 = LoadTexture("64x64/p3_11.png");
-    Texture Goofer2 = LoadTexture("64x64/p3_9.png");
-    bool showGoofer = false;
-
 
 public:
     friend Game;
@@ -2483,11 +2478,7 @@ public:
         
     }
     
-    void DrawGoofer() {
-        frameCounter++;
-        Texture current;
-        current = (gooferFrame / 30 % 2 == 0) ? Goofer1 : Goofer2;
-    }
+
     void Death() {
         if (!IsSoundPlaying(Die)) {
             PlaySound(Die);
@@ -3081,13 +3072,13 @@ public:
 
         float help = GetTime();
 
-        aux = aux + help - tiempoFake;
+        aux = aux + help - tiempoFake; //auxiliar es el auxiliar anterior mas el tiempo que ha pasado desde la pausa, que es el tiempofake restado al tiempoo actual
 
         tiempoFinal = tiempoInicial + 80 + aux;
-    }
+    } //sumamos eso al tiempofinal, ya que es el tiempo que ha estado en pausa
     void pause() {
 
-        tiempoFake = GetTime();
+        tiempoFake = GetTime(); //miramos en que mmento a parado
 
     }
     void DrawInicial() {
@@ -4181,9 +4172,7 @@ public:
 
 
                 }
-                if (!IsSoundPlaying(power)) {
-                    PlaySound(power);
-                }
+                
             }
             auxiliarPowerUps = 0;
             while (auxiliarPowerUps < SN.size()) {
@@ -4193,7 +4182,7 @@ public:
                     if (p.bag == 1) {
                         SN.pop_back();
                         gameNuke.started = true;
-                        gameNuke.finished = false;
+                        gameNuke.finished = false; //el game nuke es una animacion, cuando empieza a estaren uso le damos a started, ya que va a ser un buvle
                         SNInUse = true;
 
                     }
@@ -4248,7 +4237,7 @@ public:
 
                 if (PlayerPowerUpCoffee(p, cafe[auxiliarPowerUps])) {
                     if (p.bag == 1) {
-                        if (cafeEnUso == 1) {
+                        if (cafeEnUso == 1) { //mismo que con la pistola
                             timeCafeFinal = GetTime();
                             cafe.pop_back();
 
@@ -4286,9 +4275,8 @@ public:
 
             }
 
-            //actualiza la vida del jugador cada vez que recoge el power up de vida
             if (IsKeyDown(KEY_SPACE) && p.bag == 1) {
-                if (bagItem == 2) {
+                if (bagItem == 2) { //mira si hay algo en la bolsa y el personaje quiere usarlo
 
                     if (HMGEnUso == 1) {
                         HMGTimeInicial = GetTime();
@@ -4332,7 +4320,7 @@ public:
 
 
 
-
+            //aqui hace que los enemigos se muevan y se pinten, si esta en uso el Screen Nuke no se pintan
             i = 0;
             ogreaux = enemigo.size();
             while (i < enemigo.size()) {
@@ -4404,7 +4392,7 @@ public:
 
 
             if (gameNuke.started && !gameNuke.finished && SNInUse) {
-                gameNuke.UsePowerUp(enemigo, orcs, marip);
+                gameNuke.UsePowerUp(enemigo, orcs, marip); 
                 if (!IsSoundPlaying(explosion)) {
                     PlaySound(explosion);
                 }
@@ -4413,11 +4401,11 @@ public:
             }
             if (gameNuke.finished) {
 
-                SNInUse = false;
+                SNInUse = false; //si ha acabado de eliminar a todos deja de estar en uso
             }
             i = 0;
 
-            while (i < bulletSize) {
+            while (i < bulletSize) { //mira si las bullets se han ido
 
                 if (0 > bullets[i].GetPosition().x || GetScreenWidth() < bullets[i].GetPosition().x || GetScreenHeight() < bullets[i].GetPosition().y || 0 > bullets[i].GetPosition().y) {
                     bulletSize = bullets.size();
@@ -4445,14 +4433,12 @@ public:
                 i++;
             }
 
-            if (bulletSize > 20) {
-                bulletSize = bullets.size();
-            };
+           
             p.Movement(this->level);
             p.Draw();
 
             if (p.status == false) {
-                p.bag = 0;
+                p.bag = 0; //si ha muerto el personaje deja de usar todos los power ups
                 if (cafeEnUso==1) {
                 
                     Coffee aux(p);
@@ -4467,10 +4453,10 @@ public:
 
                 
                 }
-                p.Death();
+                p.Death(); 
                 Tiempo.Draw();
                 int x = 0;
-
+                //elimina todos los power ups y enemigos
                 while (0 < enemigo.size()) {
 
                     enemigo.pop_back();
@@ -4525,15 +4511,8 @@ public:
 
                 deadogres = 0;
 
-                if (p.lives < 0) {
+                if (p.lives < 0) { //si se ha acabado las vidas se limpia el suelo tmn si no, no
 
-
-
-
-
-
-
-                    int clean = 0;
                     while (0 < dead.size()) {
 
                         dead.pop_back();
@@ -4556,7 +4535,7 @@ public:
 
             }
 
-            if (p.bag == 1) {
+            if (p.bag == 1) { //dibuja en el inventario
                 if (bagItem == 1) {
                     DrawTexture(vida, 14, 12, WHITE);
 
@@ -4577,7 +4556,7 @@ public:
             }
            
            
-            if (Tiempo.tiempo() == true && p.status == true) {
+            if (Tiempo.tiempo() == true && p.status == true) { //si ha acabado el
                 ChangingLevel = true;
                 
             }
@@ -4585,7 +4564,7 @@ public:
         }
 
 
-        // si el jugador muere o el tiempo se acaba, actualiza el juego, ya sea pasando de nivel o perdiendo la partida
+        // si el jugador muere 
         else if (!p.status) {
 
             ClearBackground(BLACK);
@@ -4593,7 +4572,7 @@ public:
             BeginDrawing();
             int i = 0;
             Tiempo.Draw();
-            if (tiempoFake == false) {
+            if (tiempoFake == false) { //esto es porque mientras esta muerto el tiempo no avanza, así que hacemos un tiempo que se une
 
                 Tiempo.pause();
                 tiempoFake = true;
@@ -4617,16 +4596,7 @@ public:
                 money.pop_back();
 
             }
-            while (0 < enemigo.size()) {
-
-                enemigo.pop_back();
-            }
-            while (0 < orcs.size()) {
-                orcs.pop_back();
-
-            }while (0 < marip.size()) {
-                marip.pop_back();
-            }
+           
             while (i < dead.size()) {
 
                 dead[i].DeathAnim();
@@ -4640,26 +4610,26 @@ public:
 
 
                 }
-                /*  float auxiliart = GetTime();*/
+             
 
                 i++;
 
 
 
             }
-            if (p.lives >= 0) {
+            if (p.lives >= 0) { //s no es la muerte definitiva hacemos una animacion
 
                 p.DeathAnim();
 
             }
             i = 0;
 
-            if ( p.lives < 0) {
+            if ( p.lives < 0) { //si hay menos de 0 es game over
                 GameOver(p);
             }
             if (p.status == true) {
-                Tiempo.NewTime();
-                p.ResetPlayer(level);
+                Tiempo.NewTime(); //hacemos el nuevo tiempo inicial
+                p.ResetPlayer(level); //reset player a la posicion y tiempofake es falso por si vuelve a pasar
                 tiempoFake = false;
             }
 
@@ -4669,7 +4639,7 @@ public:
 
         }
        
-        if (ChangingLevel && !tiendaActiva && monstersize==0) {
+        if (ChangingLevel && !tiendaActiva && monstersize==0) { //si el nivel se esta cambiando, el personaje tiene que ir hasta el final de la pantalla para ir al siguiente nivel
             ClearBackground(BLACK);
             BeginDrawing();
             p.Movement(level);
@@ -4697,7 +4667,7 @@ public:
             EndDrawing();
         }
 
-        if ((level == 2 || level ==4 || level ==6 || level == 8 || level ==9 || level==11) && monstersize == 0 && ChangingLevel && p.status)
+        if ((level == 2 || level ==4 || level ==6 || level == 8 || level ==9 || level==11) && monstersize == 0 && ChangingLevel && p.status) //mira si las conficiones se cumplen para la tienda
         {
             tiendaActiva = true;
 
@@ -4748,31 +4718,12 @@ public:
     }
     void ChangeLevel(time& Tiempo, Player& p, std::vector<Ogre>& enemigo, std::vector<Shoot>& bullets, std::vector <PowerUpLive>& Lives) {
         this->level++;
-
+        //
 
         tiempoiniciado = false;
         int x = 0;
 
-        while (enemigo.size() > 0) {
-
-            enemigo.pop_back();
-
-        }
-
-        x = 0;
-        while (0 < bullets.size()) {
-            bullets.pop_back();
-
-
-
-        }
-
-        x = 0;
-        if (Lives.size() > 0) {
-
-            Lives.pop_back();
-
-        }
+      //limpia cuando se cambia de nivel y suma al nivel para cambiarlo
 
 
 
@@ -4801,7 +4752,7 @@ public:
 
     }
     //cambia de nivel y reinicia los valores
-    void GameWon() {
+    void GameWon() { //si ha ganado dibuja que ha ganado
         BeginDrawing();
         ClearBackground(BLACK);
         DrawText("You Won!", 40, screenHeight / 2, 40, WHITE);
@@ -4812,13 +4763,15 @@ public:
     void GameOver(Player& p) {
 
 
-        gameover = true;
+        gameover = true; //todo lo del personaje vuelve a lo normal
         p.lives = 3;
         p.money = 0;
+        p.vel = 2;
+        powerRate = 0.4;
 
     }
     //pantalla de perdiste
-    void GameOverScreen(Player& p) {
+    void GameOverScreen(Player& p) { //screen de gameover, reinicia al jugador (l reiniciamos varias veces por si acaso)
         ClearBackground(BLACK);
         /*BeginDrawing();*/
         BeginDrawing();
@@ -4845,6 +4798,7 @@ public:
 
 
 };
+//por alguna razón no me dejaba hacer lo del power up clision en la clase, así que aqui tienes tods
 bool PlayerPowerUp(Player& p, PowerUpLive& pp) {
 
     bool check = CheckCollisionRecs(p.Square, pp.Square);
@@ -4911,7 +4865,7 @@ bool PlayerPowerUpScreenMoney(Player& p, coins& pp) {
 
 }
 
-class Background : public Stage {
+class Background : public Stage { //dibuja los backgrounds dependiendo del nivel
 private:
 
     Texture suelo = LoadTexture("stage/64x64_fondo_desierto.png");
@@ -7878,7 +7832,7 @@ private:
     Texture moneda1 = LoadTexture("items/128x128_moneda1.png");
     Texture barra = LoadTexture("ui/barra.png");
 public:
-    friend int main();
+    friend int main();//dibuja la UI dependiendo de la vida y money del jugador
     void draw(Player p) {
         DrawTexture(vida, 0, 64, WHITE);
         DrawTexture(moneda1, 0, 96, WHITE);
@@ -8089,7 +8043,7 @@ int main()
             if (!game.gameover) {
                 if (!game.wonGame) {
 
-                    if (game.CheckLevel() == 5) {
+                    if (game.CheckLevel() == 5) { //mira que cancion 
                                
                         player.BossPlayer();       
                     }
@@ -8118,7 +8072,7 @@ int main()
 
             }
             else {
-                if (!gameovertime) {
+                if (!gameovertime) {//ha acabado el juego y mira si han pasado 3 segundos para volver a la pantalla de inicio
                     GOtime = GetTime();
 
                     gameovertime = true;
@@ -8144,7 +8098,7 @@ int main()
         else {
 
 
-
+            //la presentacion del juego
             t.Presentation();
         }
 
