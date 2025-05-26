@@ -2442,7 +2442,7 @@ public:
         status = true;
         
     }//constructor del boss
-    void DrawGoofer(Player& player, int& level, int& currentLevel) {
+    void DrawGoofer(Player& player, int& level, int& currentLevel, time& t) {
         float currentTime = GetTime();
 
         if (currentTime - lastGooferUpdateTime > 0.2f) {
@@ -2450,13 +2450,14 @@ public:
             lastGooferUpdateTime = currentTime;
             gooferPos.y += 15;  
         }//hacer que los goofers vallan hacia abajo
-        if (gooferPos.y + 32 >= screenHeight) { 
+        if (gooferPos.y + 32 >= screenHeight) {
             player.ResetPlayer(6);
             level = 6;
             currentLevel = 6;
-            showGoofer = false; 
-            gooferPos.y = 0;     
-            return;              
+            showGoofer = false;
+            gooferPos.y = 0;
+            t.IniciarTiempo(); 
+            return;
         }
         Texture current;
         Texture current2;
@@ -3365,10 +3366,10 @@ public:
                
             }
             else { //si el tiempo ya ha sido iniciado
-                if (level != 5 && level != 51) {
+                
                     Tiempo.TiempoQueHaPasado();
                     Tiempo.Draw();
-                }
+                
 
 
             }
@@ -3376,30 +3377,14 @@ public:
             //empieza el tiempo, lo dibuja y lo va actualizando
             if (boss.showGoofer) {
                 DrawRectangle(64, 32, GetScreenWidth(), GetScreenHeight(), BLACK);
-                boss.DrawGoofer(p, level,currentLevel);
+                boss.DrawGoofer(p, level,currentLevel, Tiempo);
                 showLog = false;
-                boss.DrawGoofer();
-                p.followingGoofer = true;
-                p.Draw();
                 EndDrawing();
                 return;
             }
-            if (boss.showGoofer && !p.followingGoofer) {
-                Rectangle cosaRect = { boss.gooferPos.x, boss.gooferPos.y - boss.cosa.height / 2,
-                                       (float)boss.cosa.width, (float)boss.cosa.height };
-
-                Rectangle playerRect = { p.GetPosition().x, p.GetPosition().y, 32, 32 }; // Adjust to your player's size
-
-                if (CheckCollisionRecs(cosaRect, playerRect)) {
-                    p.followingGoofer = true;
-                }
-            }
-            if (p.followingGoofer) {
-                p.playerPos.x = boss.gooferPos.x;
-                p.playerPos.y = boss.gooferPos.y + 32; 
-            }
+            
             if (level == 11) {
-                currentLevel = 11;
+                currentLevel = 11;//para las colisiones del nivel 11
 
             }
             if (showLog) {
@@ -7963,7 +7948,6 @@ private:
     bool GameBegin = false;
     Texture Instruct = LoadTexture("mov.png");
     int alive = 0;
-    bool GameBegin = false;
     bool instructions = false;
     float InicialTime = 0;
 public:
