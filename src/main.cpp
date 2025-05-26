@@ -3333,7 +3333,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 5;
+        level = 1;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3359,10 +3359,10 @@ public:
                
             }
             else { //si el tiempo ya ha sido iniciado
-                if (level != 5 && level != 51) {
+               
                     Tiempo.TiempoQueHaPasado();
                     Tiempo.Draw();
-                }
+                
 
 
             }
@@ -3370,25 +3370,11 @@ public:
             if (boss.showGoofer) {
                 DrawRectangle(64, 32, GetScreenWidth(), GetScreenHeight(), BLACK);
                 boss.DrawGoofer();
-                p.followingGoofer = true;
-                p.Draw();
                 EndDrawing();
                 return;
             }
-            if (boss.showGoofer && !p.followingGoofer) {
-                Rectangle cosaRect = { boss.gooferPos.x, boss.gooferPos.y - boss.cosa.height / 2,
-                                       (float)boss.cosa.width, (float)boss.cosa.height };
 
-                Rectangle playerRect = { p.GetPosition().x, p.GetPosition().y, 32, 32 }; // Adjust to your player's size
-
-                if (CheckCollisionRecs(cosaRect, playerRect)) {
-                    p.followingGoofer = true;
-                }
-            }
-            if (p.followingGoofer) {
-                p.playerPos.x = boss.gooferPos.x;
-                p.playerPos.y = boss.gooferPos.y + 32; 
-            }
+            
             if (level == 11) {
                 currentLevel = 11;
 
@@ -3498,7 +3484,7 @@ public:
                     
 
                 }
-                if (!boss.status && !boss.deathHandled) {
+                if ((level == 5 || level == 51) &&!boss.status && !boss.deathHandled) {
                     float elapsed = GetTime() - boss.deathTime;
 
                     if (elapsed > 2.0f) { 
