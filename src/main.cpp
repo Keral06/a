@@ -98,6 +98,9 @@ tambien se utiliza para los sonidos de movimiento y muerte
 class Player : public Entity {
 
 private:
+    bool logEffectActive = false;
+    float logEffectStartTime = 0.0f;
+    Texture2D contento = LoadTexture("64x64/personaje.contento.png");
     int lives;
     int money;
     Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
@@ -157,8 +160,16 @@ public:
 
     }
     void Draw() {
-        //BeginDrawing();
-
+        float now = GetTime();
+        if (logEffectActive) {
+            if (now - logEffectStartTime < 2.0f) {
+                DrawTexture(contento, GetPosition().x, GetPosition().y, WHITE);
+                return;  // Prevent drawing other sprites while happy
+            }
+            else {
+                logEffectActive = false;  // End effect
+            }
+        }
         if (status == true) {
             if (dir == DIAGONAL1) {
                 if (dire <= 50) {
@@ -310,7 +321,9 @@ public:
         bool moved = false;
         float nextX = playerPos.x;
         float nextY = playerPos.y;
-
+        if (logEffectActive && (GetTime() - logEffectStartTime < 2.0f)) {
+            return; 
+        }
         if (status == true) {
 
             if (IsKeyDown(KEY_D) && IsKeyDown(KEY_W))
@@ -593,6 +606,41 @@ public:
                 DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
                 DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
             }
+            else if (level == 51) {
+                Rectangle lado1 = { 320, 160, 32, 32 };
+                Rectangle lado2 = { 224, 224, 32, 32 };
+                Rectangle lado3 = { 384, 224, 32, 32 };
+                Rectangle lado4 = { 288, 416, 96, 32 };
+                Rectangle lado5 = { 64, 288, 246, 32 };
+                Rectangle lado6 = { 362, 288, 256, 32 };
+                Rectangle lado9 = { 64, 32, 32, 512 };
+                Rectangle lado10 = { 64, 32, 512, 32 };
+                Rectangle lado11 = { 544, 32, 32, 512 };
+                Rectangle lado12 = { 64, 512, 512, 32 };
+
+                Rectangle nextPlayerPos = { nextX, nextY, 32, 32 };
+
+
+                if (!CheckCollisionRecs(nextPlayerPos, lado1) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado2) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado3) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado4) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado5) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado6) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado9) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado10) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado11) &&
+                    !CheckCollisionRecs(nextPlayerPos, lado12)) {
+
+
+                    playerPos.x = nextX;
+                    playerPos.y = nextY;
+                }
+                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
+                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
+                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+                }
             else if (level == 6) {
                 Rectangle lado1 = { 96, 64, 96, 32 };
                 Rectangle lado2 = { 96, 64, 32, 96 };
@@ -2413,6 +2461,11 @@ private:
     float deathStartTime;
     bool status;
     bool deathAnimationFinished = false;
+    float lastMoveTime = 0.0f;
+    float pauseStartTime = 0.0f;
+    bool isPaused = false;
+    bool deathHandled = false;
+    float deathTime = 0.0f;
 
 public:
     friend Game;
@@ -2560,37 +2613,40 @@ public:
 
         float now = GetTime();
 
-
         if (Intro) {
-            if (now - introStartTime < 17.0f) { //cambiar mas tarde, solo fase prueba//
+            if (now - introStartTime < 17.0f) {
                 moving = false;
                 DrawTexture(Dialogo, 310, 360, WHITE);
                 return;
-
-            }
-
-            else {
-                Intro = false;
-                moving = true;
-            }
-        }
-        else if (moving) {
-            int contador = GetTime();
-            if (contador % 7 == 0) {
-                Intro = true;
-                moving = false;
-                
-                return;
             }
             else {
                 Intro = false;
                 moving = true;
-                playerPos.x += direction * vel;
-                if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
-                return;
+                lastMoveTime = now;
             }
+        }
+
+        // Handle pause-resume cycle
+        if (!isPaused && now - lastMoveTime >= 6.0f) {
+            isPaused = true;
+            pauseStartTime = now;
+            moving = false;
+        }
+        else if (isPaused && now - pauseStartTime >= 4.0f) {
+            isPaused = false;
+            lastMoveTime = now;
+            moving = true;
 
         }
+
+        if (moving) {
+            playerPos.x += direction * vel;
+            if (playerPos.x < 96 || playerPos.x > screenWidth - 64) direction *= -1;
+            return;
+        }
+            
+
+        
 
 
     }
@@ -3211,7 +3267,10 @@ public:
 
 class Game {
 private:
-
+    Texture2D tronco = LoadTexture("items/128x128_e.png"); 
+    Vector2 logPos= { 0, 0 };
+    bool showLog = false;
+    bool logOnPlayer = false;
     int punteroDraw;
 
     int level;
@@ -3299,8 +3358,26 @@ public:
                 currentLevel = 11;
 
             }
+            if (showLog) {
+                if (logOnPlayer) {
+                    Vector2 playerPos = p.GetPosition();
+                    DrawTexture(tronco, playerPos.x, playerPos.y - 32, WHITE); // 40 pixels above
+                }
+                else {
+                    DrawTexture(tronco,320, 352, WHITE);
+                }
+            }
+            if (showLog && !p.logEffectActive) {
+                Rectangle playerRect = { p.GetPosition().x, p.GetPosition().y, 32, 32 };
+                Rectangle logRect = { 320, 352, 32, 32};
 
-
+                if (CheckCollisionRecs(playerRect, logRect)) {
+                    p.logEffectActive = true;
+                    
+                    p.logEffectStartTime = GetTime();
+                    logOnPlayer = true;
+                }
+            }
             // Handle bullet creation with arrow keys
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
                 IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
@@ -3315,8 +3392,10 @@ public:
 
 
             }
+            
+           
             int a = GetTime();
-            if (level == 5 && a > 17.0f && boss.status && boss.IsAlive()) {
+            if (level == 5 && a > 17.0f && boss.status && boss.IsAlive() && !boss.isPaused) {
                 static float shootTimer = powerRate;
 
                 if (shootTimer <= 0) {
@@ -3326,6 +3405,7 @@ public:
 
                 shootTimer -= GetFrameTime();
             }
+
 
             int i = 0;
             // dibuja el ogro 
@@ -3344,9 +3424,24 @@ public:
                 if (!bullets[i].isEnemyBullet &&
                     
                     CheckCollisionRecs(bulletRect, { boss.GetPosition().x, boss.GetPosition().y, 32, 32 })) {
+                    if (bulletDamage = 1) {
+                        boss.hp--;
+                        bullets[i].eliminate = true;
 
-                    boss.hp--;
-                    bullets[i].eliminate = true;
+                    }
+                    else if (bulletDamage = 2) {
+                        boss.hp--;
+                        boss.hp--;
+                        bullets[i].eliminate = true;
+                    }
+                    else {
+                        boss.hp--;
+                        boss.hp--;
+                        boss.hp--;
+                        bullets[i].eliminate = true;
+
+                    }
+                    
                     
                     
                     
@@ -3355,7 +3450,19 @@ public:
                 if (boss.hp <= 0 && boss.status == true) {
 
                     boss.Death();
+                    
 
+                }
+                if (!boss.status && !boss.deathHandled) {
+                    float elapsed = GetTime() - boss.deathTime;
+
+                    if (elapsed > 2.0f) { 
+                        level = 51; 
+                        Lives.push_back(PowerUpLive(boss.GetPosition()));
+                        showLog = true; 
+
+                        boss.deathHandled = true;
+                    }
                 }
                 
                 
@@ -3425,7 +3532,7 @@ public:
             //la tienda aparece solo en el level 3
            
 
-            if (level > 3 && level != 5 && !SNInUse) {
+            if (level > 3 && level != 5 && level != 51 && !SNInUse) {
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
 
@@ -3589,7 +3696,7 @@ public:
                 bossFight = false;
             }
 
-            if (level > 6 && level != 5  && !SNInUse) {
+            if (level > 6 && level != 5 && level != 51  && !SNInUse) {
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
                     Mariposa auxiliar;
 
@@ -3769,7 +3876,7 @@ public:
 
 
             }
-            if (level != 5  && !SNInUse) { //ogre
+            if (level != 5 && level != 51 && !SNInUse) { //ogre
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
 
@@ -5908,6 +6015,157 @@ public:
         DrawTexture(desierto4, 352 + 64, 416 + 32, WHITE);
         DrawTexture(desierto4, 384 + 64, 416 + 32, WHITE);
     }
+    void Drawlevel51() {
+        int x = 0 + 64;
+        int y = 32;
+        for (int i = 0; i < 8; i++) {
+            DrawTexture(desierto1, x, y, WHITE);
+            y = y + 32;
+        }
+        DrawTexture(desierto2, 64, 128, WHITE);
+        y = y + 32;
+        for (int i = 0; i < 6; i++) {
+            DrawTexture(desierto1, x, y, WHITE);
+            y = y + 32;
+        }
+        DrawTexture(desierto2, x, y, WHITE);
+        y = 32;
+        for (int i = 0; i < 15; i++) {
+            DrawTexture(desierto1, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(desierto2, 32 + 64, y, WHITE);
+        DrawTexture(desierto2, 160 + 64, y, WHITE);
+        DrawTexture(desierto2, 352 + 64, y, WHITE);
+        y = 512;
+        x = 32 + 64;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto1, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(desierto2, 64 + 64, y, WHITE);
+        DrawTexture(desierto2, 256 + 64, y, WHITE);
+        x = 320 + 64;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(desierto2, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 480 + 64;
+        y = 32;
+        for (int i = 0; i < 16; i++) {
+            DrawTexture(desierto2, x, y, WHITE);
+            y = y + 32;
+        }
+        DrawTexture(desierto1, x, 96 + 32, WHITE);
+        DrawTexture(desierto1, x, 160 + 32, WHITE);
+        DrawTexture(desierto1, x, 192 + 32, WHITE);
+        DrawTexture(desierto1, x, 288 + 32, WHITE);
+        DrawTexture(desierto1, x, 352 + 32, WHITE);
+        x = 64 + 64;
+        y = 96;
+        for (int i = 0; i < 12; i++)
+        {
+            for (int i = 0; i < 12; i++) {
+                DrawTexture(fondo_desierto, x, y, WHITE);
+                y = y + 32;
+            }
+            y = 96;
+            x = x + 32;
+        }
+        y = 64;
+        x = 32 + 64;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 32 + 64;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto3, x, y, WHITE);
+            y = y + 32;
+        }
+        y = 448 + 32;
+        x = 32 + 64;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto3, x, y, WHITE);
+            x = x + 32;
+        }
+        x = 448 + 64;
+        y = 64;
+        for (int i = 0; i < 14; i++) {
+            DrawTexture(desierto3, x, y, WHITE);
+            y = y + 32;
+        }
+        x = 0 + 64;
+        y = 288;
+        for (int i = 0; i < 2; i++) {
+            DrawTexture(lago2, x, y, WHITE);
+            x = x + 32;
+        }
+        for (int i = 0; i < 5; i++) {
+            DrawTexture(lago1, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago2, x, y, WHITE);
+        x = x + 32;
+        DrawTexture(lago1, x, y, WHITE);
+        x = x + 32;
+        for (int i = 0; i < 4; i++) {
+            DrawTexture(lago2, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(lago1, x, y, WHITE);
+        x = x + 32;
+        DrawTexture(lago2, x, y, WHITE);
+        x = x + 32;
+        DrawTexture(lago1, x, y, WHITE);
+        x = 160 + 64;
+        y = 192 + 32;
+        for (int i = 0; i < 1; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, y, WHITE);
+                }
+
+            }
+        }
+        x = 320 + 64;
+        y = 192 + 32;
+        for (int i = 0; i < 1; i++) {
+            if (currentTime % 2 == 0) {
+                DrawTexture(arbol1, x, y, WHITE);
+                int aftertime = GetTime();
+                if (aftertime % 2 != 0) {
+                    DrawTexture(arbol2, x, y, WHITE);
+                }
+
+            }
+        }
+        DrawTexture(valla, 256 + 64, 160, WHITE);
+        x = 224 + 64;
+        y = 384 + 32;
+        for (int i = 0; i < 3; i++) {
+            DrawTexture(valla, x, y, WHITE);
+            x = x + 32;
+        }
+        DrawTexture(desierto4, 416 + 64, 64 + 32, WHITE);
+        DrawTexture(desierto4, 128 + 64, 96 + 32, WHITE);
+        DrawTexture(desierto4, 160 + 64, 128 + 32, WHITE);
+        DrawTexture(desierto4, 192 + 64, 128 + 32, WHITE);
+        DrawTexture(desierto4, 320 + 64, 128 + 32, WHITE);
+        DrawTexture(desierto4, 352 + 64, 128 + 32, WHITE);
+        DrawTexture(desierto4, 416 + 64, 128 + 32, WHITE);
+        DrawTexture(desierto4, 192 + 64, 288 + 32, WHITE);
+        DrawTexture(desierto4, 352 + 64, 288 + 32, WHITE);
+        DrawTexture(desierto4, 352 + 64, 320 + 32, WHITE);
+        DrawTexture(desierto4, 96 + 64, 352 + 32, WHITE);
+        DrawTexture(desierto4, 192 + 64, 352 + 32, WHITE);
+        DrawTexture(desierto4, 192 + 64, 384 + 32, WHITE);
+        DrawTexture(desierto4, 352 + 64, 416 + 32, WHITE);
+        DrawTexture(desierto4, 384 + 64, 416 + 32, WHITE);
+        DrawTexture(puente, 320, 288, WHITE);
+    }
 
     void Drawlevel6() {
         int x = 64;
@@ -7587,6 +7845,11 @@ public:
             Drawlevel11();
 
         }
+        else if (g.CheckLevel() == 51) {
+
+            Drawlevel51();
+
+        }
         else if (g.CheckLevel() == 12) {
 
             ClearBackground(BLACK);
@@ -7884,4 +8147,4 @@ int main()
     CloseWindow();
     return 0;
 
-}
+};
