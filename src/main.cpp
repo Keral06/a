@@ -3342,7 +3342,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 2;
+        level = 1;
         stage = 2;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
