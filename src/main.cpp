@@ -1203,7 +1203,7 @@ public:
 
    
 
-    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage) {
+    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage, int level) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
@@ -4686,7 +4686,7 @@ public:
             EndDrawing();
         }
 
-        if (level == 2 && monstersize == 0 && ChangingLevel && p.status)
+        if ((level == 2 || level ==4 || level ==6 || level == 8 || level ==9 || level==11) && monstersize == 0 && ChangingLevel && p.status)
         {
             tiendaActiva = true;
 
@@ -4703,7 +4703,7 @@ public:
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
             tienda.Update(deltaTime, this->tiendaActiva); 
-            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage); // Lógica de compra
+            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage, level); // Lógica de compra
 
             
             tienda.Draw();         
