@@ -2437,7 +2437,7 @@ private:
     float lastGooferUpdateTime = 0;
 public:
     friend Game;
-    Boss() : Enemy(4, 2), isAlive(true), frameCounter(0), moving(false) {
+    Boss() : Enemy(50, 2), isAlive(true), frameCounter(0), moving(false) {
         playerPos = { (float)(320), 448 };
         introStartTime = GetTime();
         Intro = true;
@@ -2636,7 +2636,7 @@ public:
         float now = GetTime();
 
         if (Intro) {
-            if (now - introStartTime < 92.0f) {
+            if (now - introStartTime < 340.0f) {
                 moving = false;
                 DrawTexture(Dialogo, 310, 360, WHITE);
                 return;
@@ -3080,7 +3080,7 @@ public:
 
     time() {
 
-        tiempoFinal = 20.0f;
+        tiempoFinal = 80.0f;
         tiempoTranscurrido = 0;
         barraAncho = 512;
 
@@ -3342,7 +3342,7 @@ public:
         deadogres = 0;
 
         level = 1;
-        stage = 2;        /*  BeginDrawing();*/
+        stage = 1;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
 
