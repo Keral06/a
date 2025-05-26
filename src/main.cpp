@@ -162,7 +162,6 @@ public:
     void Draw() {
         float now = GetTime();
         if (logEffectActive) {
-            if (now - logEffectStartTime < 2.0f) {
                 DrawTexture(contento, GetPosition().x, GetPosition().y, WHITE);
                 return;  // Prevent drawing other sprites while happy
             }
@@ -321,7 +320,6 @@ public:
         bool moved = false;
         float nextX = playerPos.x;
         float nextY = playerPos.y;
-        if (logEffectActive && (GetTime() - logEffectStartTime < 2.0f)) {
             return; 
         }
         if (status == true) {
@@ -1065,6 +1063,7 @@ class Store {
     Texture botas[3];
     Texture pistola[3];
     Texture caja[3];
+    Texture CosasDeLaTienda[3];
 
     Vector2 position = { 255 + 65, 0 };
     float animTime = 0;
@@ -1126,16 +1125,6 @@ public:
         store = LoadTexture("tienda_red.png");
 
         //textura de las cosas de la tienda 
-        botas[0] = LoadTexture("tienda/botas.png");
-        botas[1] = LoadTexture("tienda/botas2.png");  
-        botas[2] = LoadTexture("tienda/cabeza.png");
-        pistola[0] = LoadTexture("tienda/pistola.png");
-        pistola[1] = LoadTexture("tienda/pistola2.png");
-        pistola[2] = LoadTexture("tienda/piistola3.png");
-        caja[0] = LoadTexture("tienda/.cubo.png");
-        caja[1] = LoadTexture("tienda/cubo2.png");
-        caja[2] = LoadTexture("tienda/cubo3.png");
-
         
         
         texturaContento = LoadTexture("64x64/personaje_contento.jpg");
@@ -1201,87 +1190,44 @@ public:
     }
     
     void DrawInventario() {
+        // Solo dibujar si hay items
         if (inventario.empty()) return;
-
         for (size_t i = 0; i < inventario.size(); i++) {
-            Vector2 itemPos = { inventarioPos.x, inventarioPos.y + (i * espacioentreitems) };
 
-            switch (inventario[i]) {
-            case 0: // Botas
-                DrawTextureEx(botas[nivelBotas - 1], itemPos, 0, 0.7f, WHITE);
-                break;
-            case 1: // Pistola
-                DrawTextureEx(pistola[nivelPistola - 1], itemPos, 0, 0.7f, WHITE);
-                break;
-            case 2: // Cubo
-                DrawTextureEx(caja[nivelCubo - 1], itemPos, 0, 0.7f, WHITE);
-                break;
-            }
         }
     }
 
-    void Compra(Vector2 playerPos, int& playerCoins, bool& tiendaActiva, float& vel, float& powerRate, int& bulletDamage) {
+   
+
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
+        
         if (currentTime - ultimaCompraTime < compraCooldown) return;
 
         itemSeleccionado = -1;
-        Vector2 itemPositions[3] = { {210,250}, {260,250}, {310,250} };
 
         for (int i = 0; i < 3; i++) {
             if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
                 itemSeleccionado = i;
+                
 
-                int precioActual = 0;
-                bool puedeComprar = false;
-
-                // Determinar precio según nivel
-                switch (i) {
-                case 0: // Botas
-                    if (nivelBotas <= 3) {
-                        precioActual = preciosBotas[nivelBotas - 1];
-                        puedeComprar = playerCoins >= precioActual;
-                    }
-                    break;
-                case 1: // Pistola
-                    if (nivelPistola <= 3) {
-                        precioActual = preciosPistola[nivelPistola - 1];
-                        puedeComprar = playerCoins >= precioActual;
-                    }
-                    break;
-                case 2: // Cubo
-                    if (nivelCubo <= 3) {
-                        precioActual = preciosCubo[nivelCubo - 1];
-                        puedeComprar = playerCoins >= precioActual;
-                    }
-                    break;
-                }
-
-                if (puedeComprar && inventario.size() < maxItemsVisible) {
-                    playerCoins -= precioActual;
                     inventario.push_back(i);
-
-                    if (!IsSoundPlaying(buy)) PlaySound(buy);
-
                     ultimaCompraTime = currentTime;
                     jugadorContento = true;
                     tiempoContento = 0.0f;
-                    
                     if (i == 1) {
-
+                    
                         vel += 0.5;
                     }if (i == 2) {
-
+                    
                         powerRate -= 0.2;
                     }if (i == 3) {
-
+                    
                         bulletDamage += 1;
                     }
 
-                    
-            
-
+                    // Cerrar tienda inmediatamente después de comprar
                     CerrarTienda(tiendaActiva);
                 }
                 break;
@@ -1337,17 +1283,6 @@ public:
 
             // dibujar la tienda y los items cuando el tendero está quieto
             DrawTexture(store, 190, 230, WHITE);
-            // Dibujar botas (posición 210,250)
-            DrawTexture(botas[nivelBotas - 1], 210, 250, WHITE);
-            DrawText(TextFormat("%d", preciosBotas[nivelBotas - 1]), 220, 280, 20, BLACK);
-
-            // Dibujar pistola (posición 260,250)
-            DrawTexture(pistola[nivelPistola - 1], 260, 250, WHITE);
-            DrawText(TextFormat("%d", preciosPistola[nivelPistola - 1]), 270, 280, 20, BLACK);
-
-            // Dibujar cubo (posición 310,250)
-            DrawTexture(caja[nivelCubo - 1], 310, 250, WHITE);
-            DrawText(TextFormat("%d", preciosCubo[nivelCubo - 1]), 320, 280, 20, BLACK);
         }
         else {
             // Dibujar animación de aparición (caminando hacia abajo)
@@ -2295,7 +2230,6 @@ public:
                     i++;
                 }
                 i = h;
-               
             }
             enemigo[i].SNAnim();
             if (enemigo[i].isSNfinished) {
@@ -2319,7 +2253,6 @@ public:
 
             i++;
         }
-    
         i = 0;
         while (orcs.size() > i) {
             if (firstTryorcs) {
@@ -3349,7 +3282,6 @@ private:
     float timeOfLive = 0;
     int bagItem = 0;
     int bagItemAux = 0;
-    float powerRate = 0.3;
     int timeCafeInicial;
     int timeCafeFinal;
     int HMGTimeInicial;
@@ -3373,7 +3305,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 1;
+        level = 5;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3587,7 +3519,6 @@ public:
 
             if (level > 3 && level != 5 && level != 51 && !SNInUse) {
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
 
                     Orc auxiliar;
                     orcs.push_back(auxiliar);
@@ -3748,10 +3679,6 @@ public:
             else if (level > 5 && !bossFight || level < 5 && !bossFight) {
                 bossFight = false;
             }
-
-
-            if (level > 6 && level != 5 && level != 51 && !SNInUse) {
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
 
                     Mariposa auxiliar;
 
@@ -3933,7 +3860,6 @@ public:
             }
             if (level != 5 && level != 51 && !SNInUse) { //ogre
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
 
                     Ogre auxiliar;
                     enemigo.push_back(auxiliar);
