@@ -69,7 +69,7 @@ protected:
 
 class Entity :public Colision {
 public:
-    Entity(int hp, int vel, Vector2 initialPos) : playerPos(initialPos), Colision(initialPos) {
+    Entity(int hp, float vel, Vector2 initialPos) : playerPos(initialPos), Colision(initialPos) {
         this->hp = hp;
         this->vel = vel;
         dir = IDLE;
