@@ -2353,6 +2353,7 @@ public:
 
         if (elapsed < 0.1) {
             DrawTexture(Death1, playerPos.x, playerPos.y, WHITE);
+
         }
         else if (elapsed < 0.2) {
             DrawTexture(Death2, playerPos.x, playerPos.y, WHITE);
@@ -2404,7 +2405,7 @@ private:
 
 public:
     friend Game;
-    Boss() : Enemy(2, 2), isAlive(true), frameCounter(0), moving(false) {
+    Boss() : Enemy(1, 2), isAlive(true), frameCounter(0), moving(false) {
         playerPos = { (float)(320), 448 };
         introStartTime = GetTime();
         Intro = true;
@@ -2449,14 +2450,89 @@ public:
         }
         else if (elapsed < 0.2f) {
             DrawTexture(Death2, playerPos.x, playerPos.y, WHITE);
+            DrawTexture(Death1, playerPos.x + 32, playerPos.y, WHITE);
+            DrawTexture(Death1, playerPos.x, playerPos.y + 32, WHITE);
         }
         else if (elapsed < 0.3f) {
             DrawTexture(Death3, playerPos.x, playerPos.y, WHITE);
+            DrawTexture(Death2, playerPos.x + 32, playerPos.y, WHITE);
+            DrawTexture(Death2, playerPos.x, playerPos.y + 32, WHITE);
+            DrawTexture(Death1, playerPos.x - 32, playerPos.y, WHITE);
+            DrawTexture(Death1, playerPos.x, playerPos.y - 32, WHITE);
         }
         else if (elapsed < 0.4f) {
             DrawTexture(Death4, playerPos.x, playerPos.y, WHITE);
+            DrawTexture(Death3, playerPos.x +32, playerPos.y, WHITE);
+            DrawTexture(Death3, playerPos.x, playerPos.y + 32, WHITE);
+            DrawTexture(Death2, playerPos.x - 32, playerPos.y, WHITE);
+            DrawTexture(Death2, playerPos.x, playerPos.y - 32, WHITE);
+            DrawTexture(Death1, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death1, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death1, playerPos.x + 16, playerPos.y + 16, WHITE);
+            DrawTexture(Death1, playerPos.x + 16, playerPos.y + 16, WHITE);
         }
         else if (elapsed < 0.5f) {
+            DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
+            DrawTexture(Death4, playerPos.x + 32, playerPos.y, WHITE);
+            DrawTexture(Death4, playerPos.x, playerPos.y + 32, WHITE);
+            DrawTexture(Death3, playerPos.x - 32, playerPos.y, WHITE);
+            DrawTexture(Death3, playerPos.x, playerPos.y - 32, WHITE);
+            DrawTexture(Death2, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death2, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death1, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death1, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death1, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death1, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death2, playerPos.x + 16, playerPos.y + 16, WHITE);
+            DrawTexture(Death2, playerPos.x + 16, playerPos.y + 16, WHITE);
+        }
+        else if (elapsed < 0.6f) {
+            DrawTexture(Death5, playerPos.x + 32, playerPos.y, WHITE);
+            DrawTexture(Death5, playerPos.x, playerPos.y + 32, WHITE);
+            DrawTexture(Death4, playerPos.x - 32, playerPos.y, WHITE);
+            DrawTexture(Death4, playerPos.x, playerPos.y - 32, WHITE);
+            DrawTexture(Death3, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death3, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death2, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death2, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death1, playerPos.x, playerPos.y, WHITE);
+            DrawTexture(Death2, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death2, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death3, playerPos.x + 16, playerPos.y + 16, WHITE);
+            DrawTexture(Death3, playerPos.x + 16, playerPos.y + 16, WHITE);
+        }
+        else if (elapsed < 0.7f) {
+            DrawTexture(Death5, playerPos.x - 32, playerPos.y, WHITE);
+            DrawTexture(Death5, playerPos.x, playerPos.y - 32, WHITE);
+            DrawTexture(Death4, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death4, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death3, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death3, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death2, playerPos.x, playerPos.y, WHITE);
+            DrawTexture(Death3, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death3, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death4, playerPos.x + 16, playerPos.y + 16, WHITE);
+            DrawTexture(Death4, playerPos.x + 16, playerPos.y + 16, WHITE);
+        }
+        else if (elapsed < 0.8f) {
+            DrawTexture(Death5, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death5, playerPos.x + 32, playerPos.y + 32, WHITE);
+            DrawTexture(Death4, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death4, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death3, playerPos.x, playerPos.y, WHITE);
+            DrawTexture(Death4, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death4, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death5, playerPos.x + 16, playerPos.y + 16, WHITE);
+            DrawTexture(Death5, playerPos.x + 16, playerPos.y + 16, WHITE);
+        }
+        else if (elapsed < 0.9f) {
+            DrawTexture(Death5, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death5, playerPos.x - 32, playerPos.y - 32, WHITE);
+            DrawTexture(Death4, playerPos.x, playerPos.y, WHITE);
+            DrawTexture(Death5, playerPos.x - 16, playerPos.y - 16, WHITE);
+            DrawTexture(Death5, playerPos.x - 16, playerPos.y - 16, WHITE);
+        }
+        else if (elapsed < 1.0f) {
             DrawTexture(Death5, playerPos.x, playerPos.y, WHITE);
         }
         else {
@@ -3171,7 +3247,7 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 3;
+        level = 5;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
