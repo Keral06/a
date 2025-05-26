@@ -2466,12 +2466,12 @@ private:
     bool isPaused = false;
     bool deathHandled = false;
     float deathTime = 0.0f;
-    int gooferFrame = 0;
-    float lastGooferUpdateTime = 0;
     Texture Goofer1 = LoadTexture("64x64/p3_11.png");
     Texture Goofer2 = LoadTexture("64x64/p3_9.png");
     bool showGoofer = false;
-
+    int gooferFrame = 0;
+    float gooferStartTime = 0.0f;
+    Vector2 gooferPos = { 320, 0 };
 
 public:
     friend Game;
@@ -3363,7 +3363,11 @@ public:
 
             }
             //empieza el tiempo, lo dibuja y lo va actualizando
-
+            if (boss.showGoofer) {
+                ClearBackground(BLACK);
+                boss.DrawGoofer();          
+                return;                 
+            }
             if (level == 11) {
                 currentLevel = 11;
 
@@ -3387,6 +3391,14 @@ public:
                     p.logEffectStartTime = GetTime();
                     logOnPlayer = true;
                 }
+            }
+            if (p.logEffectActive && (GetTime() - p.logEffectStartTime >= 2.0f)) {
+                p.logEffectActive = false;
+
+                boss.showGoofer = true;
+                boss.gooferStartTime = GetTime();
+                boss.showGoofer = true;
+                boss.gooferPos = { p.GetPosition().x, 0 }; 
             }
             // Handle bullet creation with arrow keys
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
