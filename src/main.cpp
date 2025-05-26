@@ -109,6 +109,7 @@ private:
     Texture Diagonal23 = LoadTexture("64x64/personaje.izquierda3.png");
     Texture Atras1 = LoadTexture("64x64/personaje.detras1.png");
     Texture Atras2 = LoadTexture("64x64/personaje.detras2.png");
+    Texture Comprar = LoadTexture("64x64/personaje.contento.png");
     Texture Humo1 = LoadTexture("effects/muerte.png");
     Texture Humo2 = LoadTexture("effects/muerte1.png");
     Texture Humo3 = LoadTexture("effects/muerte2.png");
@@ -128,6 +129,7 @@ public:
     friend class Mariposa;
     friend class coins;
     friend class Coffee;
+    friend Store;
     friend  bool PlayerPowerUpCoffee(Player& p, Coffee& pp);
     friend bool PlayerPowerUpHMG(Player& p, HeavyMachineGun& pp);
     friend bool PlayerPowerUpScreenNuke(Player& p, ScreenNuke& pp);
@@ -135,7 +137,7 @@ public:
 
 
     Player(int hp, int vel) : Entity(hp, vel, { (float)(playerScreenX + 128) / 2, 240 }) {
-        this->money = 0;
+        this->money = 50;
         this->lives = 3;
         this->dir = ARRIBA;
         dire = 1;
@@ -903,6 +905,7 @@ public:
     //resetea al jugador despues de morir
 
 
+
     friend class Enemy;
     friend class Colision;
     friend class Ogre;
@@ -1021,13 +1024,27 @@ class Store {
     int currentFrame = 0;
     bool hasAppeared = false;
 
-    const int precios[3] = { 10, 15, 10 }; // Precios de los items
+    const int precios[3] = { 8, 10, 15 }; // Precios de los items
     int itemSeleccionado = -1; //  ninguno seleccionado
     const float rangoCompra = 50.0f;
     float tiempoTiendaAbierta = 0.0f;
     const float tiempoMaximoTienda = 20.0f; // 30 segundos abierta
     bool estaCerrando = false;
-    
+    bool tiendaActiva = false;
+    std::vector<int> inventario; 
+    const Vector2 inventarioPos = { 20, 400 }; 
+    const float espacioentreitems = 35.0f;
+    const int maxItemsVisible = 5;
+
+    float ultimaCompraTime = 0.0f;
+    const float compraCooldown = 1.0f;
+    bool puedeComprar = true;
+    Texture texturaContento;
+    bool jugadorContento = false;
+    float tiempoContento = 0.0f;
+    const float duracionContento = 1.5f;
+
+
 
 public:
     friend int main();
@@ -1052,13 +1069,12 @@ public:
         store = LoadTexture("tienda_red.png");
 
         //textura de las cosas de la tienda 
-        CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");
-        CosasDeLaTienda[1] = LoadTexture("tienda/128x128_cubo2.png");
-        CosasDeLaTienda[2] = LoadTexture("tienda/128x128_mun.png");
-        CosasDeLaTienda[3] = LoadTexture("tienda/128x128_pistola2.png");
-        CosasDeLaTienda[4] = LoadTexture("tienda/128x128_cubo2.png");
-        CosasDeLaTienda[5] = LoadTexture("tienda/128x128_mun.png");
-
+        CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");//cambiar por botas
+            CosasDeLaTienda[1] = LoadTexture("tienda/128x128_mun.png"); //cambiar por pistola
+        CosasDeLaTienda[2] = LoadTexture("tienda/128x128_cubo2.png");
+        
+        
+        texturaContento = LoadTexture("64x64/personaje_contento.jpg");
         
     }
 
@@ -1094,9 +1110,7 @@ public:
 
 
 
-    void desaparecer(float deltaTime)
-    {
-
+    void desaparecer(float deltaTime) {
         if (!isWalking) return;
 
         // Animación de caminar
@@ -1106,80 +1120,114 @@ public:
             currentFrame = (currentFrame + 1) % 2;
         }
 
-        // Movimiento hacia arriba
+        // Movimiento hacia arriba 
         position.y -= walkSpeed * deltaTime;
 
-        // Detenerse al llegar a 0
-        if (position.y >= 0)
-        {
-
-            position.y = 0;
+        // Verificar si ha salido completamente de pantalla
+        if (position.y <= 0) {  
+            position.y = 0;      
             isWalking = false;
             hasAppeared = false;
             estaCerrando = false;
             tiempoTiendaAbierta = 0.0f;
             currentFrame = 0;
+
+            // (Opcional) Resetear otros estados si es necesario
+            itemSeleccionado = -1;
         }
     }
     
-
-    void Compra(Vector2 playerPos, int& playerCoins)
-    {
-        bool comprado = false;  //para que no compre de mas 
-        if (isWalking == false)
-        {
-            itemSeleccionado = -1;
-
-            // Posiciones de los items en la tienda
-            Vector2 itemPositions[3] = {
-                {210, 250}, // Pistola
-                {260, 250}, // Cubo
-                {310, 250}  // Munición
+    void DrawInventario() {
+        // Solo dibujar si hay items
+        if (inventario.empty()) return;
+        for (size_t i = 0; i < inventario.size(); i++) {
+            int itemIndex = inventario[i];
+            Vector2 itemPos = {
+                inventarioPos.x,
+                inventarioPos.y + (i * espacioentreitems) // Usar spacing negativo para apilar hacia arriba
             };
 
-            // Verificar proximidad con cada item
-            for (int i = 0; i < 3; i++) {
-                if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
-                    itemSeleccionado = i;
+            // Dibujar el itrm
+            DrawTextureEx(CosasDeLaTienda[itemIndex], itemPos, 0, 1.0f, WHITE);
+        }
+    }
 
-                        if (!comprado && playerCoins >= precios[i]) {
-                            playerCoins -= precios[i];
-                            comprado = true;
-                        }
-                    break; // Un item a la vez
+   
+
+    void Compra(Vector2 playerPos, int& playerCoins) {
+        if (!tiendaActiva) return;
+        float currentTime = GetTime();
+
+        
+        if (currentTime - ultimaCompraTime < compraCooldown) return;
+
+        itemSeleccionado = -1;
+        Vector2 itemPositions[3] = { {210,250},{260,250},{310,250} };
+
+        for (int i = 0; i < 3; i++) {
+            if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
+                itemSeleccionado = i;
+
+                if (playerCoins >= precios[i] && inventario.size() < maxItemsVisible) {
+                    playerCoins -= precios[i];
+                    inventario.push_back(i);
+                    
+                    ultimaCompraTime = currentTime;
+                    jugadorContento = true;
+                    tiempoContento = 0.0f;
+
+                    // Cerrar tienda inmediatamente después de comprar
+                    CerrarTienda();
                 }
-            }
-            if (itemSeleccionado == -1) {
-                comprado = false;
+                break;
             }
         }
     }
 
     void Update(float deltaTime) {
         if (!hasAppeared && !estaCerrando) {
-            aparecer(deltaTime); // Entrada
+            aparecer(deltaTime); // 
+            tiendaActiva = false;
         }
         else if (hasAppeared && !estaCerrando) {
+            tiendaActiva = true;
             // Lógica mientras la tienda está abierta
             tiempoTiendaAbierta += deltaTime;
-            if (tiempoTiendaAbierta >= tiempoMaximoTienda) {
-                estaCerrando = true;
-                isWalking = true;
+            if (tiempoTiendaAbierta >= tiempoMaximoTienda) { //si en un tiempo no hay ningun paso se cierra la tienda
+                CerrarTienda();
             }
         }
         else if (estaCerrando) {
             desaparecer(deltaTime); // Salida
+            tiendaActiva = false;
+        }
+
+        if (jugadorContento) {
+            tiempoContento += deltaTime;
+            if (tiempoContento >= duracionContento) {
+                jugadorContento = false;
+            }
         }
     }
+    
 
+    void CerrarTienda() {
+        estaCerrando = true;
+        isWalking = true;
+        tiendaActiva = false;
+        tiempoTiendaAbierta = 0.0f;
+    }
 
-
-    void Draw() {   //aparicion y compra
+    void Draw() {
         // Dibujar al tendero 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
-        if (hasAppeared) {
-            // Dibujar tendero quieto (textura de frente)
+
+        if (estaCerrando) {
+            // Usar animación de caminar cuando se está yendo
+            DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
+        }
+        else if (hasAppeared) {
+            // Dibujar tendero quieto (textura de frente) cuando está en la tienda
             DrawTexture(storemanTextures[2], position.x, position.y, WHITE);
 
             // dibujar la tienda y los items cuando el tendero está quieto
@@ -1187,15 +1235,15 @@ public:
             for (int i = 0; i < 3; i++) {
                 DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
                 DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
-
-
             }
         }
-        else
-        {
-            // Dibujar animación de aparición
+        else {
+            // Dibujar animación de aparición (caminando hacia abajo)
             DrawTexture(walkFrames[currentFrame], position.x, position.y, WHITE);
         }
+
+        DrawInventario(); //permanente
+        
     }
 
 
@@ -1206,6 +1254,7 @@ public:
 
 
 };
+
 class Enemy : public Entity {
 public:
     friend class Shoot;
@@ -3094,7 +3143,7 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
-        level = 5;
+        level = 3;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
