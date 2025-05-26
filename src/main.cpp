@@ -3164,6 +3164,7 @@ private:
     Vector2 He;
     ScreenNuke gameNuke;
     bool firstRound = true;
+    int bulletDamage = 1;
 
 
 
@@ -3360,7 +3361,7 @@ public:
                             else {
                                 
                                 if (bullets[j].ColisionBullet(orcs[i]) == true) {
-                                    orcs[i].hp--;
+                                    orcs[i].hp-=bulletDamage;
                                     if (orcs[i].hp < 0) {
 
                                         DeadOgre auxiliari(orcs[i].GetPosition());
@@ -4507,7 +4508,7 @@ public:
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
             tienda.Update(deltaTime, this->tiendaActiva); 
-            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva); // Lógica de compra
+            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate); // Lógica de compra
 
             
             tienda.Draw();         
