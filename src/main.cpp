@@ -1062,7 +1062,9 @@ class Store {
     Texture walkFrames[2];  // caminar
     Texture storemanTextures[5];
     Texture store;
-    Texture CosasDeLaTienda[3];
+    Texture botas[3];
+    Texture pistola[3];
+    Texture caja[3];
 
     Vector2 position = { 255 + 65, 0 };
     float animTime = 0;
@@ -1072,7 +1074,7 @@ class Store {
     int currentFrame = 0;
     bool hasAppeared = false;
 
-    const int precios[3] = { 8, 10, 15 }; // Precios de los items
+    
     int itemSeleccionado = -1; //  ninguno seleccionado
     const float rangoCompra = 50.0f;
     float tiempoTiendaAbierta = 0.0f;
@@ -1094,6 +1096,12 @@ class Store {
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
 
+    int nivelBotas = 1;
+    int nivelPistola = 1;
+    int nivelCubo = 1;
+    const int preciosBotas[3] = { 8, 20, 10 };
+    const int preciosPistola[3] = { 10, 20, 30 };
+    const int preciosCubo[3] = { 15, 30, 45 };
 
 public:
     friend int main();
@@ -1118,9 +1126,16 @@ public:
         store = LoadTexture("tienda_red.png");
 
         //textura de las cosas de la tienda 
-        CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");//cambiar por botas
-            CosasDeLaTienda[1] = LoadTexture("tienda/128x128_mun.png"); //cambiar por pistola
-        CosasDeLaTienda[2] = LoadTexture("tienda/128x128_cubo2.png");
+        botas[0] = LoadTexture("tienda/botas.png");
+        botas[1] = LoadTexture("tienda/botas2.png");  
+        botas[2] = LoadTexture("tienda/cabeza.png");
+        pistola[0] = LoadTexture("tienda/pistola.png");
+        pistola[1] = LoadTexture("tienda/pistola2.png");
+        pistola[2] = LoadTexture("tienda/piistola3.png");
+        caja[0] = LoadTexture("tienda/.cubo.png");
+        caja[1] = LoadTexture("tienda/cubo2.png");
+        caja[2] = LoadTexture("tienda/cubo3.png");
+
         
         
         texturaContento = LoadTexture("64x64/personaje_contento.jpg");
@@ -1181,62 +1196,92 @@ public:
             tiempoTiendaAbierta = 0.0f;
             currentFrame = 0;
 
-            // (Opcional) Resetear otros estados si es necesario
             itemSeleccionado = -1;
         }
     }
     
     void DrawInventario() {
-        // Solo dibujar si hay items
         if (inventario.empty()) return;
-        for (size_t i = 0; i < inventario.size(); i++) {
-            int itemIndex = inventario[i];
-            Vector2 itemPos = {
-                inventarioPos.x,
-                inventarioPos.y + (i * espacioentreitems) // Usar spacing negativo para apilar hacia arriba
-            };
 
-            // Dibujar el itrm
-            DrawTextureEx(CosasDeLaTienda[itemIndex], itemPos, 0, 1.0f, WHITE);
+        for (size_t i = 0; i < inventario.size(); i++) {
+            Vector2 itemPos = { inventarioPos.x, inventarioPos.y + (i * espacioentreitems) };
+
+            switch (inventario[i]) {
+            case 0: // Botas
+                DrawTextureEx(botas[nivelBotas - 1], itemPos, 0, 0.7f, WHITE);
+                break;
+            case 1: // Pistola
+                DrawTextureEx(pistola[nivelPistola - 1], itemPos, 0, 0.7f, WHITE);
+                break;
+            case 2: // Cubo
+                DrawTextureEx(caja[nivelCubo - 1], itemPos, 0, 0.7f, WHITE);
+                break;
+            }
         }
     }
 
-   
-
-    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage) {
+    void Compra(Vector2 playerPos, int& playerCoins, bool& tiendaActiva, float& vel, float& powerRate, int& bulletDamage) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
-        
         if (currentTime - ultimaCompraTime < compraCooldown) return;
 
         itemSeleccionado = -1;
-        Vector2 itemPositions[3] = { {210,250},{260,250},{310,250} };
+        Vector2 itemPositions[3] = { {210,250}, {260,250}, {310,250} };
 
         for (int i = 0; i < 3; i++) {
             if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
                 itemSeleccionado = i;
-                
 
-                if (playerCoins >= precios[i] && inventario.size() < maxItemsVisible) {
-                    playerCoins -= precios[i];
+                int precioActual = 0;
+                bool puedeComprar = false;
+
+                // Determinar precio según nivel
+                switch (i) {
+                case 0: // Botas
+                    if (nivelBotas <= 3) {
+                        precioActual = preciosBotas[nivelBotas - 1];
+                        puedeComprar = playerCoins >= precioActual;
+                    }
+                    break;
+                case 1: // Pistola
+                    if (nivelPistola <= 3) {
+                        precioActual = preciosPistola[nivelPistola - 1];
+                        puedeComprar = playerCoins >= precioActual;
+                    }
+                    break;
+                case 2: // Cubo
+                    if (nivelCubo <= 3) {
+                        precioActual = preciosCubo[nivelCubo - 1];
+                        puedeComprar = playerCoins >= precioActual;
+                    }
+                    break;
+                }
+
+                if (puedeComprar && inventario.size() < maxItemsVisible) {
+                    playerCoins -= precioActual;
                     inventario.push_back(i);
-                    if (!IsSoundPlaying(buy)) {PlaySound(buy); }
+
+                    if (!IsSoundPlaying(buy)) PlaySound(buy);
+
                     ultimaCompraTime = currentTime;
                     jugadorContento = true;
                     tiempoContento = 0.0f;
-                    if (i == 1) {
                     
+                    if (i == 1) {
+
                         vel += 0.5;
                     }if (i == 2) {
-                    
+
                         powerRate -= 0.2;
                     }if (i == 3) {
-                    
+
                         bulletDamage += 1;
                     }
 
-                    // Cerrar tienda inmediatamente después de comprar
+                    
+            
+
                     CerrarTienda(tiendaActiva);
                 }
                 break;
@@ -1292,10 +1337,17 @@ public:
 
             // dibujar la tienda y los items cuando el tendero está quieto
             DrawTexture(store, 190, 230, WHITE);
-            for (int i = 0; i < 3; i++) {
-                DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
-                DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
-            }
+            // Dibujar botas (posición 210,250)
+            DrawTexture(botas[nivelBotas - 1], 210, 250, WHITE);
+            DrawText(TextFormat("%d", preciosBotas[nivelBotas - 1]), 220, 280, 20, BLACK);
+
+            // Dibujar pistola (posición 260,250)
+            DrawTexture(pistola[nivelPistola - 1], 260, 250, WHITE);
+            DrawText(TextFormat("%d", preciosPistola[nivelPistola - 1]), 270, 280, 20, BLACK);
+
+            // Dibujar cubo (posición 310,250)
+            DrawTexture(caja[nivelCubo - 1], 310, 250, WHITE);
+            DrawText(TextFormat("%d", preciosCubo[nivelCubo - 1]), 320, 280, 20, BLACK);
         }
         else {
             // Dibujar animación de aparición (caminando hacia abajo)
@@ -2243,7 +2295,7 @@ public:
                     i++;
                 }
                 i = h;
-                firstTryenemy = false;
+               
             }
             enemigo[i].SNAnim();
             if (enemigo[i].isSNfinished) {
@@ -2267,6 +2319,7 @@ public:
 
             i++;
         }
+    
         i = 0;
         while (orcs.size() > i) {
             if (firstTryorcs) {
@@ -3296,7 +3349,7 @@ private:
     float timeOfLive = 0;
     int bagItem = 0;
     int bagItemAux = 0;
-    float powerRate = 0.4;
+    float powerRate = 0.3;
     int timeCafeInicial;
     int timeCafeFinal;
     int HMGTimeInicial;
@@ -3320,7 +3373,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 5;
+        level = 1;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3534,7 +3587,7 @@ public:
 
             if (level > 3 && level != 5 && level != 51 && !SNInUse) {
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
 
                     Orc auxiliar;
                     orcs.push_back(auxiliar);
@@ -3696,8 +3749,10 @@ public:
                 bossFight = false;
             }
 
-            if (level > 6 && level != 5 && level != 51  && !SNInUse) {
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
+
+            if (level > 6 && level != 5 && level != 51 && !SNInUse) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
+
                     Mariposa auxiliar;
 
                     // Random border spawn position
@@ -3878,7 +3933,7 @@ public:
             }
             if (level != 5 && level != 51 && !SNInUse) { //ogre
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
 
                     Ogre auxiliar;
                     enemigo.push_back(auxiliar);
@@ -4397,8 +4452,7 @@ public:
                 if (!IsSoundPlaying(explosion)) {
                     PlaySound(explosion);
                 }
-                bagItem = 0;
-
+              
             }
             if (gameNuke.finished) {
 
@@ -4804,6 +4858,10 @@ public:
         gameover = true;
         p.lives = 3;
         p.money = 0;
+        p.vel = 2;
+        powerRate = 0.3;
+
+
 
     }
     //pantalla de perdiste
@@ -7960,8 +8018,10 @@ private:
     Texture view = LoadTexture("cabeza2.png");
     //IMG_0971
     Texture Chachi = LoadTexture("pene.png");
-    bool GameBegin = false;
+    Texture Instruct = LoadTexture("mov.png");
 
+    bool GameBegin = false;
+    bool instructions = false;
     int alive = 0;
     float InicialTime = 0;
 public:
@@ -7998,10 +8058,20 @@ public:
 
         }
         else {
-
             DrawTexture(view, 0, 0, WHITE);
 
+            DrawText("Press the letter I for the instructions. Press it again for them to go away.\n And be able to start the game", 0, 490, 20, WHITE);
+            if (IsKeyPressed(KEY_I)) { instructions = !instructions; }
+            if (!instructions) {
+            
             if (IsKeyDown(KEY_SPACE)) { GameBegin = true; }
+            
+            }
+            else {
+            
+            
+                DrawTexture(Instruct, 0, 0, WHITE);
+            }
 
         }
 
@@ -8071,6 +8141,7 @@ int main()
     bool gameovertime = false;
     float GOtime = 0;
     bool tiendaActiva = false;
+    bool instructions;
     while (!WindowShouldClose()) {
 
         if (t.GameBegin) {
@@ -8135,6 +8206,7 @@ int main()
 
 
             t.Presentation();
+            
         }
 
 
