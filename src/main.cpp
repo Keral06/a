@@ -1083,7 +1083,9 @@ class Store {
     Texture walkFrames[2];  // caminar
     Texture storemanTextures[5];
     Texture store;
-    Texture CosasDeLaTienda[3];
+    Texture botas[3];
+    Texture pistola[3];
+    Texture caja[3];
 
     Vector2 position = { 255 + 65, 0 };
     float animTime = 0;
@@ -1117,6 +1119,13 @@ class Store {
     Texture caja[3];
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
+
+    int nivelBotas = 1;
+    int nivelPistola = 1;
+    int nivelCubo = 1;
+    const int preciosBotas[3] = { 8, 20, 10 };
+    const int preciosPistola[3] = { 10, 20, 30 };
+    const int preciosCubo[3] = { 15, 30, 45 };
     int primero = 0;
   
 
@@ -1150,7 +1159,7 @@ public:
         botas[2] = LoadTexture("tienda/cabeza.png");
         pistola[0] = LoadTexture("tienda/pistola.png");
         pistola[1] = LoadTexture("tienda/pistola2.png");
-        pistola[2] = LoadTexture("tienda/piistola3.png");
+        pistola[2] = LoadTexture("tienda/pistola3.png");
         caja[0] = LoadTexture("tienda/cubo.png");
         caja[1] = LoadTexture("tienda/cubo2.png");
         caja[2] = LoadTexture("tienda/cubo3.png");
@@ -1230,7 +1239,17 @@ public:
             };
 
             // Dibujar el itrm
-            DrawTextureEx(CosasDeLaTienda[itemIndex], itemPos, 0, 1.0f, WHITE);
+            switch (inventario[i]) {
+            case 0: // Botas
+                DrawTextureEx(botas[nivelBotas - 1], itemPos, 0, 0.7f, WHITE);
+                break;
+            case 1: // Pistola
+                DrawTextureEx(pistola[nivelPistola - 1], itemPos, 0, 0.7f, WHITE);
+                break;
+            case 2: // Cubo
+                DrawTextureEx(caja[nivelCubo - 1], itemPos, 0, 0.7f, WHITE);
+                break;
+            }
         }
     }
 
@@ -1251,10 +1270,35 @@ public:
                 itemSeleccionado = i;
                 
 
-                if (playerCoins >= precios[i] && inventario.size() < maxItemsVisible) {
-                    playerCoins -= precios[i];
+                int precioActual = 0;
+                bool puedeComprar = false;
+
+                // Determinar precio según nivel
+                switch (i) {
+                case 0: // Botas
+                    if (nivelBotas <= 3) {
+                        precioActual = preciosBotas[nivelBotas - 1];
+                        puedeComprar = playerCoins >= precioActual;
+                    }
+                    break;
+                case 1: // Pistola
+                    if (nivelPistola <= 3) {
+                        precioActual = preciosPistola[nivelPistola - 1];
+                        puedeComprar = playerCoins >= precioActual;
+                    }
+                    break;
+                case 2: // Cubo
+                    if (nivelCubo <= 3) {
+                        precioActual = preciosCubo[nivelCubo - 1];
+                        puedeComprar = playerCoins >= precioActual;
+                    }
+                    break;
+                }
+
+                if (puedeComprar && inventario.size() < maxItemsVisible) {
+                    playerCoins -= precioActual;
                     inventario.push_back(i);
-                    if (!IsSoundPlaying(buy)) {PlaySound(buy); }
+                    if (!IsSoundPlaying(buy)) PlaySound(buy);
                     ultimaCompraTime = currentTime;
                     jugadorContento = true;
                     tiempoContento = 0.0f;
@@ -1333,10 +1377,18 @@ public:
 
             // dibujar la tienda y los items cuando el tendero está quieto
             DrawTexture(store, 190, 230, WHITE);
-            for (int i = 0; i < 3; i++) {
-                DrawTexture(CosasDeLaTienda[i], 210 + (i * 50), 250, WHITE);
-                DrawText(TextFormat("%d", precios[i]), 220 + (i * 50), 280, 20, BLACK);
-            }
+
+            // Dibujar botas (posición 210,250)
+            DrawTexture(botas[nivelBotas - 1], 210, 250, WHITE);
+            DrawText(TextFormat("%d", preciosBotas[nivelBotas - 1]), 220, 280, 20, BLACK);
+
+            // Dibujar pistola (posición 260,250)
+            DrawTexture(pistola[nivelPistola - 1], 260, 250, WHITE);
+            DrawText(TextFormat("%d", preciosPistola[nivelPistola - 1]), 270, 280, 20, BLACK);
+
+            // Dibujar cubo (posición 310,250)
+            DrawTexture(caja[nivelCubo - 1], 310, 250, WHITE);
+            DrawText(TextFormat("%d", preciosCubo[nivelCubo - 1]), 320, 280, 20, BLACK);
         }
         else {
             // Dibujar animación de aparición (caminando hacia abajo)
@@ -2507,7 +2559,12 @@ private:
     bool isPaused = false;
     bool deathHandled = false;
     float deathTime = 0.0f;
-
+    Texture Goofer1 = LoadTexture("64x64/p3_11.png");
+    Texture Goofer2 = LoadTexture("64x64/p3_9.png");
+    bool showGoofer = false;
+    int gooferFrame = 0;
+    float gooferStartTime = 0.0f;
+    Vector2 gooferPos = { 320, 0 };
 public:
     friend Game;
     Boss() : Enemy(1, 2), isAlive(true), frameCounter(0), moving(false) {
@@ -3394,7 +3451,11 @@ public:
 
             }
             //empieza el tiempo, lo dibuja y lo va actualizando
-
+            if (boss.showGoofer) {
+                ClearBackground(BLACK);
+                boss.DrawGoofer();          
+                return;                 
+            }
             if (level == 11) {
                 currentLevel = 11;
 
@@ -3419,7 +3480,18 @@ public:
                     logOnPlayer = true;
                 }
             }
+            if (p.logEffectActive && (GetTime() - p.logEffectStartTime >= 2.0f)) {
+                p.logEffectActive = false;
+
+                boss.showGoofer = true;
+                boss.gooferStartTime = GetTime();
+                boss.showGoofer = true;
+                boss.gooferPos = { p.GetPosition().x, 0 }; 
+            }
+            // Handle bullet creation with arrow keys
+
             //para las bullets
+
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
                 IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
                 //el timer de cuando ha de esperar una bullet para volver a ser lanzada es el power rate, por eso hay upgrades para disminuirlo
