@@ -2247,7 +2247,7 @@ public:
                     i++;
                 }
                 i = h;
-                firstTryenemy = false;
+               
             }
             enemigo[i].SNAnim();
             if (enemigo[i].isSNfinished) {
@@ -2271,6 +2271,7 @@ public:
 
             i++;
         }
+    
         i = 0;
         while (orcs.size() > i) {
             if (firstTryorcs) {
@@ -3289,7 +3290,7 @@ private:
     float timeOfLive = 0;
     int bagItem = 0;
     int bagItemAux = 0;
-    float powerRate = 0.4;
+    float powerRate = 0.3;
     int timeCafeInicial;
     int timeCafeFinal;
     int HMGTimeInicial;
@@ -3313,7 +3314,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 3;
+        level = 1;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3479,7 +3480,7 @@ public:
 
             if (level > 3 && level != 5 && !SNInUse) {
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
 
                     Orc auxiliar;
                     orcs.push_back(auxiliar);
@@ -3642,7 +3643,7 @@ public:
             }
 
             if (level > 6 && level != 5  && !SNInUse) {
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
                     Mariposa auxiliar;
 
                     // Random border spawn position
@@ -3823,7 +3824,7 @@ public:
             }
             if (level != 5  && !SNInUse) { //ogre
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) {
 
                     Ogre auxiliar;
                     enemigo.push_back(auxiliar);
@@ -4342,8 +4343,7 @@ public:
                 if (!IsSoundPlaying(explosion)) {
                     PlaySound(explosion);
                 }
-                bagItem = 0;
-
+              
             }
             if (gameNuke.finished) {
 
@@ -4749,6 +4749,10 @@ public:
         gameover = true;
         p.lives = 3;
         p.money = 0;
+        p.vel = 2;
+        powerRate = 0.3;
+
+
 
     }
     //pantalla de perdiste
@@ -7749,8 +7753,10 @@ private:
     Texture view = LoadTexture("cabeza2.png");
     //IMG_0971
     Texture Chachi = LoadTexture("pene.png");
-    bool GameBegin = false;
+    Texture Instruct = LoadTexture("mov.png");
 
+    bool GameBegin = false;
+    bool instructions = false;
     int alive = 0;
     float InicialTime = 0;
 public:
@@ -7787,10 +7793,20 @@ public:
 
         }
         else {
-
             DrawTexture(view, 0, 0, WHITE);
 
+            DrawText("Press the letter I for the instructions. Press it again for them to go away.\n And be able to start the game", 0, 490, 20, WHITE);
+            if (IsKeyPressed(KEY_I)) { instructions = !instructions; }
+            if (!instructions) {
+            
             if (IsKeyDown(KEY_SPACE)) { GameBegin = true; }
+            
+            }
+            else {
+            
+            
+                DrawTexture(Instruct, 0, 0, WHITE);
+            }
 
         }
 
@@ -7860,6 +7876,7 @@ int main()
     bool gameovertime = false;
     float GOtime = 0;
     bool tiendaActiva = false;
+    bool instructions;
     while (!WindowShouldClose()) {
 
         if (t.GameBegin) {
@@ -7924,6 +7941,7 @@ int main()
 
 
             t.Presentation();
+            
         }
 
 
