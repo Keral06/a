@@ -1044,9 +1044,7 @@ class Store {
     bool jugadorContento = false;
     float tiempoContento = 0.0f;
     const float duracionContento = 1.5f;
-    Texture botas[3];
-    Texture pistola[3];
-    Texture caja[3];
+   
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
 
@@ -1084,7 +1082,6 @@ public:
 
         //textura de las cosas de la tienda 
         botas[0] = LoadTexture("tienda/botas.png");
-
         botas[1] = LoadTexture("tienda/botas2.png");  
         botas[2] = LoadTexture("tienda/cabeza.png");
         pistola[0] = LoadTexture("tienda/pistola.png");
