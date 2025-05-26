@@ -1083,7 +1083,6 @@ public:
 
         //textura de las cosas de la tienda 
         botas[0] = LoadTexture("tienda/botas.png");
-
         botas[1] = LoadTexture("tienda/botas2.png");  
         botas[2] = LoadTexture("tienda/cabeza.png");
         pistola[0] = LoadTexture("tienda/pistola.png");
