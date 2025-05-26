@@ -45,7 +45,7 @@ enum Direccion
 class Colision {
 public:
     Colision(Vector2 posicion) {
-        BeginDrawing();
+        
         float widthThing = 96 - 64;
         float HeightThing = 64 - 32;
 
@@ -4700,24 +4700,7 @@ public:
 
         if (tiendaActiva && monstersize == 0 && p.status)
         {
-            while (0 < Lives.size()) {
-
-                Lives.pop_back();
-            }
-            while (0 < SN.size()) {
-
-                SN.pop_back();
-            }
-            while (0 < gun.size()) {
-
-                gun.pop_back();
-            }while (0 < cafe.size()) {
-
-                cafe.pop_back();
-            }while (0 < money.size()) {
-                money.pop_back();
-
-            }
+          
             ClearBackground(BLACK);
 
             BeginDrawing();
@@ -4793,8 +4776,8 @@ public:
     }
     //cambia de nivel y reinicia los valores
     void GameWon() { //si ha ganado dibuja que ha ganado
-        BeginDrawing();
         ClearBackground(BLACK);
+        BeginDrawing();
         DrawText("You Won!", 40, screenHeight / 2, 40, WHITE);
         EndDrawing();
 
@@ -7974,8 +7957,8 @@ public:
     Title() {}
 
     void Presentation() {
-        BeginDrawing();
         ClearBackground(BLACK);
+        BeginDrawing();
         if (alive != 0) {
             InicialTime = GetTime();
 
