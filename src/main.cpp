@@ -997,7 +997,7 @@ public:
     void Draw() {
 
 
-        DrawTexture(vida, pos.x, pos.y, WHITE);
+        DrawTexture(vida, pos.x, pos.y, WHITE); //lo dibuja en la posicion en la que ha muerto el monstruo
         ColisionPlayer(pos);
     }
     //dibuja la textura y una colision alrededor para saber cuando el jugador la recoge
@@ -2396,13 +2396,13 @@ public:
     bool Delete() {
         float currentTime = GetTime();
         float elapsed = currentTime - deathStartTime;
-
+        //si el tiempo que ha pasado es este, pues se limpia para que no haya siempre monstruo
         if (elapsed > 10.0f) {
             return true;
         }
         return false;
     }
-    //chequea si el ogro ha muerto hace mas de 5 segundos para eliminar la basura que deja
+    
 
     void DeathAnim() {
 
@@ -3087,12 +3087,12 @@ public:
     }
     void Draw() {
 
-        DrawRectangle(96, 8, barraAncho, 16, GREEN);
+        DrawRectangle(96, 8, barraAncho, 16, GREEN); //la barra del tiempo es así de ancha, y dependiendo del tiempo que ha pasado se irá reduciendo
 
         double porcentaje = tiempoTranscurrido / tiempoFinal;
 
         barraAncho = (int)((playerScreenX - 32) * (1 - porcentaje));
-        /*DrawRectangle(0, 1024 / 2, barraAncho, 32, GREEN);*/
+      
 
 
 
@@ -3101,14 +3101,14 @@ public:
     }
     void IniciarTiempo() {
 
-        tiempoInicial = GetTime();
+        tiempoInicial = GetTime(); //el tiempo inicial es el que hay cuando empieza el nivel, y cada nivel son 1.20 min aprox
         tiempoFinal = tiempoInicial + 80.0f;
         aux = 0;
 
     }
     void TiempoQueHaPasado() {
         float tiempoAhora = GetTime();
-        tiempoTranscurrido = tiempoAhora - tiempoInicial - aux;
+        tiempoTranscurrido = tiempoAhora - tiempoInicial - aux; //mira en que momento concreto nos encontramos
 
 
     }
@@ -3336,19 +3336,19 @@ public:
             ClearBackground(BLACK);
             /*BeginDrawing();*/
             BeginDrawing();
-            if (tiempoiniciado == false) {
-                if (firstRound) {
+            if (tiempoiniciado == false) { // si el tiempo no ha iniciado
+                if (firstRound) { //y es la primera ronda, hace que la bolsa sea 0 y que ya no sea la primera ronda
                     p.bag = 0;
                     firstRound = false;
                 }
-                Tiempo.IniciarTiempo();
-                tiempoiniciado = true;
-                Tiempo.DrawInicial();
+                Tiempo.IniciarTiempo(); //inicia el tiempo (entrar en función para explicación, esto irá pasando por todo el código)
+                tiempoiniciado = true; //para que no vuelva a iniciar el tiempo en un futuro
+               
             }
-            else {
+            else { //si el tiempo ya ha sido iniciado
 
-                Tiempo.TiempoQueHaPasado();
-                Tiempo.Draw();
+                Tiempo.TiempoQueHaPasado(); 
+                Tiempo.Draw(); 
 
 
             }
@@ -3378,10 +3378,10 @@ public:
                     logOnPlayer = true;
                 }
             }
-            // Handle bullet creation with arrow keys
+            //para las bullets
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT) ||
                 IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN)) {
-                // Add rate limiting for bullets
+                //el timer de cuando ha de esperar una bullet para volver a ser lanzada es el power rate, por eso hay upgrades para disminuirlo
                 static float shootTimer = powerRate;
                 if (shootTimer <= 0) {
                     bullets.push_back(Shoot(p));
@@ -3393,7 +3393,7 @@ public:
 
             }
             
-           
+           //lo mismo que el anterior pero es para el boss
             int a = GetTime();
             if (level == 5 && a > 17.0f && boss.status && boss.IsAlive() && !boss.isPaused) {
                 static float shootTimer = powerRate;
@@ -3408,10 +3408,10 @@ public:
 
 
             int i = 0;
-            // dibuja el ogro 
+            // boss, comentalo queralt
             while (i < bullets.size()) {
 
-                bullets[i].UpdatePosition(level);
+                bullets[i].UpdatePosition(level); 
                 bullets[i].Draw();
                 Rectangle bulletRect = { bullets[i].GetPosition().x, bullets[i].GetPosition().y, 3, 3 };
                 Rectangle playerHitbox = { p.GetPosition().x, p.GetPosition().y, 32, 32 };
@@ -3499,16 +3499,16 @@ public:
                 
             }
 
-            tienda.DrawInventario();
+            tienda.DrawInventario(); //dibuja lo que tiene el jugador en el inventario
             i = 0;
-            while (i < dead.size()) {
-            
+            while (i < dead.size()) { //los cosas que sueltan los monstruos al morir
+             
                 if (dead[i].Delete()) {
                 
                     if (dead.size() == 1) {
                     
                         dead.pop_back();
-                    
+                    //si solo hay uno hay poop back pero si hay más de uno, lo que hacemos es que el que se ha de eliminar es suplantado por el siguiente, y al último le hacemos pop_back
                     }
                     else {
                        int j = i;
@@ -3529,19 +3529,19 @@ public:
 
             int bulletSize = bullets.size();
 
-            //la tienda aparece solo en el level 3
+        
            
 
-            if (level > 3 && level != 5 && level != 51 && !SNInUse) {
+            if (level > 3 && level != 5 && level != 51 && !SNInUse) { //este aparece en todos los niveles a partir del 3, menos en el del boss, y cuando esta en uso el screen nuke no pueden hacer nada
                 int i = 0;
-                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
+                if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 6+level && !ChangingLevel) { //hacemos que el máximo de enemigos son 8 mas el nivel en el que se encuentran para que haya mas dificultad
 
                     Orc auxiliar;
                     orcs.push_back(auxiliar);
 
 
                 }
-                if (orcs.size() > 0) {
+                if (orcs.size() > 0) { //aqui lo que hacemos es mirar bullet a bullet si ha chocado con un orco
 
 
                     int j = 0;
@@ -3555,7 +3555,7 @@ public:
                             }
                             else {
                                 
-                                if (bullets[j].ColisionBullet(orcs[i]) == true) {
+                                if (bullets[j].ColisionBullet(orcs[i]) == true) { //si choca creamos un goop verde, el DeadOgre, y 
                                     orcs[i].hp-=bulletDamage;
                                     if (orcs[i].hp < 0) {
 
@@ -3564,7 +3564,7 @@ public:
                                         float timehelp = GetTime();
                                         auxTime.push_back(timehelp);
                                         deadogres++;
-
+                                        //de manera random puede aparecer un power up
 
                                         int a = GetRandomValue(1, 10);
                                         if (a == 1 && Lives.size() == 0) {
@@ -3624,7 +3624,7 @@ public:
                                             orcs[i].Death();
                                             while (aux < orcs.size() - 1) {
 
-                                                orcs[aux] = orcs[aux + 1];
+                                                orcs[aux] = orcs[aux + 1]; //eliminamos de la misma manera que anteriormente
                                                 aux++;
 
                                             }
@@ -3635,7 +3635,7 @@ public:
 
                                     }
                                     else {
-                                        if (!IsSoundPlaying(Hit) ){
+                                        if (!IsSoundPlaying(Hit) ){ //hace un sonido diferente si no ha muerto pero le han golpeado
                                             PlaySound(Hit);
                                         }
                                         
@@ -3650,7 +3650,7 @@ public:
                                         bulletSize--;
                                     }
                                     else if (bullets.size() > 1) {
-                                        while (aux < bullets.size() - 1) {
+                                        while (aux < bullets.size() - 1) { //eliminamos de la misma manera
                                             bullets[aux] = bullets[aux + 1];
                                             aux++;
                                         }
@@ -3695,6 +3695,7 @@ public:
             else if (level > 5 && !bossFight || level < 5 && !bossFight) {
                 bossFight = false;
             }
+            //es el mismo código que el orco
 
             if (level > 6 && level != 5 && level != 51  && !SNInUse) {
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
@@ -3875,8 +3876,8 @@ public:
 
 
 
-            }
-            if (level != 5 && level != 51 && !SNInUse) { //ogre
+            }//este también hace lo mismo
+            if (level != 5 && !SNInUse) { //ogre
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
 
@@ -4054,7 +4055,7 @@ public:
                 i++;
 
             }
-            //dibujar los power ups
+            //dibujar los power ups y olos elimina si han pasado más de 10 segundos (es lo mismo en todos pero solo explico el de Lives)
 
             int auxiliarPowerUps = 0;
             while (auxiliarPowerUps < Lives.size()) {
@@ -4122,7 +4123,7 @@ public:
 
             while (auxiliarPowerUps < Lives.size()) {
 
-                if (PlayerPowerUp(p, Lives[auxiliarPowerUps])) {
+                if (PlayerPowerUp(p, Lives[auxiliarPowerUps])) { //mira si se han chocado, y si lo han hecho gana una vida
 
                     Lives[0].UsePowerUp(p);
                     Lives.pop_back();
@@ -4141,9 +4142,9 @@ public:
                 if (PlayerPowerUpHMG(p, gun[auxiliarPowerUps])) {
                     if (p.bag == 1) {
                         gun[0].UsePowerUp(powerRate);
-                        gun.pop_back();
+                        gun.pop_back(); //aqui lo que hace es que se elimina despues de usar el power up, ya que si hay un elemento en la bolsa usa al chocarse
                         HMGEnUso = 1;
-                        HMGTimeInicial = GetTime();
+                        HMGTimeInicial = GetTime(); //esto es porque dura unos 12 segundos
                     }
                     else {
 
@@ -4161,7 +4162,7 @@ public:
 
             }
             if (HMGEnUso == 1) {
-                HMGTimeFinal = GetTime();
+                HMGTimeFinal = GetTime(); //si esta en uso mira todo el rato si han pasado los 12 segundos, si han pasado crea un auxiliar para que el power rate vuelva a ser normal
                 if (HMGTimeFinal - HMGTimeInicial > 12) {
                     HeavyMachineGun Aux(p.playerPos);
                     Aux.StopUsing(powerRate);
