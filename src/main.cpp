@@ -86,7 +86,7 @@ public:
     Direccion dir;
 protected:
     int hp;
-    int vel;
+    float vel;
     Vector2 playerPos;
     Sound Walk = LoadSound("sound effects/prairie king walk.ogg");
     Sound Die = LoadSound("sound effects/enemy death.ogg");
@@ -1154,7 +1154,7 @@ public:
 
    
 
-    void Compra(Vector2 playerPos, int& playerCoins, bool tiendaActiva) {
+    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
@@ -1176,6 +1176,16 @@ public:
                     ultimaCompraTime = currentTime;
                     jugadorContento = true;
                     tiempoContento = 0.0f;
+                    if (i == 1) {
+                    
+                        vel += 0.5;
+                    }if (i == 2) {
+                    
+                        powerRate -= 0.2;
+                    }if (i == 3) {
+                    
+                        bulletDamage += 1;
+                    }
 
                     // Cerrar tienda inmediatamente después de comprar
                     CerrarTienda(tiendaActiva);
@@ -3304,7 +3314,7 @@ public:
                 
             }
 
-
+            tienda.DrawInventario();
             i = 0;
             while (i < dead.size()) {
             
@@ -4508,7 +4518,7 @@ public:
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
             tienda.Update(deltaTime, this->tiendaActiva); 
-            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate); // Lógica de compra
+            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage); // Lógica de compra
 
             
             tienda.Draw();         
