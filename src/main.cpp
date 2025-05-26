@@ -86,7 +86,7 @@ public:
     Direccion dir;
 protected:
     int hp;
-    int vel;
+    float vel;
     Vector2 playerPos;
     Sound Walk = LoadSound("sound effects/prairie king walk.ogg");
     Sound Die = LoadSound("sound effects/enemy death.ogg");
@@ -1030,7 +1030,7 @@ class Store {
     float tiempoTiendaAbierta = 0.0f;
     const float tiempoMaximoTienda = 20.0f; // segundos abierta
     bool estaCerrando = false;
-    bool tiendaActiva = false;
+   
     std::vector<int> inventario; 
     const Vector2 inventarioPos = { 20, 400 }; 
     const float espacioentreitems = 35.0f;
@@ -1043,7 +1043,8 @@ class Store {
     bool jugadorContento = false;
     float tiempoContento = 0.0f;
     const float duracionContento = 1.5f;
-    
+    Sound buy = LoadSound("song/cowboy_secret.wav");
+    Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
 
 
 public:
@@ -1064,7 +1065,7 @@ public:
         storemanTextures[2] = LoadTexture("64x64/128x128_p4-2.png");
         storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
         storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
-
+       
         //textura del fondo tienda
         store = LoadTexture("tienda_red.png");
 
@@ -1154,7 +1155,7 @@ public:
 
    
 
-    void Compra(Vector2 playerPos, int& playerCoins) {
+    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
@@ -1172,20 +1173,30 @@ public:
                 if (playerCoins >= precios[i] && inventario.size() < maxItemsVisible) {
                     playerCoins -= precios[i];
                     inventario.push_back(i);
-                    
+                    if (!IsSoundPlaying(buy)) {PlaySound(buy); }
                     ultimaCompraTime = currentTime;
                     jugadorContento = true;
                     tiempoContento = 0.0f;
+                    if (i == 1) {
+                    
+                        vel += 0.5;
+                    }if (i == 2) {
+                    
+                        powerRate -= 0.2;
+                    }if (i == 3) {
+                    
+                        bulletDamage += 1;
+                    }
 
                     // Cerrar tienda inmediatamente después de comprar
-                    CerrarTienda();
+                    CerrarTienda(tiendaActiva);
                 }
                 break;
             }
         }
     }
 
-    void Update(float deltaTime) {
+    void Update(float deltaTime, bool &tiendaActiva) {
         if (!hasAppeared && !estaCerrando) {
             aparecer(deltaTime); // 
             tiendaActiva = false;
@@ -1195,7 +1206,7 @@ public:
             // Lógica mientras la tienda está abierta
             tiempoTiendaAbierta += deltaTime;
             if (tiempoTiendaAbierta >= tiempoMaximoTienda) { //si en un tiempo no hay ningun paso se cierra la tienda
-                CerrarTienda();
+                CerrarTienda(tiendaActiva);
             }
         }
         else if (estaCerrando) {
@@ -1212,7 +1223,7 @@ public:
     }
     
 
-    void CerrarTienda() {
+    void CerrarTienda(bool &tiendaActiva) {
         estaCerrando = true;
         isWalking = true;
         tiendaActiva = false;
@@ -3240,6 +3251,8 @@ private:
     Vector2 He;
     ScreenNuke gameNuke;
     bool firstRound = true;
+    int bulletDamage = 1;
+
 
 
 public:
@@ -3247,10 +3260,12 @@ public:
     friend int main();
     Game() {
         deadogres = 0;
+
         level = 5;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
+     
        
        ScreenNuke gameNuke();
     }
@@ -3377,7 +3392,7 @@ public:
                 
             }
 
-
+            tienda.DrawInventario();
             i = 0;
             while (i < dead.size()) {
             
@@ -3408,16 +3423,7 @@ public:
             int bulletSize = bullets.size();
 
             //la tienda aparece solo en el level 3
-            if (level == 3&& enemigo.size() == 0)
-            {
-                tiendaActiva = true;
-
-            }
-            else
-            {
-                tiendaActiva = false;
-            }
-
+           
 
             if (level > 3 && level != 5 && !SNInUse) {
                 int i = 0;
@@ -3443,7 +3449,7 @@ public:
                             else {
                                 
                                 if (bullets[j].ColisionBullet(orcs[i]) == true) {
-                                    orcs[i].hp--;
+                                    orcs[i].hp-=bulletDamage;
                                     if (orcs[i].hp < 0) {
 
                                         DeadOgre auxiliari(orcs[i].GetPosition());
@@ -4573,19 +4579,48 @@ public:
             EndDrawing();
         }
 
-
-        if (tiendaActiva)
+        if (level == 2 && monstersize == 0 && ChangingLevel && p.status)
         {
+            tiendaActiva = true;
+
+        }
+        else
+        {
+            tiendaActiva = false;
+        }
+
+        if (tiendaActiva && monstersize == 0 &&p.status)
+        {
+            ClearBackground(BLACK);
+            BeginDrawing();
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
-            tienda.Update(deltaTime); 
-            tienda.Compra(p.GetPosition(), p.money); // Lógica de compra
+            tienda.Update(deltaTime, this->tiendaActiva); 
+            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage); // Lógica de compra
 
-
-            BeginDrawing();
-            ClearBackground(BLACK); 
+            
             tienda.Draw();         
-            p.Draw();               
+            p.Draw();  
+            punteroDraw++;
+            int i = 0;
+
+            if (punteroDraw % 120 != 0) {
+
+                DrawTexture(puntero, 350, 510, WHITE);
+
+
+            }
+            if (p.playerPos.y > 475) {
+
+                if (p.playerPos.x > 288 && p.playerPos.x < 384) {
+
+
+                    ChangeLevel(Tiempo, p, enemigo, bullets, Lives);
+                    ChangingLevel = false;
+
+                }
+
+            }
             EndDrawing();
         }
         //reinicia los valores si el jugador pierde una vida
