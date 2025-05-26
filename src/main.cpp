@@ -1094,6 +1094,9 @@ class Store {
     const float duracionContento = 1.5f;
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
+    int primero = 0;
+    int segund = 0;
+    int tercero = 0;
 
 
 public:
@@ -1204,7 +1207,7 @@ public:
 
    
 
-    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage, int level) {
+    void Compra(Vector2 playerPos, int& playerCoins, bool &tiendaActiva, float &vel, float &powerRate, int &bulletDamage, int level, int &lives) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
@@ -1227,9 +1230,17 @@ public:
                     jugadorContento = true;
                     tiempoContento = 0.0f;
                     if (i == 1) {
-                    
+                        if (primero == 0 || primero==1) {
+                        
                         vel += 0.5;
+                        
+                        }else if (primero==2){
+                            lives++;
+                        }
+                    
                     }if (i == 2) {
+
+                       
                     
                         powerRate -= 0.2;
                     }if (i == 3) {
@@ -4684,7 +4695,7 @@ public:
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
             tienda.Update(deltaTime, this->tiendaActiva); 
-            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage, level); // Lógica de compra
+            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage, level, p.lives); // Lógica de compra
 
             
             tienda.Draw();         
