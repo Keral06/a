@@ -1095,8 +1095,7 @@ class Store {
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
     int primero = 0;
-    int segund = 0;
-    int tercero = 0;
+  
 
 
 public:
@@ -1237,6 +1236,7 @@ public:
                         }else if (primero==2){
                             lives++;
                         }
+                        primero++;
                     
                     }if (i == 2) {
 
