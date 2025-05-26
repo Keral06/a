@@ -1030,7 +1030,7 @@ class Store {
     float tiempoTiendaAbierta = 0.0f;
     const float tiempoMaximoTienda = 20.0f; // segundos abierta
     bool estaCerrando = false;
-    bool tiendaActiva = false;
+   
     std::vector<int> inventario; 
     const Vector2 inventarioPos = { 20, 400 }; 
     const float espacioentreitems = 35.0f;
@@ -1043,7 +1043,8 @@ class Store {
     bool jugadorContento = false;
     float tiempoContento = 0.0f;
     const float duracionContento = 1.5f;
-    
+    Sound buy = LoadSound("song/cowboy_secret.wav");
+    Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
 
 
 public:
@@ -1064,7 +1065,7 @@ public:
         storemanTextures[2] = LoadTexture("64x64/128x128_p4-2.png");
         storemanTextures[3] = LoadTexture("64x64/128x128_p4-3.png");
         storemanTextures[4] = LoadTexture("64x64/128x128_p4-4.png");
-
+       
         //textura del fondo tienda
         store = LoadTexture("tienda_red.png");
 
@@ -1172,7 +1173,7 @@ public:
                 if (playerCoins >= precios[i] && inventario.size() < maxItemsVisible) {
                     playerCoins -= precios[i];
                     inventario.push_back(i);
-                    
+                    if (!IsSoundPlaying(buy)) {PlaySound(buy); }
                     ultimaCompraTime = currentTime;
                     jugadorContento = true;
                     tiempoContento = 0.0f;
