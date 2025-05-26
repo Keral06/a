@@ -122,6 +122,9 @@ private:
     bool status;
     int bag = 0;
     float deathStartTime = 0;
+    bool estaContento = false;
+    float tiempoContento = 0.0f;
+    Texture texturaContento= LoadTexture("64x64/personaje.contento.png");
 
 public:
     friend int main();
@@ -160,6 +163,23 @@ public:
         bag = 0;
 
     }
+
+    void SetContento(bool feliz) {
+        estaContento = feliz;
+        if (feliz) tiempoContento = 0.0f; 
+    }
+
+    void Update() {
+        if (estaContento) {
+            float frameTime = GetFrameTime();
+            tiempoContento += GetFrameTime();
+            if (tiempoContento >= 1.0f) {  // Duración de 1 segundo
+                estaContento = false;
+            }
+        }
+    }
+
+
     void Draw() {
         float now = GetTime();
         if (logEffectActive) {
@@ -295,7 +315,7 @@ public:
 
 
         }
-
+        
     }
     //dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
     void ResetPlayer(int level) {
@@ -1092,6 +1112,9 @@ class Store {
     bool jugadorContento = false;
     float tiempoContento = 0.0f;
     const float duracionContento = 1.5f;
+    Texture botas[3];
+    Texture pistola[3];
+    Texture caja[3];
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
     int primero = 0;
@@ -1121,10 +1144,17 @@ public:
         store = LoadTexture("tienda_red.png");
 
         //textura de las cosas de la tienda 
-        CosasDeLaTienda[0] = LoadTexture("tienda/128x128_pistola2.png");//cambiar por botas
-            CosasDeLaTienda[1] = LoadTexture("tienda/128x128_mun.png"); //cambiar por pistola
-        CosasDeLaTienda[2] = LoadTexture("tienda/128x128_cubo2.png");
-        
+        botas[0] = LoadTexture("tienda/botas.png");
+
+        botas[1] = LoadTexture("tienda/botas2.png");  
+        botas[2] = LoadTexture("tienda/cabeza.png");
+        pistola[0] = LoadTexture("tienda/pistola.png");
+        pistola[1] = LoadTexture("tienda/pistola2.png");
+        pistola[2] = LoadTexture("tienda/piistola3.png");
+        caja[0] = LoadTexture("tienda/cubo.png");
+        caja[1] = LoadTexture("tienda/cubo2.png");
+        caja[2] = LoadTexture("tienda/cubo3.png");
+
         
         texturaContento = LoadTexture("64x64/personaje_contento.jpg");
         
@@ -1243,8 +1273,8 @@ public:
                        
                     
                         powerRate -= 0.2;
-                    }if (i == 3) {
-                    
+                    }if (i == 2) {
+
                         bulletDamage += 1;
                     }
 
@@ -1292,7 +1322,8 @@ public:
 
     void Draw() {
         // Dibujar al tendero 
-        BeginDrawing();
+        
+       
 
         if (estaCerrando) {
             // Usar animación de caminar cuando se está yendo
@@ -3332,7 +3363,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 5;
+        level = 2;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3541,7 +3572,7 @@ public:
 
             int bulletSize = bullets.size();
 
-        
+            
            
 
             if (level > 3 && level != 5 && level != 51 && !SNInUse) { //este aparece en todos los niveles a partir del 3, menos en el del boss, y cuando esta en uso el screen nuke no pueden hacer nada
@@ -4690,8 +4721,9 @@ public:
 
         if (tiendaActiva && monstersize == 0 &&p.status)
         {
-            ClearBackground(BLACK);
+            
             BeginDrawing();
+            /*ClearBackground(BLACK);*/
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
             tienda.Update(deltaTime, this->tiendaActiva); 
