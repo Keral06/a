@@ -4723,9 +4723,27 @@ public:
 
         if (tiendaActiva && monstersize == 0 &&p.status)
         {
+            while (0 < Lives.size()) {
+
+                Lives.pop_back();
+            }
+            while (0 < SN.size()) {
+
+                SN.pop_back();
+            }
+            while (0 < gun.size()) {
+
+                gun.pop_back();
+            }while (0 < cafe.size()) {
+
+                cafe.pop_back();
+            }while (0 < money.size()) {
+                money.pop_back();
+
+            }
+            ClearBackground(BLACK);
             
             BeginDrawing();
-            /*ClearBackground(BLACK);*/
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
             tienda.Update(deltaTime, this->tiendaActiva); 
