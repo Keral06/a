@@ -4644,7 +4644,7 @@ public:
 
             }
             i = 0;
-
+            if (ChangingLevel == true && tiendaActiva == true) { ChangingLevel == true; tiendaActiva == true; }
             if (p.lives < 0) { //si hay menos de 0 es game over
                 GameOver(p);
             }
