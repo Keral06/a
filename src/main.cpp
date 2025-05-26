@@ -1244,7 +1244,7 @@ public:
 
                     }if (i == 2) {
 
-                        powerRate -= 0.2;
+                        powerRate -= 0.1;
                     }if (i == 2) {
 
                         bulletDamage += 1;
@@ -3262,13 +3262,13 @@ public:
     }
     void UsePowerUp(float& powerRate) {
 
-        powerRate -= 0.1;
+        powerRate -= 0.05;
 
     }
 
     void StopUsing(float& powerRate) {
 
-        powerRate += 0.1;
+        powerRate += 0.05;
 
 
     }
@@ -4469,7 +4469,7 @@ public:
                 }
                 if (HMGEnUso == 1) {
                     HeavyMachineGun Aux(p.playerPos);
-                    Aux.UsePowerUp(this->powerRate);
+                    Aux.StopUsing(this->powerRate);
                     HMGEnUso = 1;
 
 
