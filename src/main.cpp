@@ -143,7 +143,7 @@ public:
 
 
     Player(int hp, int vel) : Entity(hp, vel, { (float)(playerScreenX + 128) / 2, 240 }) {
-        this->money = 50;
+        this->money = 0;
         this->lives = 3;
         this->dir = ARRIBA;
         dire = 1;
@@ -1270,9 +1270,7 @@ public:
                     
                     }if (i == 2) {
 
-                       
-                    
-                        powerRate -= 0.2;
+                       powerRate -= 0.2;
                     }if (i == 2) {
 
                         bulletDamage += 1;
@@ -1987,7 +1985,7 @@ private:
 public:
     friend class PowerUpLive;
     friend class Game;
-    Orc() : Enemy(3, 1) {}
+    Orc() : Enemy(3, 0.5) {}
     //declara al enemigo
     void Death() {
 
