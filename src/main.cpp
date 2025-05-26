@@ -3331,7 +3331,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 5;
+        level = 1;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
