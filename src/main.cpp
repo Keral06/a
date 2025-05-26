@@ -4291,8 +4291,7 @@ public:
                 if (!IsSoundPlaying(explosion)) {
                     PlaySound(explosion);
                 }
-                bagItem = 0;
-
+              
             }
             if (gameNuke.finished) {
 
