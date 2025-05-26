@@ -101,6 +101,8 @@ private:
     bool logEffectActive = false;
     float logEffectStartTime = 0.0f;
     Texture2D contento = LoadTexture("64x64/personaje.contento.png");
+    Texture2D victoria = LoadTexture("64x64/personaje.saludo.png");
+    bool followingGoofer = false;
     int lives;
     int money;
     Texture Abajo1 = LoadTexture("64x64/personaje.adelante2.png");
@@ -124,7 +126,6 @@ private:
     float deathStartTime = 0;
     bool estaContento = false;
     float tiempoContento = 0.0f;
-    Texture texturaContento= LoadTexture("64x64/personaje.contento.png");
 
 public:
     friend int main();
@@ -170,6 +171,7 @@ public:
     }
 
     void Update() {
+        
         if (estaContento) {
             float frameTime = GetFrameTime();
             tiempoContento += GetFrameTime();
@@ -1114,9 +1116,6 @@ class Store {
     bool jugadorContento = false;
     float tiempoContento = 0.0f;
     const float duracionContento = 1.5f;
-    Texture botas[3];
-    Texture pistola[3];
-    Texture caja[3];
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
 
@@ -2545,6 +2544,7 @@ private:
     Texture Death3 = LoadTexture("effects/128x128_piedra3.png");
     Texture Death4 = LoadTexture("effects/128x128_piedra4.png");
     Texture Death5 = LoadTexture("effects/128x128_piedra5.png");
+    Texture Contento = LoadTexture("64x64/personaje.contento.png");
     bool isAlive;
     int frameCounter;
     bool moving;
@@ -2565,7 +2565,7 @@ private:
     Texture Goofer4 = LoadTexture("64x64/p3_5.png");
     Texture Goofer5 = LoadTexture("64x64/p3_6.png");
     Texture Goofer6 = LoadTexture("64x64/p3_7.png");
-    Texture cosa = LoadTexture("64x64/128x128_112.png");
+    Texture cosa = LoadTexture("128x128_112.png");
     bool showGoofer = false; 
     int gooferFrame = 0;
     float gooferStartTime = 0.0f;
@@ -2591,8 +2591,6 @@ public:
         
         Texture current;
         Texture current2;
-        Texture cosa1;
-        cosa1 = cosa;
         int frame = ((int)(GetTime() * 5)) % 4;
 
         if (frame == 0) {
@@ -2623,10 +2621,11 @@ public:
             current2 = Goofer5;
         }
 
-        DrawTexture(current2, gooferPos.x + 32, gooferPos.y + 64, WHITE);
-        DrawTexture(current2, gooferPos.x -32, gooferPos.y + 64, WHITE);
+        DrawTexture(current2, gooferPos.x + 16, gooferPos.y + 64, WHITE);
+        DrawTexture(current2, gooferPos.x -16, gooferPos.y + 64, WHITE);
         DrawTexture(current, gooferPos.x, gooferPos.y, WHITE);
-        DrawTexture(cosa1, gooferPos.x, gooferPos.y + 16, WHITE);
+        DrawTexture(cosa, gooferPos.x - 16 , gooferPos.y + 32, WHITE);
+        DrawTexture(Contento, gooferPos.x - 16, gooferPos.y + 32, WHITE);
     }
     
 
@@ -3498,9 +3497,10 @@ public:
                
             }
             else { //si el tiempo ya ha sido iniciado
-
-                Tiempo.TiempoQueHaPasado(); 
-                Tiempo.Draw(); 
+                if (level != 5 && level != 51) {
+                    Tiempo.TiempoQueHaPasado();
+                    Tiempo.Draw();
+                }
 
 
             }
@@ -3508,8 +3508,24 @@ public:
             if (boss.showGoofer) {
                 DrawRectangle(64, 32, GetScreenWidth(), GetScreenHeight(), BLACK);
                 boss.DrawGoofer();
+                p.followingGoofer = true;
+                p.Draw();
                 EndDrawing();
                 return;
+            }
+            if (boss.showGoofer && !p.followingGoofer) {
+                Rectangle cosaRect = { boss.gooferPos.x, boss.gooferPos.y - boss.cosa.height / 2,
+                                       (float)boss.cosa.width, (float)boss.cosa.height };
+
+                Rectangle playerRect = { p.GetPosition().x, p.GetPosition().y, 32, 32 }; // Adjust to your player's size
+
+                if (CheckCollisionRecs(cosaRect, playerRect)) {
+                    p.followingGoofer = true;
+                }
+            }
+            if (p.followingGoofer) {
+                p.playerPos.x = boss.gooferPos.x;
+                p.playerPos.y = boss.gooferPos.y + 32; 
             }
             if (level == 11) {
                 currentLevel = 11;
