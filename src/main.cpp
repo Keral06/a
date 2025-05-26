@@ -1028,7 +1028,7 @@ class Store {
     int itemSeleccionado = -1; //  ninguno seleccionado
     const float rangoCompra = 50.0f;
     float tiempoTiendaAbierta = 0.0f;
-    const float tiempoMaximoTienda = 20.0f; // 30 segundos abierta
+    const float tiempoMaximoTienda = 20.0f; // segundos abierta
     bool estaCerrando = false;
     bool tiendaActiva = false;
     std::vector<int> inventario; 
@@ -1043,7 +1043,7 @@ class Store {
     bool jugadorContento = false;
     float tiempoContento = 0.0f;
     const float duracionContento = 1.5f;
-
+    
 
 
 public:
@@ -1167,6 +1167,7 @@ public:
         for (int i = 0; i < 3; i++) {
             if (CheckCollisionCircles(playerPos, rangoCompra, itemPositions[i], 0)) {
                 itemSeleccionado = i;
+                
 
                 if (playerCoins >= precios[i] && inventario.size() < maxItemsVisible) {
                     playerCoins -= precios[i];
