@@ -164,10 +164,10 @@ public:
         if (logEffectActive) {
             if (now - logEffectStartTime < 10.0f) {
                 DrawTexture(contento, GetPosition().x, GetPosition().y, WHITE);
-                return;  // Prevent drawing other sprites while happy
+                return;  
             }
             else {
-                logEffectActive = false;  // End effect
+                logEffectActive = false;  
             }
         }
         if (status == true) {
