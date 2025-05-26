@@ -2515,11 +2515,17 @@ private:
     bool deathHandled = false;
     float deathTime = 0.0f;
     Texture Goofer1 = LoadTexture("64x64/p3_11.png");
-    Texture Goofer2 = LoadTexture("64x64/p3_9.png");
-    bool showGoofer = false;
+    Texture Goofer2 = LoadTexture("64x64/p3_10.png");
+    Texture Goofer3 = LoadTexture("64x64/p3_9.png");
+    Texture Goofer4 = LoadTexture("64x64/p3_5.png");
+    Texture Goofer5 = LoadTexture("64x64/p3_6.png");
+    Texture Goofer6 = LoadTexture("64x64/p3_7.png");
+    Texture cosa = LoadTexture("64x64/128x128_112.png");
+    bool showGoofer = false; 
     int gooferFrame = 0;
     float gooferStartTime = 0.0f;
     Vector2 gooferPos = { 320, 0 };
+    float lastGooferUpdateTime = 0;     
 public:
     friend Game;
     Boss() : Enemy(1, 2), isAlive(true), frameCounter(0), moving(false) {
@@ -2528,6 +2534,54 @@ public:
         Intro = true;
         status = true;
         
+    }
+    void DrawGoofer() {
+        float currentTime = GetTime();
+
+        if (currentTime - lastGooferUpdateTime > 0.2f) {
+            gooferFrame++;
+            lastGooferUpdateTime = currentTime;
+            gooferPos.y += 15;  
+        }
+        
+        Texture current;
+        Texture current2;
+        Texture cosa1;
+        cosa1 = cosa;
+        int frame = ((int)(GetTime() * 5)) % 4;
+
+        if (frame == 0) {
+            current = Goofer1;
+        }
+        else if (frame == 1) {
+            current = Goofer2;
+        }
+        else if (frame == 2) {
+            current = Goofer3;
+        }
+        else {
+            current = Goofer2;
+        }
+        DrawTexture(current, gooferPos.x, gooferPos.y, WHITE);
+
+        int frame2 = ((int)(GetTime() * 5)) % 4;
+        if (frame == 0) {
+            current2 = Goofer4;
+        }
+        else if (frame == 1) {
+            current2 = Goofer5;
+        }
+        else if (frame == 2) {
+            current2 = Goofer6;
+        }
+        else {
+            current2 = Goofer5;
+        }
+
+        DrawTexture(current2, gooferPos.x + 32, gooferPos.y + 64, WHITE);
+        DrawTexture(current2, gooferPos.x -32, gooferPos.y + 64, WHITE);
+        DrawTexture(current, gooferPos.x, gooferPos.y, WHITE);
+        DrawTexture(cosa1, gooferPos.x, gooferPos.y + 16, WHITE);
     }
     
 
@@ -3373,7 +3427,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 2;
+        level = 5;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3407,9 +3461,10 @@ public:
             }
             //empieza el tiempo, lo dibuja y lo va actualizando
             if (boss.showGoofer) {
-                ClearBackground(BLACK);
-                boss.DrawGoofer();          
-                return;                 
+                DrawRectangle(64, 32, GetScreenWidth(), GetScreenHeight(), BLACK);
+                boss.DrawGoofer();
+                EndDrawing();
+                return;
             }
             if (level == 11) {
                 currentLevel = 11;
@@ -3440,7 +3495,6 @@ public:
 
                 boss.showGoofer = true;
                 boss.gooferStartTime = GetTime();
-                boss.showGoofer = true;
                 boss.gooferPos = { p.GetPosition().x, 0 }; 
             }
             // Handle bullet creation with arrow keys
@@ -3945,7 +3999,7 @@ public:
 
 
             }//este también hace lo mismo
-            if (level != 5 && !SNInUse) { //ogre
+            if (level != 5 && level != 51 && !SNInUse) { //ogre
                 int i = 0;
                 if (GetRandomValue(1, 40) == 1 && enemigo.size() + orcs.size() + marip.size() < 15 && !ChangingLevel) {
 
