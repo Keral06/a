@@ -4765,7 +4765,7 @@ public:
         float auxiliar = 0;
 
         p.ResetPlayer(level);
-        if (this->level == 11) {
+        if (this->level == 12) {
 
             wonGame = true;
 
