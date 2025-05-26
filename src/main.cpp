@@ -152,7 +152,26 @@ public:
         bag = 0;
     } //declara los valores iniciales del jugador
     int dire;
-
+    void Unload() {
+    
+        UnloadTexture(contento);
+        UnloadTexture(victoria);
+        UnloadTexture(Abajo1);
+        UnloadTexture(Abajo);
+        UnloadTexture(Abajo2);
+        UnloadTexture(Diagonal12);
+        UnloadTexture(Diagonal13);
+        UnloadTexture(Diagonal22);
+        UnloadTexture(Diagonal23);
+        UnloadTexture(Atras1);
+        UnloadTexture(Atras2);
+        UnloadTexture(Comprar);
+        UnloadTexture(Humo1);
+        UnloadTexture(Humo2);
+        UnloadTexture(Humo3);
+        UnloadTexture(Humo4);
+        UnloadTexture(Humo5);
+    }
     void playerAgain() {
 
         this->money = 0;
@@ -1380,6 +1399,15 @@ public:
                 playerPos = { (float)(playerScreenX + 32), ((float)(playerScreenY + 64) / 2) };
             }
         }
+    }
+    void unload() {
+        UnloadTexture(vida);
+        UnloadTexture(humoo1);
+        UnloadTexture(humoo2);
+        UnloadTexture(humoo3);
+        UnloadTexture(humoo4);
+        UnloadTexture(humoo5);
+    
     }
     void SNAnim() {
         float currentTime = GetTime();
@@ -8182,6 +8210,8 @@ int main()
 
 
     }
+    p.Unload();
+   
 
     CloseAudioDevice();
     CloseWindow();
