@@ -2466,6 +2466,12 @@ private:
     bool isPaused = false;
     bool deathHandled = false;
     float deathTime = 0.0f;
+    int gooferFrame = 0;
+    float lastGooferUpdateTime = 0;
+    Texture Goofer1 = LoadTexture("64x64/p3_11.png");
+    Texture Goofer2 = LoadTexture("64x64/p3_9.png");
+    bool showGoofer = false;
+
 
 public:
     friend Game;
@@ -2477,7 +2483,11 @@ public:
         
     }
     
-
+    void DrawGoofer() {
+        frameCounter++;
+        Texture current;
+        current = (gooferFrame / 30 % 2 == 0) ? Goofer1 : Goofer2;
+    }
     void Death() {
         if (!IsSoundPlaying(Die)) {
             PlaySound(Die);
