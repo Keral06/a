@@ -119,6 +119,9 @@ private:
     bool status;
     int bag = 0;
     float deathStartTime = 0;
+    bool estaContento = false;
+    float tiempoContento = 0.0f;
+    Texture texturaContento= LoadTexture("64x64/personaje.contento.png");
 
 public:
     friend int main();
@@ -156,9 +159,32 @@ public:
         bag = 0;
 
     }
+
+    void SetContento(bool feliz) {
+        estaContento = feliz;
+        if (feliz) tiempoContento = 0.0f; 
+    }
+
+    void Update() {
+        if (estaContento) {
+            float frameTime = GetFrameTime();
+            tiempoContento += GetFrameTime();
+            if (tiempoContento >= 1.0f) {  // Duración de 1 segundo
+                estaContento = false;
+            }
+        }
+    }
+
+
     void Draw() {
         //BeginDrawing();
 
+       if (estaContento) {
+           
+            DrawTexture(texturaContento, GetPosition().x, GetPosition().y, WHITE);
+        }
+
+       else{
         if (status == true) {
             if (dir == DIAGONAL1) {
                 if (dire <= 50) {
@@ -283,7 +309,7 @@ public:
 
 
         }
-
+        }
     }
     //dibuja el sprite indicado del jugador dependiendo de la direccion en la que se mueve
     void ResetPlayer(int level) {
@@ -1045,6 +1071,7 @@ class Store {
     bool jugadorContento = false;
     float tiempoContento = 0.0f;
     const float duracionContento = 1.5f;
+    
     Sound buy = LoadSound("song/cowboy_secret.wav");
     Sound walking = LoadSound("song/Cowboy_Footsteps.wav");
 
@@ -1084,7 +1111,7 @@ public:
         pistola[0] = LoadTexture("tienda/pistola.png");
         pistola[1] = LoadTexture("tienda/pistola2.png");
         pistola[2] = LoadTexture("tienda/piistola3.png");
-        caja[0] = LoadTexture("tienda/.cubo.png");
+        caja[0] = LoadTexture("tienda/cubo.png");
         caja[1] = LoadTexture("tienda/cubo2.png");
         caja[2] = LoadTexture("tienda/cubo3.png");
 
@@ -1172,7 +1199,7 @@ public:
         }
     }
 
-    void Compra(Vector2 playerPos, int& playerCoins, bool& tiendaActiva, float& vel, float& powerRate, int& bulletDamage) {
+    void Compra(Vector2 playerPos, int& playerCoins, bool& tiendaActiva, float& vel, float& powerRate, int& bulletDamage, Player& player) {
         if (!tiendaActiva) return;
         float currentTime = GetTime();
 
@@ -1217,16 +1244,16 @@ public:
                     if (!IsSoundPlaying(buy)) PlaySound(buy);
 
                     ultimaCompraTime = currentTime;
-                    jugadorContento = true;
-                    tiempoContento = 0.0f;
+                    player.estaContento = true;
+                    player.tiempoContento = 0.0f;
                     
-                    if (i == 1) {
+                    if (i == 0) {
 
                         vel += 0.5;
-                    }if (i == 2) {
+                    }if (i == 1) {
 
                         powerRate -= 0.2;
-                    }if (i == 3) {
+                    }if (i == 2) {
 
                         bulletDamage += 1;
                     }
@@ -1277,7 +1304,8 @@ public:
 
     void Draw() {
         // Dibujar al tendero 
-        BeginDrawing();
+        
+       
 
         if (estaCerrando) {
             // Usar animación de caminar cuando se está yendo
@@ -3314,7 +3342,7 @@ public:
     Game() {
         deadogres = 0;
 
-        level = 1;
+        level = 2;
         stage = 5;        /*  BeginDrawing();*/
         std::vector<DeadOgre>dead;
         tiempoiniciado = false;
@@ -3475,7 +3503,7 @@ public:
 
             int bulletSize = bullets.size();
 
-            //la tienda aparece solo en el level 3
+            
            
 
             if (level > 3 && level != 5 && !SNInUse) {
@@ -4643,12 +4671,13 @@ public:
 
         if (tiendaActiva && monstersize == 0 &&p.status)
         {
-            ClearBackground(BLACK);
+            
             BeginDrawing();
+            /*ClearBackground(BLACK);*/
             p.Movement(this->level); 
             float deltaTime = GetFrameTime();
             tienda.Update(deltaTime, this->tiendaActiva); 
-            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage); // Lógica de compra
+            tienda.Compra(p.GetPosition(), p.money, this->tiendaActiva, p.vel, this->powerRate, this->bulletDamage, p); // Lógica de compra
 
             
             tienda.Draw();         
