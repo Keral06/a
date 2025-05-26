@@ -444,11 +444,6 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-
 
             }
             else if (level == 2) {
@@ -485,14 +480,6 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
 
             }
             else if (level == 3) {
@@ -539,18 +526,6 @@ public:
                 }
 
 
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-                DrawRectangleLines(lado16.x, lado16.y, lado16.width, lado16.height, RED);
-                DrawRectangleLines(lado13.x, lado13.y, lado13.width, lado13.height, GREEN);
-                DrawRectangleLines(lado14.x, lado14.y, lado14.width, lado14.height, BLUE);
-                DrawRectangleLines(lado15.x, lado15.y, lado15.width, lado15.height, BLUE);
             }
             else if (level == 4) {
                 Rectangle lado1 = { 224, 192, 96, 32 };
@@ -586,14 +561,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+               
 
             }
             else if (level == 5) {
@@ -624,10 +592,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+              
             }
             else if (level == 51) {
                 Rectangle lado1 = { 320, 160, 32, 32 };
@@ -659,10 +624,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+               
                 }
             else if (level == 6) {
                 Rectangle lado1 = { 96, 64, 96, 32 };
@@ -706,10 +668,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+               
             }
             else if (level == 7) {
                 Rectangle lado1 = { 128, 128, 32, 32 };
@@ -749,14 +708,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+               
             }
             else if (level == 8) {
                 Rectangle lado1 = { 64, 192, 120, 32 };
@@ -792,14 +744,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+               
             }
 
             else if (level == 9) {
@@ -838,14 +783,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+              
             }
 
             else if (level == 10) {
@@ -882,14 +820,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-                DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-                DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-                DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-                DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-                DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-                DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+               
             }
             else if (level == 11) {
                 Rectangle lado1 = { 64, 64, 512, 32 };
@@ -913,8 +844,7 @@ public:
                     playerPos.x = nextX;
                     playerPos.y = nextY;
                 }
-                DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-                DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
+                
             }
             ColisionPlayer(playerPos);
         }
@@ -1525,10 +1455,7 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
+           
 
 
         }
@@ -1574,14 +1501,7 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
+          
 
         }
         else if (level == 3) {
@@ -1634,18 +1554,6 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
-            DrawRectangleLines(lado17.x, lado17.y, lado17.width, lado17.height, RED);
-            DrawRectangleLines(lado18.x, lado18.y, lado18.width, lado18.height, GREEN);
-            DrawRectangleLines(lado20.x, lado20.y, lado20.width, lado20.height, BLUE);
-            DrawRectangleLines(lado19.x, lado19.y, lado19.width, lado19.height, BLUE);
         }
         else if (level == 4) {
             Rectangle lado1 = { 224, 192, 86, 32 };
@@ -1689,14 +1597,6 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
 
         }
         else if (level == 6) {
@@ -1749,10 +1649,6 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
         }
 
         else if (level == 7) {
@@ -1801,14 +1697,6 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
         }
         else if (level == 8) {
             Rectangle lado1 = { 64, 192, 120, 32 };
@@ -1852,14 +1740,6 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
         }
         else if (level == 9) {
             Rectangle lado1 = { 192, 160, 64, 64 };
@@ -1905,14 +1785,6 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
         }
         else if (level == 10) {
             Rectangle lado1 = { 64, 64, 224, 32 };
@@ -1956,14 +1828,6 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
-            DrawRectangleLines(lado3.x, lado3.y, lado3.width, lado3.height, BLUE);
-            DrawRectangleLines(lado4.x, lado4.y, lado4.width, lado4.height, BLUE);
-            DrawRectangleLines(lado5.x, lado5.y, lado5.width, lado5.height, RED);
-            DrawRectangleLines(lado6.x, lado6.y, lado6.width, lado6.height, GREEN);
-            DrawRectangleLines(lado7.x, lado7.y, lado7.width, lado7.height, BLUE);
-            DrawRectangleLines(lado8.x, lado8.y, lado8.width, lado8.height, BLUE);
         }
         else if (level == 11) {
             Rectangle lado1 = { 64, 64, 512, 32 };
@@ -1995,8 +1859,6 @@ public:
                 playerPos.x = nextX;
                 playerPos.y = nextY;
             }
-            DrawRectangleLines(lado1.x, lado1.y, lado1.width, lado1.height, RED);
-            DrawRectangleLines(lado2.x, lado2.y, lado2.width, lado2.height, GREEN);
         }
 
 
